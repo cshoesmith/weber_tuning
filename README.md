@@ -7,9 +7,12 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 - **61 Engine Database**: Toyota, Honda, Mazda, Nissan/Datsun, Alfa Romeo (1960-2010)
 - **Multiple Weber Families**: DCOE sidedraft, IDF downdraft, and 32/36 progressive baselines
 - **Setup Selector**: DCOE single/twin/triple, IDF single/twin, and 32/36 progressive single
+- **Physical Setup Limits**: Carburetor layouts are now restricted so total venturi count cannot exceed the engine's cylinder/rotor count
 - **Stronger Cam Modeling**: Stock, street, and race cams now shift venturi suggestions plus main, idle, pump, and air-corrector baselines more noticeably
+- **Engine Summary Header**: The Recommended Baseline panel now shows the selected engine or custom setup summary, including displacement, cylinder/rotor count, RPM, and cam profile
 - **Setup Preview**: Recommendations now begin with the selected carb setup, a visual illustration, and per-venturi/per-barrel load context
 - **Configuration Health Score**: Enforce the choke/jet sizes you actually have, then see whether the remaining circuits can compensate or whether the combo is a poor fit
+- **Override Reset Buttons**: Each available-parts override field now has its own Reset button to return that selector to Auto / baseline instantly
 - **Body-Specific Choke Availability**: DCOE and IDF venturi choices now change with carb body size so unrealistic pairings are filtered out up front
 - **Baseline Weber Formulas**: Family-specific main and air correction rules, plus idle/emulsion/needle starting points
 - **Supports**: 4-cyl, 6-cyl, and rotary engines (985cc - 3500cc)
@@ -25,9 +28,9 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 2. Select your vehicle make from the first dropdown
 3. Select your engine from the connected engine dropdown (auto-fills specs)
 4. Confirm the cam profile for the engine or your build
-5. The calculator suggests a carburetor setup after the cam choice; keep it or override it manually
-6. Override displacement/RPM and adjust carb body, venturi, and supporting settings as needed
-7. If you only have certain jets on hand, enter them in the available-parts override fields and review the Configuration Health Score
+5. The calculator suggests a carburetor setup after the cam choice; only layouts with a realistic venturi count for that engine are available
+6. Override displacement/RPM and adjust carb body, venturi, and supporting settings as needed; the Recommended Baseline header echoes the active engine/setup summary
+7. If you only have certain jets on hand, enter them in the available-parts override fields, use the per-field Reset buttons to return any selector to Auto, and review the Configuration Health Score
 8. Recommendations update live as settings change, with a brief visual highlight when the calculated results change
 
 ## Engine Coverage
@@ -53,7 +56,7 @@ Based on Weber carburetor technical specifications and period tuning guides from
 - 240260280.com DCOE Theory & Tuning
 - Dave Andrews carburetor tuning guides
 
-The calculator uses Weber baseline formulas for main and air corrector jets, then layers on heuristics for altitude, cam profile, venturi suggestion, supporting jet choices, and progressive-carb staging. Cam choice now has a stronger effect on choke suggestion, idle/progression fuel, pump delivery, and high-RPM air correction. For DCOE and IDF layouts, the venturi and main-jet baseline is surfaced explicitly as a per-venturi recommendation so single, twin, and triple setups are easier to sanity-check.
+The calculator uses Weber baseline formulas for main and air corrector jets, then layers on heuristics for altitude, cam profile, venturi suggestion, supporting jet choices, and progressive-carb staging. Cam choice now has a stronger effect on choke suggestion, idle/progression fuel, pump delivery, and high-RPM air correction. For DCOE and IDF layouts, the venturi and main-jet baseline is surfaced explicitly as a per-venturi recommendation so single, twin, and triple setups are easier to sanity-check. The setup selector also enforces a basic physical limit: you cannot choose a layout with more venturis than the engine has cylinders or rotors.
 
 ## Disclaimer
 

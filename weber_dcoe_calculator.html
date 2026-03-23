@@ -1908,6 +1908,45 @@
             return displacement / Math.max(carbCount, 1);
         }
 
+        function getSetupVenturiCount(setupKey) {
+            const setup = carbSetups[setupKey];
+            if (!setup) {
+                return 0;
+            }
+
+            return setup.familyKey === 'progressive' ? 2 : Math.max(setup.carbCount * 2, 1);
+        }
+
+        function getValidCarbSetupKeys(cylinders) {
+            return Object.keys(carbSetups).filter(setupKey => getSetupVenturiCount(setupKey) <= Math.max(cylinders, 1));
+        }
+
+        function getFallbackCarbSetup(cylinders) {
+            const validSetupKeys = getValidCarbSetupKeys(cylinders);
+            return validSetupKeys[0] || 'dcoe_single';
+        }
+
+        function refreshCarbSetupOptions(cylinders, preferredSetupKey = null) {
+            const select = document.getElementById('carbSetup');
+            const currentValue = preferredSetupKey || select.value;
+            const validSetupKeys = new Set(getValidCarbSetupKeys(cylinders));
+
+            Array.from(select.options).forEach(option => {
+                const isValid = validSetupKeys.has(option.value);
+                option.disabled = !isValid;
+                option.hidden = !isValid;
+            });
+
+            if (validSetupKeys.has(currentValue)) {
+                select.value = currentValue;
+                return currentValue;
+            }
+
+            const fallback = getFallbackCarbSetup(cylinders);
+            select.value = fallback;
+            return fallback;
+        }
+
         function getReferenceUnitLabel(cylinders) {
             return cylinders <= 3 ? 'rotor' : 'cylinder';
         }
@@ -2392,50 +2431,57 @@
         }
 
         function suggestCarbSetup(displacement, cylinders, cam) {
+            const fallback = getFallbackCarbSetup(cylinders);
+
             if (cylinders >= 6 || cylinders === 3) {
-                return 'dcoe_triple';
+                return getValidCarbSetupKeys(cylinders).includes('dcoe_triple') ? 'dcoe_triple' : fallback;
             }
 
             if (cylinders === 2) {
-                return displacement >= 1200 || cam === 'race' ? 'dcoe_double' : 'dcoe_single';
+                return getValidCarbSetupKeys(cylinders).includes('dcoe_single') ? 'dcoe_single' : fallback;
             }
 
             if (cam === 'race' || displacement >= 1900) {
-                return 'dcoe_double';
+                return getValidCarbSetupKeys(cylinders).includes('dcoe_double') ? 'dcoe_double' : fallback;
             }
 
-            return 'dcoe_single';
+            return getValidCarbSetupKeys(cylinders).includes('dcoe_single') ? 'dcoe_single' : fallback;
         }
 
         function applySuggestedCarbSetup(force = false) {
+            const setupSelect = document.getElementById('carbSetup');
             if (!force && carbSetupSuggestionState.manualOverride) {
-                return document.getElementById('carbSetup').value;
+                return refreshCarbSetupOptions(parseInt(document.getElementById('cylinders').value, 10) || 4, setupSelect.value);
             }
 
             const displacement = parseFloat(document.getElementById('displacement').value) || 2000;
             const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
             const cam = document.getElementById('cam').value;
             const suggestedSetup = suggestCarbSetup(displacement, cylinders, cam);
-            document.getElementById('carbSetup').value = suggestedSetup;
-            return suggestedSetup;
+            return refreshCarbSetupOptions(cylinders, suggestedSetup);
         }
 
         function updateCarburetorUI(shouldRecalculate = true) {
-            const setupKey = document.getElementById('carbSetup').value;
-            const setup = carbSetups[setupKey];
-            const familyKey = setup.familyKey;
-            const family = carbFamilies[familyKey];
-
             const displacement = parseFloat(document.getElementById('displacement').value) || 2000;
             const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
             const maxRpm = parseInt(document.getElementById('maxRpm').value, 10) || 6000;
             const cam = document.getElementById('cam').value;
+            const validSetupKeys = getValidCarbSetupKeys(cylinders);
             const suggestedSetupKey = suggestCarbSetup(displacement, cylinders, cam);
+            const selectedSetupKey = refreshCarbSetupOptions(cylinders, document.getElementById('carbSetup').value);
+            const setupKey = validSetupKeys.includes(selectedSetupKey) ? selectedSetupKey : suggestedSetupKey;
+            document.getElementById('carbSetup').value = setupKey;
+            const setup = carbSetups[setupKey];
+            const familyKey = setup.familyKey;
+            const family = carbFamilies[familyKey];
             const suggestedSetupLabel = carbSetups[suggestedSetupKey].label;
+            const restrictionNote = validSetupKeys.length < Object.keys(carbSetups).length
+                ? ` Layouts with more than ${cylinders} venturi${cylinders === 1 ? '' : 's'} are hidden for this engine.`
+                : '';
 
             document.getElementById('setupHelp').textContent = carbSetupSuggestionState.manualOverride && suggestedSetupKey !== setupKey
-                ? `${setup.help} Suggested from current engine + cam: ${suggestedSetupLabel}. Manual override is active.`
-                : `${setup.help} Suggested from current engine + cam: ${suggestedSetupLabel}. You can override it.`;
+                ? `${setup.help} Suggested from current engine + cam: ${suggestedSetupLabel}. Manual override is active.${restrictionNote}`
+                : `${setup.help} Suggested from current engine + cam: ${suggestedSetupLabel}. You can override it.${restrictionNote}`;
             document.getElementById('venturiLabel').textContent = family.venturiLabel;
             document.getElementById('carbBodyLabel').textContent = family.bodyLabel;
             document.getElementById('airBleedLabel').textContent = family.airBleedLabel;
