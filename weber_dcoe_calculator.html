@@ -331,8 +331,38 @@
             display: none;
         }
 
+        .override-input-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 8px;
+            align-items: center;
+        }
+
         .override-input {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .override-reset-btn {
+            padding: 8px 12px;
+            border: 1px solid #c9d5e1;
+            border-radius: 6px;
+            background: #f4f8fb;
+            color: #425466;
+            font-size: 0.76em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .override-reset-btn:hover:not(:disabled) {
+            background: #e7f0f8;
+            border-color: #9fb8cf;
+        }
+
+        .override-reset-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
         }
 
         .override-input.user-selected,
@@ -1066,23 +1096,38 @@
                     <div class="grid-2" id="overrideGrid">
                         <div class="form-group override-control" id="overrideGroup1">
                             <label for="overrideValue1" id="overrideLabel1">Available Main Jet</label>
-                            <input type="number" class="override-input" id="overrideValue1" placeholder="Auto / baseline">
+                            <div class="override-input-row">
+                                <input type="number" class="override-input" id="overrideValue1" placeholder="Auto / baseline">
+                                <button type="button" class="override-reset-btn" id="overrideReset1" onclick="resetOverrideField(1)">Reset</button>
+                            </div>
                         </div>
                         <div class="form-group override-control" id="overrideGroup2">
                             <label for="overrideValue2" id="overrideLabel2">Available Air Corrector</label>
-                            <input type="number" class="override-input" id="overrideValue2" placeholder="Auto / baseline">
+                            <div class="override-input-row">
+                                <input type="number" class="override-input" id="overrideValue2" placeholder="Auto / baseline">
+                                <button type="button" class="override-reset-btn" id="overrideReset2" onclick="resetOverrideField(2)">Reset</button>
+                            </div>
                         </div>
                         <div class="form-group override-control" id="overrideGroup3">
                             <label for="overrideValue3" id="overrideLabel3">Available Idle Jet</label>
-                            <input type="number" class="override-input" id="overrideValue3" placeholder="Auto / baseline">
+                            <div class="override-input-row">
+                                <input type="number" class="override-input" id="overrideValue3" placeholder="Auto / baseline">
+                                <button type="button" class="override-reset-btn" id="overrideReset3" onclick="resetOverrideField(3)">Reset</button>
+                            </div>
                         </div>
                         <div class="form-group override-control" id="overrideGroup4">
                             <label for="overrideValue4" id="overrideLabel4">Available Pump Jet</label>
-                            <input type="number" class="override-input" id="overrideValue4" placeholder="Auto / baseline">
+                            <div class="override-input-row">
+                                <input type="number" class="override-input" id="overrideValue4" placeholder="Auto / baseline">
+                                <button type="button" class="override-reset-btn" id="overrideReset4" onclick="resetOverrideField(4)">Reset</button>
+                            </div>
                         </div>
                         <div class="form-group override-control" id="overrideGroup5">
                             <label for="overrideValue5" id="overrideLabel5">Available Secondary Air</label>
-                            <input type="number" class="override-input" id="overrideValue5" placeholder="Auto / baseline">
+                            <div class="override-input-row">
+                                <input type="number" class="override-input" id="overrideValue5" placeholder="Auto / baseline">
+                                <button type="button" class="override-reset-btn" id="overrideReset5" onclick="resetOverrideField(5)">Reset</button>
+                            </div>
                         </div>
                     </div>
                     <div class="override-notice" id="overrideHelp">Use forced jet values only when you need to work with the parts you already own.</div>
@@ -1842,7 +1887,99 @@
             return `${served.toFixed(1)} ${getReferenceUnitLabel(cylinders)}s per venturi`;
         }
 
-        function suggestVenturiFromLoad(loadPerVenturi, maxRpm, familyKey = 'dcoe') {
+        function getCamTuningProfile(familyKey, cam) {
+            const familyProfiles = {
+                dcoe: {
+                    stock: {
+                        venturiShift: -1,
+                        mainJetAdjustment: -5,
+                        airCorrectorAdjustment: 5,
+                        idleJetAdjustment: -5,
+                        pumpJetAdjustment: -5,
+                        note: 'Stock cams keep overlap low, so signal is stronger and the baseline can stay a little smaller and leaner.'
+                    },
+                    street: {
+                        venturiShift: 0,
+                        mainJetAdjustment: 0,
+                        airCorrectorAdjustment: 0,
+                        idleJetAdjustment: 0,
+                        pumpJetAdjustment: 0,
+                        note: 'Street cams use the neutral Weber-style baseline.'
+                    },
+                    race: {
+                        venturiShift: 2,
+                        mainJetAdjustment: 10,
+                        airCorrectorAdjustment: -5,
+                        idleJetAdjustment: 5,
+                        pumpJetAdjustment: 5,
+                        note: 'Race cams weaken low-speed signal and pull harder upstairs, so the baseline shifts to larger chokes, richer idle/progression, and a stronger pump shot.'
+                    }
+                },
+                idf: {
+                    stock: {
+                        venturiShift: -1,
+                        mainJetAdjustment: -5,
+                        airCorrectorAdjustment: 5,
+                        idleJetAdjustment: -2,
+                        pumpJetAdjustment: -5,
+                        note: 'Stock cams usually let IDFs behave crisply on a slightly tidier baseline.'
+                    },
+                    street: {
+                        venturiShift: 0,
+                        mainJetAdjustment: 0,
+                        airCorrectorAdjustment: 0,
+                        idleJetAdjustment: 0,
+                        pumpJetAdjustment: 0,
+                        note: 'Street cams use the neutral IDF baseline.'
+                    },
+                    race: {
+                        venturiShift: 2,
+                        mainJetAdjustment: 10,
+                        airCorrectorAdjustment: -5,
+                        idleJetAdjustment: 2,
+                        pumpJetAdjustment: 5,
+                        note: 'Race cams push IDFs toward bigger chokes, richer mains, and a stronger transition shot to cover overlap and airflow demand.'
+                    }
+                },
+                progressive: {
+                    stock: {
+                        venturiBias: 0,
+                        mainJetAdjustment: -5,
+                        secondaryMainSpread: 10,
+                        primaryAirAdjustment: 5,
+                        secondaryAirAdjustment: 5,
+                        idleJetAdjustment: -5,
+                        note: 'Stock-cam progressive setups usually prefer the smaller venturi pair and slightly leaner supporting jets.'
+                    },
+                    street: {
+                        venturiBias: 1,
+                        mainJetAdjustment: 0,
+                        secondaryMainSpread: 12,
+                        primaryAirAdjustment: 0,
+                        secondaryAirAdjustment: 0,
+                        idleJetAdjustment: 0,
+                        note: 'Street cams stay near the middle-ground progressive baseline.'
+                    },
+                    race: {
+                        venturiBias: 2,
+                        mainJetAdjustment: 10,
+                        secondaryMainSpread: 20,
+                        primaryAirAdjustment: -5,
+                        secondaryAirAdjustment: -10,
+                        idleJetAdjustment: 5,
+                        note: 'Race cams bias the progressive baseline toward the larger venturi pair, richer mains, and a heavier secondary fuel curve.'
+                    }
+                }
+            };
+
+            return familyProfiles[familyKey]?.[cam] || familyProfiles[familyKey]?.street || familyProfiles.dcoe.street;
+        }
+
+        function getCamAdvisory(familyKey, cam) {
+            return getCamTuningProfile(familyKey, cam).note;
+        }
+
+        function suggestVenturiFromLoad(loadPerVenturi, maxRpm, familyKey = 'dcoe', cam = 'street') {
             let suggested = 28;
 
             if (loadPerVenturi >= 300) suggested = 30;
@@ -1854,17 +1991,27 @@
             if (maxRpm >= 7500) suggested += 2;
             else if (maxRpm <= 5500) suggested -= 2;
 
+            suggested += getCamTuningProfile(familyKey, cam).venturiShift || 0;
+
             if (familyKey === 'idf' && suggested > 38) suggested = 38;
 
             return clamp(suggested, 28, 40);
         }
 
-        function suggestVenturi(displacement, cylinders, maxRpm, familyKey = 'dcoe') {
-            return suggestVenturiFromLoad(getCylinderCapacity(displacement, cylinders), maxRpm, familyKey);
+        function suggestVenturi(displacement, cylinders, maxRpm, familyKey = 'dcoe', cam = 'street') {
+            return suggestVenturiFromLoad(getCylinderCapacity(displacement, cylinders), maxRpm, familyKey, cam);
         }
 
         function suggestProgressiveVenturi(displacement, maxRpm, cam) {
-            if (displacement > 2000 || maxRpm >= 6500 || cam === 'race') {
+            const camProfile = getCamTuningProfile('progressive', cam);
+            let score = camProfile.venturiBias || 0;
+
+            if (displacement >= 1900) score += 1;
+            if (displacement >= 2300) score += 1;
+            if (maxRpm >= 6300) score += 1;
+            if (maxRpm >= 7000) score += 1;
+
+            if (score >= 3) {
                 return '27|29';
             }
 
@@ -1891,11 +2038,13 @@
                 const group = document.getElementById(`overrideGroup${index + 1}`);
                 const label = document.getElementById(`overrideLabel${index + 1}`);
                 const input = document.getElementById(`overrideValue${index + 1}`);
+                const resetButton = document.getElementById(`overrideReset${index + 1}`);
 
                 if (!config) {
                     group.classList.add('hidden');
                     input.dataset.key = '';
                     input.value = '';
+                    resetButton.disabled = true;
                     continue;
                 }
 
@@ -1906,6 +2055,7 @@
                 input.max = String(config.max);
                 input.step = String(config.step);
                 input.placeholder = 'Auto / baseline';
+                resetButton.disabled = input.value.trim() === '';
             }
 
             document.getElementById('overrideHelp').textContent = familyKey === 'progressive'
@@ -1936,9 +2086,22 @@
         function updateOverrideInputStates() {
             for (let index = 1; index <= 5; index += 1) {
                 const input = document.getElementById(`overrideValue${index}`);
+                const resetButton = document.getElementById(`overrideReset${index}`);
                 const isActive = Boolean(input.dataset.key) && input.value.trim() !== '';
                 input.classList.toggle('user-selected', isActive);
+                resetButton.disabled = !Boolean(input.dataset.key) || !isActive;
             }
+        }
+
+        function resetOverrideField(index) {
+            const input = document.getElementById(`overrideValue${index}`);
+            if (!input || !input.dataset.key) {
+                return;
+            }
+
+            input.value = '';
+            updateOverrideInputStates();
+            calculateJets();
         }
 
         function updateSelectionControlStates(context) {
@@ -2254,7 +2417,7 @@
                 targetVenturiValue = suggestProgressiveVenturi(displacement, maxRpm, cam);
                 populateSelect('venturi', family.venturiCatalog);
             } else {
-                const suggestedVenturi = suggestVenturi(displacement, cylinders, maxRpm, familyKey);
+                const suggestedVenturi = suggestVenturi(displacement, cylinders, maxRpm, familyKey, cam);
                 targetVenturiValue = String(getNearestAvailableVenturi(familyKey, selectedBody, suggestedVenturi));
                 populateSelect('venturi', getVenturiOptionsForBody(familyKey, selectedBody, targetVenturiValue));
             }
@@ -2498,9 +2661,9 @@
             const tempShift = context.temp <= 40 ? -0.18 : context.temp >= 95 ? 0.18 : 0;
             const venturiSignal = (values.venturi - values.suggestedVenturi) * 0.05;
             const mainShift = -((values.mainJet - values.referenceMainJet) / 5) * 0.08;
-            const idleShift = -((values.idleJetSize - 50) / 5) * 0.12 + airBleedEffect + tempShift * 0.6;
-            const pumpShift = -((values.pumpJet - 40) / 5) * 0.08;
-            const airCorrShift = ((values.airCorrector - (values.mainJet + 50)) / 5) * 0.05;
+            const idleShift = -((values.idleJetSize - values.referenceIdleJet) / 5) * 0.12 + airBleedEffect + tempShift * 0.6;
+            const pumpShift = -((values.pumpJet - values.referencePumpJet) / 5) * 0.08;
+            const airCorrShift = ((values.airCorrector - values.referenceAirCorrector) / 5) * 0.05;
 
             return buildAfrProfile([
                 { label: 'Idle', value: 14.0 + idleShift, targetLow: 13.5, targetHigh: 14.4 },
@@ -2516,9 +2679,9 @@
             const tempShift = context.temp <= 40 ? -0.16 : context.temp >= 95 ? 0.16 : 0;
             const venturiSignal = (values.venturi - values.suggestedVenturi) * 0.045;
             const mainShift = -((values.mainJet - values.referenceMainJet) / 5) * 0.08;
-            const idleShift = -((values.idleJetSize - 50) / 5) * 0.11 + airBleedEffect + tempShift * 0.55;
-            const pumpShift = -((values.pumpJet - 45) / 5) * 0.08;
-            const airCorrShift = ((values.airCorrector - (values.mainJet + 55)) / 5) * 0.05;
+            const idleShift = -((values.idleJetSize - values.referenceIdleJet) / 5) * 0.11 + airBleedEffect + tempShift * 0.55;
+            const pumpShift = -((values.pumpJet - values.referencePumpJet) / 5) * 0.08;
+            const airCorrShift = ((values.airCorrector - values.referenceAirCorrector) / 5) * 0.05;
 
             return buildAfrProfile([
                 { label: 'Idle', value: 13.9 + idleShift, targetLow: 13.4, targetHigh: 14.2 },
@@ -2532,11 +2695,11 @@
         function estimateProgressiveAfr(context, values) {
             const emulsionEffect = getAirBleedEffect('progressive', context.airBleed);
             const tempShift = context.temp <= 40 ? -0.14 : context.temp >= 95 ? 0.14 : 0;
-            const primaryShift = -((values.primaryMain - values.primaryBaseline) / 5) * 0.09;
-            const secondaryShift = -((values.secondaryMain - (values.primaryMain + values.secondaryOffset)) / 5) * 0.08;
+            const primaryShift = -((values.primaryMain - values.referencePrimaryMain) / 5) * 0.09;
+            const secondaryShift = -((values.secondaryMain - values.referenceSecondaryMain) / 5) * 0.08;
 
             return buildAfrProfile([
-                { label: 'Idle', value: 14.1 - ((values.idleJet - 55) / 5) * 0.1 + emulsionEffect + tempShift * 0.5, targetLow: 13.7, targetHigh: 14.5 },
+                { label: 'Idle', value: 14.1 - ((values.idleJet - values.referenceIdleJet) / 5) * 0.1 + emulsionEffect + tempShift * 0.5, targetLow: 13.7, targetHigh: 14.5 },
                 { label: 'Primary', value: 14.4 + primaryShift + emulsionEffect * 0.7, targetLow: 14.0, targetHigh: 14.8 },
                 { label: 'Transition', value: 13.7 + primaryShift * 0.6 + emulsionEffect * 0.45, targetLow: 13.3, targetHigh: 14.0 },
                 { label: 'Secondary', value: 13.2 + secondaryShift + tempShift * 0.25, targetLow: 12.8, targetHigh: 13.5 },
@@ -2673,7 +2836,8 @@
             const perCarbCapacity = getPerCarbCapacity(context.displacement, context.carbCount);
             const assignmentText = getApproxBarrelAssignment(context.cylinders, totalBarrels);
             const venturi = parseInt(context.venturiValue, 10) || 34;
-            const suggestedVenturi = suggestVenturiFromLoad(displacementPerVenturi, context.maxRpm, 'dcoe');
+            const camProfile = getCamTuningProfile('dcoe', context.cam);
+            const suggestedVenturi = suggestVenturiFromLoad(displacementPerVenturi, context.maxRpm, 'dcoe', context.cam);
             const baselineMainJet = venturi * 4;
             const altitudeCorrection = context.altitude > 0 ? (context.altitude / 1000 * 0.02) : 0;
             let mainJetRaw = baselineMainJet;
@@ -2681,11 +2845,10 @@
                 mainJetRaw = Math.round(mainJetRaw * (1 - altitudeCorrection));
             }
 
-            const camAdjustments = { stock: -5, street: 0, race: 5 };
-            const camAdjustment = camAdjustments[context.cam] || 0;
+            const camAdjustment = camProfile.mainJetAdjustment;
             const camAdjustedMainJet = mainJetRaw + camAdjustment;
             const recommendedMainJet = clamp(roundToStep(camAdjustedMainJet, 5), 115, 180);
-            const recommendedAirCorrector = roundToStep(recommendedMainJet + 50, 5);
+            const recommendedAirCorrector = clamp(roundToStep(recommendedMainJet + 50 + camProfile.airCorrectorAdjustment, 5), 140, 260);
 
             let emulsionTube = 'F16';
             if (displacementPerVenturi < 325) emulsionTube = 'F11';
@@ -2697,11 +2860,12 @@
             if (displacementPerVenturi > 425) recommendedIdleJet = 50;
             if (displacementPerVenturi > 550) recommendedIdleJet = 55;
             if (displacementPerVenturi > 700) recommendedIdleJet = 60;
+            recommendedIdleJet = clamp(roundToStep(recommendedIdleJet + camProfile.idleJetAdjustment, 5), 35, 70);
 
             let recommendedPumpJet = 40;
             if (displacementPerVenturi < 360) recommendedPumpJet = 35;
             if (displacementPerVenturi > 650) recommendedPumpJet = 45;
-            if (context.cam === 'race') recommendedPumpJet = 45;
+            recommendedPumpJet = clamp(roundToStep(recommendedPumpJet + camProfile.pumpJetAdjustment, 5), 30, 55);
 
             const mainJet = clamp(context.overrides.mainJet ?? recommendedMainJet, 110, 190);
             const airCorrector = clamp(context.overrides.airCorrector ?? recommendedAirCorrector, 140, 260);
@@ -2732,10 +2896,13 @@
                 venturi,
                 suggestedVenturi,
                 mainJet,
-                referenceMainJet: roundToStep(venturi * 4, 5),
+                referenceMainJet: recommendedMainJet,
                 airCorrector,
+                referenceAirCorrector: recommendedAirCorrector,
                 idleJetSize,
-                pumpJet
+                referenceIdleJet: recommendedIdleJet,
+                pumpJet,
+                referencePumpJet: recommendedPumpJet
             });
 
             const health = buildHealthScore({
@@ -2769,23 +2936,23 @@
                 cards: [
                     { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: `Suggested from roughly ${Math.round(displacementPerVenturi)}cc per venturi and ${assignmentText}.`, userSelected: venturiUserSelected },
                     { name: 'Main Jet', value: String(mainJet), note: formatOverrideAwareNote('Controls WOT fuel flow. Baseline is calculated per venturi from venturi × 4.', mainJet, recommendedMainJet), userSelected: mainJet !== recommendedMainJet },
-                    { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('Leans the mixture as RPM rises. Baseline is main + 50.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector },
+                    { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('Leans the mixture as RPM rises. Cam profile can shift this baseline up or down from the usual main + 50 rule.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector },
                     { name: 'Emulsion Tube', value: emulsionTube, note: `Selected from approximately ${Math.round(displacementPerVenturi)}cc of load per venturi.` },
-                    { name: 'Idle Jet', value: `${idleJetSize}${context.airBleed}`, note: formatOverrideAwareNote('Progression and cruise baseline keyed to venturi load, not just carb count. Format: fuel jet + air bleed.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet || context.airBleedUserSelected },
+                    { name: 'Idle Jet', value: `${idleJetSize}${context.airBleed}`, note: formatOverrideAwareNote('Progression and cruise baseline is keyed to venturi load and cam overlap, not just carb count. Format: fuel jet + air bleed.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet || context.airBleedUserSelected },
                     { name: 'Pump Jet', value: String(pumpJet), note: formatOverrideAwareNote('Accelerator pump discharge scaled for venturi load and cam aggressiveness.', pumpJet, recommendedPumpJet), userSelected: pumpJet !== recommendedPumpJet },
                     { name: 'Auxiliary Venturi', value: auxVenturi, note: 'Main-circuit signal booster. Smaller chokes prefer smaller aux venturis.' },
                     { name: 'Needle Valve', value: needleValve, note: 'Float chamber refill rate matched to approximate fuel demand per carb body.' }
                 ],
                 formulaTitle: '📐 DCOE Baseline Formulas',
-                formulaDescription1: '<strong>Main Jet:</strong> Venturi × 4 baseline per venturi, then altitude/cam adjustments, then rounded to the nearest 5.',
-                formulaDescription2: '<strong>Air Corrector:</strong> Main Jet + 50, rounded to the nearest 5.',
+                formulaDescription1: '<strong>Main Jet:</strong> Venturi × 4 baseline per venturi, then altitude and a stronger cam-profile adjustment, then rounded to the nearest 5.',
+                formulaDescription2: '<strong>Air Corrector:</strong> Main Jet + 50, with cam-based cleanup shifts for stock vs. race behavior, then rounded to the nearest 5.',
                 formulaDescription3: '<strong>DCOE Reference:</strong>',
                 mainJetFormula: mainJetSteps.join(' → '),
-                airCorrFormula: airCorrector === recommendedAirCorrector ? `${recommendedMainJet} + 50 = ${airCorrector}` : `${recommendedMainJet} + 50 = ${recommendedAirCorrector} → forced available jet = ${airCorrector}`,
+                airCorrFormula: airCorrector === recommendedAirCorrector ? `${recommendedMainJet} + 50 ${camProfile.airCorrectorAdjustment >= 0 ? '+' : ''}${camProfile.airCorrectorAdjustment} = ${airCorrector}` : `${recommendedMainJet} + 50 ${camProfile.airCorrectorAdjustment >= 0 ? '+' : ''}${camProfile.airCorrectorAdjustment} = ${recommendedAirCorrector} → forced available jet = ${airCorrector}`,
                 supportFormula: '&lt;325cc: F11 | 325-399cc: F15<br>400-474cc: F16 | 475cc+: F2',
                 carbFamilySummary: `Setup: ${context.setupLabel} • ${carbFamilies.dcoe.name} • ${context.carbBody} body • ${totalBarrels} venturis total`,
-                venturiRecommendation: `Suggested venturi: ${suggestedVenturi}mm per venturi (${Math.round(displacementPerVenturi)}cc load each)`,
-                advisorySummary: `${venturiAdvisory} ${getCarbBodyAdvisory('dcoe', context.carbBody, venturi)} ${getTemperatureAdvisory(context.temp)}`,
+                venturiRecommendation: `Suggested venturi: ${suggestedVenturi}mm per venturi (${Math.round(displacementPerVenturi)}cc load each) • ${context.cam} cam bias ${camProfile.venturiShift >= 0 ? '+' : ''}${camProfile.venturiShift}mm`,
+                advisorySummary: `${venturiAdvisory} ${getCamAdvisory('dcoe', context.cam)} ${getCarbBodyAdvisory('dcoe', context.carbBody, venturi)} ${getTemperatureAdvisory(context.temp)}`,
                 afrProfile,
                 afrSummary: summarizeAfrProfile(afrProfile),
                 altitudeWarning: '⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.',
@@ -2799,7 +2966,8 @@
             const perCarbCapacity = getPerCarbCapacity(context.displacement, context.carbCount);
             const assignmentText = getApproxBarrelAssignment(context.cylinders, totalBarrels);
             const venturi = parseInt(context.venturiValue, 10) || 32;
-            const suggestedVenturi = suggestVenturiFromLoad(displacementPerVenturi, context.maxRpm, 'idf');
+            const camProfile = getCamTuningProfile('idf', context.cam);
+            const suggestedVenturi = suggestVenturiFromLoad(displacementPerVenturi, context.maxRpm, 'idf', context.cam);
             const baselineMainJet = Math.round(venturi * 4.1);
             const altitudeCorrection = context.altitude > 0 ? (context.altitude / 1000 * 0.02) : 0;
             let mainJetRaw = baselineMainJet;
@@ -2807,11 +2975,10 @@
                 mainJetRaw = Math.round(mainJetRaw * (1 - altitudeCorrection));
             }
 
-            const camAdjustments = { stock: -5, street: 0, race: 7 };
-            const camAdjustment = camAdjustments[context.cam] || 0;
+            const camAdjustment = camProfile.mainJetAdjustment;
             const camAdjustedMainJet = mainJetRaw + camAdjustment;
             const recommendedMainJet = clamp(roundToStep(camAdjustedMainJet, 5), 115, 190);
-            const recommendedAirCorrector = roundToStep(recommendedMainJet + 55, 5);
+            const recommendedAirCorrector = clamp(roundToStep(recommendedMainJet + 55 + camProfile.airCorrectorAdjustment, 5), 140, 260);
 
             let emulsionTube = 'F11';
             if (displacementPerVenturi >= 350) emulsionTube = 'F7';
@@ -2822,11 +2989,12 @@
             if (displacementPerVenturi > 425) recommendedIdleJet = 52;
             if (displacementPerVenturi > 550) recommendedIdleJet = 55;
             if (displacementPerVenturi > 700) recommendedIdleJet = 60;
+            recommendedIdleJet = clamp(roundToStep(recommendedIdleJet + camProfile.idleJetAdjustment, 1), 40, 70);
 
             let recommendedPumpJet = 45;
             if (displacementPerVenturi < 360) recommendedPumpJet = 40;
             if (displacementPerVenturi > 650) recommendedPumpJet = 50;
-            if (context.cam === 'race') recommendedPumpJet = 50;
+            recommendedPumpJet = clamp(roundToStep(recommendedPumpJet + camProfile.pumpJetAdjustment, 5), 35, 55);
 
             const mainJet = clamp(context.overrides.mainJet ?? recommendedMainJet, 110, 200);
             const airCorrector = clamp(context.overrides.airCorrector ?? recommendedAirCorrector, 140, 260);
@@ -2856,10 +3024,13 @@
                 venturi,
                 suggestedVenturi,
                 mainJet,
-                referenceMainJet: roundToStep(venturi * 4.1, 5),
+                referenceMainJet: recommendedMainJet,
                 airCorrector,
+                referenceAirCorrector: recommendedAirCorrector,
                 idleJetSize,
-                pumpJet
+                referenceIdleJet: recommendedIdleJet,
+                pumpJet,
+                referencePumpJet: recommendedPumpJet
             });
 
             const health = buildHealthScore({
@@ -2893,23 +3064,23 @@
                 cards: [
                     { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: `Suggested from roughly ${Math.round(displacementPerVenturi)}cc per venturi and ${assignmentText}.`, userSelected: venturiUserSelected },
                     { name: 'Main Jet', value: String(mainJet), note: formatOverrideAwareNote('Downdraft IDF baseline starts slightly richer than DCOE and is calculated per venturi at venturi × 4.1.', mainJet, recommendedMainJet), userSelected: mainJet !== recommendedMainJet },
-                    { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('A slightly larger air corrector spread helps IDF top-end cleanup.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector },
+                    { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('A slightly larger air corrector spread helps IDF top-end cleanup, and the cam profile now nudges that spread richer or leaner.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector },
                     { name: 'Emulsion Tube', value: emulsionTube, note: `Chosen from approximately ${Math.round(displacementPerVenturi)}cc of load per venturi.` },
-                    { name: 'Idle Jet', value: `${idleJetSize}${context.airBleed}`, note: formatOverrideAwareNote('IDF idle circuit baseline now follows per-venturi load. Format: fuel jet + holder family.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet || context.airBleedUserSelected },
+                    { name: 'Idle Jet', value: `${idleJetSize}${context.airBleed}`, note: formatOverrideAwareNote('IDF idle circuit baseline now follows per-venturi load and cam overlap. Format: fuel jet + holder family.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet || context.airBleedUserSelected },
                     { name: 'Pump Jet', value: String(pumpJet), note: formatOverrideAwareNote('Pump jet baseline is biased by venturi load and cam because IDFs often need a stronger transition shot.', pumpJet, recommendedPumpJet), userSelected: pumpJet !== recommendedPumpJet },
                     { name: 'Booster / Aux Reference', value: booster, note: 'Reference size for signal strength. Larger vents tend to want the larger booster range.' },
                     { name: 'Needle Valve', value: needleValve, note: 'Supply rate recommendation keyed to approximate fuel demand per carb body.' }
                 ],
                 formulaTitle: '📐 IDF Baseline Formulas',
-                formulaDescription1: '<strong>Main Jet:</strong> Venturi × 4.1 baseline per venturi, then altitude/cam adjustments, then rounded to the nearest 5.',
-                formulaDescription2: '<strong>Air Corrector:</strong> Main Jet + 55, rounded to the nearest 5.',
+                formulaDescription1: '<strong>Main Jet:</strong> Venturi × 4.1 baseline per venturi, then altitude and a stronger cam-profile adjustment, then rounded to the nearest 5.',
+                formulaDescription2: '<strong>Air Corrector:</strong> Main Jet + 55, with cam-based cleanup shifts for stock vs. race behavior, then rounded to the nearest 5.',
                 formulaDescription3: '<strong>IDF Reference:</strong>',
                 mainJetFormula: mainJetSteps.join(' → '),
-                airCorrFormula: airCorrector === recommendedAirCorrector ? `${recommendedMainJet} + 55 = ${airCorrector}` : `${recommendedMainJet} + 55 = ${recommendedAirCorrector} → forced available jet = ${airCorrector}`,
+                airCorrFormula: airCorrector === recommendedAirCorrector ? `${recommendedMainJet} + 55 ${camProfile.airCorrectorAdjustment >= 0 ? '+' : ''}${camProfile.airCorrectorAdjustment} = ${airCorrector}` : `${recommendedMainJet} + 55 ${camProfile.airCorrectorAdjustment >= 0 ? '+' : ''}${camProfile.airCorrectorAdjustment} = ${recommendedAirCorrector} → forced available jet = ${airCorrector}`,
                 supportFormula: '&lt;350cc: F11 | 350-449cc: F7<br>450cc+: F2 | Idle sizes: 45 / 50 / 52 / 55 / 60',
                 carbFamilySummary: `Setup: ${context.setupLabel} • ${carbFamilies.idf.name} • ${context.carbBody} body • ${totalBarrels} venturis total`,
-                venturiRecommendation: `Suggested venturi: ${suggestedVenturi}mm per venturi (${Math.round(displacementPerVenturi)}cc load each)`,
-                advisorySummary: `${venturiAdvisory} ${getCarbBodyAdvisory('idf', context.carbBody, venturi)} ${getTemperatureAdvisory(context.temp)}`,
+                venturiRecommendation: `Suggested venturi: ${suggestedVenturi}mm per venturi (${Math.round(displacementPerVenturi)}cc load each) • ${context.cam} cam bias ${camProfile.venturiShift >= 0 ? '+' : ''}${camProfile.venturiShift}mm`,
+                advisorySummary: `${venturiAdvisory} ${getCamAdvisory('idf', context.cam)} ${getCarbBodyAdvisory('idf', context.carbBody, venturi)} ${getTemperatureAdvisory(context.temp)}`,
                 afrProfile,
                 afrSummary: summarizeAfrProfile(afrProfile),
                 altitudeWarning: '⚠️ High altitude: IDF baseline applies a 2% main jet reduction per 1000ft above sea level.',
@@ -2921,6 +3092,7 @@
             const totalBarrels = getBarrelCount(context);
             const displacementPerVenturi = getPerVenturiCapacity(context.displacement, context.carbCount, context.familyKey);
             const [primaryVenturi, secondaryVenturi] = context.venturiValue.split('|').map(value => parseInt(value, 10));
+            const camProfile = getCamTuningProfile('progressive', context.cam);
             const suggestedPair = suggestProgressiveVenturi(context.displacement, context.maxRpm, context.cam);
             const suggestedPairLabel = suggestedPair.replace('|', '/');
             const altitudeCorrection = context.altitude > 0 ? (context.altitude / 1000 * 0.02) : 0;
@@ -2931,21 +3103,21 @@
             if (context.displacement > 2200) primaryMainBase = 145;
             if (context.displacement > 2600) primaryMainBase = 150;
 
-            const camAdjustments = { stock: -5, street: 0, race: 5 };
-            const camAdjustment = camAdjustments[context.cam] || 0;
+            const camAdjustment = camProfile.mainJetAdjustment;
             let primaryRaw = primaryMainBase;
             if (context.altitude > 0) {
                 primaryRaw = Math.round(primaryRaw * (1 - altitudeCorrection));
             }
             const primaryAdjusted = primaryRaw + camAdjustment;
             const recommendedPrimaryMain = clamp(roundToStep(primaryAdjusted, 5), 125, 165);
-            const recommendedSecondaryMain = clamp(roundToStep(recommendedPrimaryMain + 10 + (context.cam === 'race' ? 5 : 0), 5), 135, 175);
-            const recommendedPrimaryAir = roundToStep(recommendedPrimaryMain + 35, 5);
-            const recommendedSecondaryAir = roundToStep(recommendedSecondaryMain + 45, 5);
+            const recommendedSecondaryMain = clamp(roundToStep(recommendedPrimaryMain + camProfile.secondaryMainSpread, 5), 135, 175);
+            const recommendedPrimaryAir = clamp(roundToStep(recommendedPrimaryMain + 35 + camProfile.primaryAirAdjustment, 5), 150, 240);
+            const recommendedSecondaryAir = clamp(roundToStep(recommendedSecondaryMain + 45 + camProfile.secondaryAirAdjustment, 5), 160, 250);
 
             let recommendedIdleJet = 50;
             if (context.displacement > 1600) recommendedIdleJet = 55;
             if (context.displacement > 2000) recommendedIdleJet = 60;
+            recommendedIdleJet = clamp(roundToStep(recommendedIdleJet + camProfile.idleJetAdjustment, 5), 45, 65);
 
             const primaryMain = clamp(context.overrides.primaryMain ?? recommendedPrimaryMain, 120, 170);
             const secondaryMain = clamp(context.overrides.secondaryMain ?? recommendedSecondaryMain, 130, 180);
@@ -2961,10 +3133,11 @@
 
             const afrProfile = estimateProgressiveAfr(context, {
                 primaryMain,
-                primaryBaseline: roundToStep(primaryMainBase, 5),
+                referencePrimaryMain: recommendedPrimaryMain,
                 secondaryMain,
-                secondaryOffset: context.cam === 'race' ? 15 : 10,
-                idleJet
+                referenceSecondaryMain: recommendedSecondaryMain,
+                idleJet,
+                referenceIdleJet: recommendedIdleJet
             });
 
             const pairDelta = selectedPairLabel === suggestedPairLabel ? 0 : 1;
@@ -2999,26 +3172,26 @@
                 },
                 cards: [
                     { name: 'Venturi Pair', value: `${primaryVenturi}/${secondaryVenturi}mm`, note: 'Progressive carbs use fixed primary and secondary venturis rather than removable chokes.', userSelected: venturiUserSelected },
-                    { name: 'Primary Main Jet', value: String(primaryMain), note: formatOverrideAwareNote('Controls cruise-to-midrange fueling on the primary barrel.', primaryMain, recommendedPrimaryMain), userSelected: primaryMain !== recommendedPrimaryMain },
-                    { name: 'Secondary Main Jet', value: String(secondaryMain), note: formatOverrideAwareNote('Secondary barrel typically wants a little more jet than the primary once it opens.', secondaryMain, recommendedSecondaryMain), userSelected: secondaryMain !== recommendedSecondaryMain },
-                    { name: 'Primary Air Corrector', value: String(primaryAir), note: formatOverrideAwareNote('Primary high-RPM trim. Baseline uses primary main + 35.', primaryAir, recommendedPrimaryAir), userSelected: primaryAir !== recommendedPrimaryAir },
-                    { name: 'Secondary Air Corrector', value: String(secondaryAir), note: formatOverrideAwareNote('Secondary high-RPM trim. Baseline uses secondary main + 45.', secondaryAir, recommendedSecondaryAir), userSelected: secondaryAir !== recommendedSecondaryAir },
-                    { name: 'Idle Jet', value: String(idleJet), note: formatOverrideAwareNote('Single-barrel progression baseline for street drivability.', idleJet, recommendedIdleJet), userSelected: idleJet !== recommendedIdleJet },
+                    { name: 'Primary Main Jet', value: String(primaryMain), note: formatOverrideAwareNote('Controls cruise-to-midrange fueling on the primary barrel. Cam choice now shifts this baseline more noticeably.', primaryMain, recommendedPrimaryMain), userSelected: primaryMain !== recommendedPrimaryMain },
+                    { name: 'Secondary Main Jet', value: String(secondaryMain), note: formatOverrideAwareNote('Secondary barrel spread now grows with cam aggressiveness instead of being almost fixed.', secondaryMain, recommendedSecondaryMain), userSelected: secondaryMain !== recommendedSecondaryMain },
+                    { name: 'Primary Air Corrector', value: String(primaryAir), note: formatOverrideAwareNote('Primary high-RPM trim. Cam can bias this above or below the usual primary main + 35 pattern.', primaryAir, recommendedPrimaryAir), userSelected: primaryAir !== recommendedPrimaryAir },
+                    { name: 'Secondary Air Corrector', value: String(secondaryAir), note: formatOverrideAwareNote('Secondary high-RPM trim. Race cams hold this richer than the old nearly fixed rule.', secondaryAir, recommendedSecondaryAir), userSelected: secondaryAir !== recommendedSecondaryAir },
+                    { name: 'Idle Jet', value: String(idleJet), note: formatOverrideAwareNote('Single-barrel progression baseline now reacts more strongly to cam overlap.', idleJet, recommendedIdleJet), userSelected: idleJet !== recommendedIdleJet },
                     { name: 'Emulsion Series', value: context.airBleed, note: 'Progressive emulsion family selection used as the baseline reference.' },
                     { name: 'Needle Valve', value: needleValve, note: 'Float valve recommendation for the common single progressive installation.' }
                 ],
                 formulaTitle: '📐 32/36 Progressive Baselines',
-                formulaDescription1: '<strong>Primary Main:</strong> Engine-size baseline, then altitude/cam adjustment, then rounded to the nearest 5.',
-                formulaDescription2: '<strong>Secondary Main & Airs:</strong> Secondary main follows the primary; air correctors are derived from each main circuit.',
+                formulaDescription1: '<strong>Primary Main:</strong> Engine-size baseline, then altitude and a stronger cam-profile adjustment, then rounded to the nearest 5.',
+                formulaDescription2: '<strong>Secondary Main & Airs:</strong> Secondary spread and air correctors now move more with cam aggressiveness instead of staying nearly fixed.',
                 formulaDescription3: '<strong>Progressive Reference:</strong>',
                 mainJetFormula: `primary baseline ${primaryMainBase}${context.altitude > 0 ? ` → altitude ${context.altitude}ft = ${primaryRaw}` : ''} → ${context.cam} cam ${camAdjustment >= 0 ? '+' : ''}${camAdjustment} = ${primaryAdjusted}${recommendedPrimaryMain !== primaryAdjusted ? ` → round = ${recommendedPrimaryMain}` : ''}${primaryMain !== recommendedPrimaryMain ? ` → forced available jet = ${primaryMain}` : ''}`,
                 airCorrFormula: primaryAir === recommendedPrimaryAir && secondaryAir === recommendedSecondaryAir && secondaryMain === recommendedSecondaryMain
-                    ? `secondary main = ${recommendedPrimaryMain} + ${context.cam === 'race' ? '15' : '10'} = ${recommendedSecondaryMain} • airs: ${recommendedPrimaryAir}/${recommendedSecondaryAir}`
+                    ? `secondary main = ${recommendedPrimaryMain} + ${camProfile.secondaryMainSpread} = ${recommendedSecondaryMain} • airs: ${recommendedPrimaryAir}/${recommendedSecondaryAir}`
                     : `baseline secondary/main airs = ${recommendedSecondaryMain} • ${recommendedPrimaryAir}/${recommendedSecondaryAir} → forced available parts = ${secondaryMain} • ${primaryAir}/${secondaryAir}`,
                 supportFormula: 'Vent pairs: 26/27 street or 27/29 sport<br>Idle sizes: 50 / 55 / 60 • Emulsion families: F50 / F66 / F6',
                 carbFamilySummary: `Setup: ${context.setupLabel} • ${carbFamilies.progressive.name} • ${context.carbBody.replace('32/36_', '32/36 ').toUpperCase()} • ${totalBarrels} barrels total`,
-                venturiRecommendation: `Suggested venturi pair: ${suggestedPairLabel}mm`,
-                advisorySummary: `${venturiAdvisory} ${getCarbBodyAdvisory('progressive', context.carbBody, context.venturiValue)} ${getTemperatureAdvisory(context.temp)}`,
+                venturiRecommendation: `Suggested venturi pair: ${suggestedPairLabel}mm • ${context.cam} cam bias ${camProfile.venturiBias >= 0 ? '+' : ''}${camProfile.venturiBias} score`,
+                advisorySummary: `${venturiAdvisory} ${getCamAdvisory('progressive', context.cam)} ${getCarbBodyAdvisory('progressive', context.carbBody, context.venturiValue)} ${getTemperatureAdvisory(context.temp)}`,
                 afrProfile,
                 afrSummary: summarizeAfrProfile(afrProfile),
                 altitudeWarning: '⚠️ High altitude: Progressive baseline trims both primary and secondary mains by roughly 2% per 1000ft above sea level.',

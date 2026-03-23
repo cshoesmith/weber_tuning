@@ -7,6 +7,7 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 - **61 Engine Database**: Toyota, Honda, Mazda, Nissan/Datsun, Alfa Romeo (1960-2010)
 - **Multiple Weber Families**: DCOE sidedraft, IDF downdraft, and 32/36 progressive baselines
 - **Setup Selector**: DCOE single/twin/triple, IDF single/twin, and 32/36 progressive single
+- **Stronger Cam Modeling**: Stock, street, and race cams now shift venturi suggestions plus main, idle, pump, and air-corrector baselines more noticeably
 - **Setup Preview**: Recommendations now begin with the selected carb setup, a visual illustration, and per-venturi/per-barrel load context
 - **Configuration Health Score**: Enforce the choke/jet sizes you actually have, then see whether the remaining circuits can compensate or whether the combo is a poor fit
 - **Body-Specific Choke Availability**: DCOE and IDF venturi choices now change with carb body size so unrealistic pairings are filtered out up front
@@ -52,7 +53,7 @@ Based on Weber carburetor technical specifications and period tuning guides from
 - 240260280.com DCOE Theory & Tuning
 - Dave Andrews carburetor tuning guides
 
-The calculator uses Weber baseline formulas for main and air corrector jets, then layers on conservative heuristics for altitude, cam profile, venturi suggestion, supporting jet choices, and progressive-carb staging. For DCOE and IDF layouts, the venturi and main-jet baseline is now surfaced explicitly as a per-venturi recommendation so single, twin, and triple setups are easier to sanity-check.
+The calculator uses Weber baseline formulas for main and air corrector jets, then layers on heuristics for altitude, cam profile, venturi suggestion, supporting jet choices, and progressive-carb staging. Cam choice now has a stronger effect on choke suggestion, idle/progression fuel, pump delivery, and high-RPM air correction. For DCOE and IDF layouts, the venturi and main-jet baseline is surfaced explicitly as a per-venturi recommendation so single, twin, and triple setups are easier to sanity-check.
 
 ## Disclaimer
 
