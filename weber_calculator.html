@@ -707,13 +707,40 @@
             gap: 12px;
         }
 
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 15px 0 8px 0;
+        }
+
         .section-title {
             font-size: 1em;
             color: #2c3e50;
-            margin: 15px 0 8px 0;
             padding-bottom: 4px;
             border-bottom: 2px solid #e0e0e0;
             font-weight: 600;
+            margin: 0;
+            flex: 1;
+        }
+
+        .section-reset-btn {
+            padding: 7px 12px;
+            border: 1px solid #c9d5e1;
+            border-radius: 999px;
+            background: #f4f8fb;
+            color: #425466;
+            font-size: 0.74em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .section-reset-btn:hover {
+            background: #e7f0f8;
+            border-color: #9fb8cf;
         }
 
         .disclaimer {
@@ -1072,7 +1099,10 @@
                     <div class="override-notice" id="setupHelp">Confirm the cam profile first, then choose the suggested carb setup or override it manually.</div>
                 </div>
 
-                <div class="section-title">Carburetor Specs</div>
+                <div class="section-header">
+                    <div class="section-title">Carburetor Specs</div>
+                    <button type="button" class="section-reset-btn" onclick="resetCarbSpecsToDefaults()">Reset Carb Defaults</button>
+                </div>
 
                 <div class="form-group">
                     <label for="venturi" id="venturiLabel">Main Venturi/Choke (mm)</label>
@@ -2136,6 +2166,19 @@
                 : 'Force the choke you have via the venturi selector, and any jet sizes you have below. The health score estimates whether the other circuits can compensate.';
         }
 
+        function getDefaultOptionValue(options) {
+            return options.find(option => option.selected)?.value ?? options[0]?.value ?? '';
+        }
+
+        function clearOverrideFields() {
+            for (let index = 1; index <= 5; index += 1) {
+                const input = document.getElementById(`overrideValue${index}`);
+                input.value = '';
+            }
+
+            updateOverrideInputStates();
+        }
+
         function getPartsOverrides() {
             const overrides = {};
 
@@ -2461,7 +2504,12 @@
             return refreshCarbSetupOptions(cylinders, suggestedSetup);
         }
 
-        function updateCarburetorUI(shouldRecalculate = true) {
+        function updateCarburetorUI(options = {}) {
+            const normalizedOptions = typeof options === 'boolean'
+                ? { shouldRecalculate: options }
+                : options;
+            const shouldRecalculate = normalizedOptions.shouldRecalculate !== false;
+            const resetSelections = !!normalizedOptions.resetSelections;
             const displacement = parseFloat(document.getElementById('displacement').value) || 2000;
             const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
             const maxRpm = parseInt(document.getElementById('maxRpm').value, 10) || 6000;
@@ -2488,6 +2536,13 @@
 
             populateSelect('carbBody', family.bodyOptions);
             populateSelect('airBleed', family.airBleedOptions);
+
+            if (resetSelections) {
+                document.getElementById('carbBody').value = getDefaultOptionValue(family.bodyOptions);
+                document.getElementById('airBleed').value = getDefaultOptionValue(family.airBleedOptions);
+                clearOverrideFields();
+            }
+
             configureOverrideFields(familyKey);
 
             const selectedBody = document.getElementById('carbBody').value;
@@ -2507,6 +2562,12 @@
             if (shouldRecalculate) {
                 calculateJets();
             }
+        }
+
+        function resetCarbSpecsToDefaults() {
+            carbSetupSuggestionState.manualOverride = false;
+            applySuggestedCarbSetup(true);
+            updateCarburetorUI({ resetSelections: true, shouldRecalculate: true });
         }
 
         function openReferenceModal() {
@@ -2566,7 +2627,7 @@
                 document.getElementById('maxRpm').value = engine.rpm;
                 carbSetupSuggestionState.manualOverride = false;
                 applySuggestedCarbSetup(true);
-                updateCarburetorUI();
+                updateCarburetorUI({ resetSelections: true, shouldRecalculate: true });
             }
         }
 
