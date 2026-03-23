@@ -21,6 +21,8 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 - **About Button**: Shows project contact details, MIT license information, and a donation placeholder button
 - **Reference Tables Button**: Opens all lookup tables and advisory material directly from the main page
 - **Reference Links Button**: Opens source links formatted in Chicago-style bibliography form
+- **Mobile-First Workflow**: On smaller screens, the app now leads with engine selection or manual entry instead of immediately showcasing the default 2.0L example
+- **Report-Style Results**: Mobile users now jump into a clearer tuning report once they begin their own setup, reusing the same calculated data and advisories
 
 ## Usage
 
@@ -32,6 +34,12 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 6. Override displacement/RPM and adjust carb body, venturi, and supporting settings as needed; the Recommended Baseline header echoes the active engine/setup summary
 7. If you only have certain jets on hand, enter them in the available-parts override fields, use the per-field Reset buttons to return any selector to Auto, and review the Configuration Health Score
 8. Recommendations update live as settings change, with a brief visual highlight when the calculated results change
+
+### Mobile Workflow Notes
+
+- On mobile-sized screens, the calculator starts with guided actions for selecting an engine, entering specs manually, or jumping to the report
+- The default 2000cc example is no longer presented as the initial mobile focus; the report stays tucked away until the user starts building their own setup
+- The report view still contains the same calculated baseline, health score, formulas, advisories, and AFR chart data as the desktop experience
 
 ## Engine Coverage
 
