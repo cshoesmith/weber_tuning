@@ -7,6 +7,7 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 - **61 Engine Database**: Toyota, Honda, Mazda, Nissan/Datsun, Alfa Romeo (1960-2010)
 - **Multiple Weber Families**: DCOE sidedraft, IDF downdraft, and 32/36 progressive baselines
 - **Setup Selector**: DCOE single/twin/triple, IDF single/twin, and 32/36 progressive single
+- **Setup Preview**: Recommendations now begin with the selected carb setup, a visual illustration, and per-venturi/per-barrel load context
 - **Baseline Weber Formulas**: Family-specific main and air correction rules, plus idle/emulsion/needle starting points
 - **Supports**: 4-cyl, 6-cyl, and rotary engines (985cc - 3500cc)
 - **Configurations**: DCOE single/twin/triple, IDF single/twin, and 32/36 progressive single
@@ -23,7 +24,7 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 4. Confirm the cam profile for the engine or your build
 5. The calculator suggests a carburetor setup after the cam choice; keep it or override it manually
 6. Override displacement/RPM and adjust carb body, venturi, and supporting settings as needed
-7. Get instant baseline jetting recommendations
+7. Recommendations update live as settings change, with a brief visual highlight when the calculated results change
 
 ## Engine Coverage
 
@@ -48,7 +49,7 @@ Based on Weber carburetor technical specifications and period tuning guides from
 - 240260280.com DCOE Theory & Tuning
 - Dave Andrews carburetor tuning guides
 
-The calculator uses Weber baseline formulas for main and air corrector jets, then layers on conservative heuristics for altitude, cam profile, venturi suggestion, supporting jet choices, and progressive-carb staging.
+The calculator uses Weber baseline formulas for main and air corrector jets, then layers on conservative heuristics for altitude, cam profile, venturi suggestion, supporting jet choices, and progressive-carb staging. For DCOE and IDF layouts, the venturi and main-jet baseline is now surfaced explicitly as a per-venturi recommendation so single, twin, and triple setups are easier to sanity-check.
 
 ## Disclaimer
 
