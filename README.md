@@ -8,6 +8,8 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 - **Multiple Weber Families**: DCOE sidedraft, IDF downdraft, and 32/36 progressive baselines
 - **Setup Selector**: DCOE single/twin/triple, IDF single/twin, and 32/36 progressive single
 - **Setup Preview**: Recommendations now begin with the selected carb setup, a visual illustration, and per-venturi/per-barrel load context
+- **Configuration Health Score**: Enforce the choke/jet sizes you actually have, then see whether the remaining circuits can compensate or whether the combo is a poor fit
+- **Body-Specific Choke Availability**: DCOE and IDF venturi choices now change with carb body size so unrealistic pairings are filtered out up front
 - **Baseline Weber Formulas**: Family-specific main and air correction rules, plus idle/emulsion/needle starting points
 - **Supports**: 4-cyl, 6-cyl, and rotary engines (985cc - 3500cc)
 - **Configurations**: DCOE single/twin/triple, IDF single/twin, and 32/36 progressive single
@@ -24,7 +26,8 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 4. Confirm the cam profile for the engine or your build
 5. The calculator suggests a carburetor setup after the cam choice; keep it or override it manually
 6. Override displacement/RPM and adjust carb body, venturi, and supporting settings as needed
-7. Recommendations update live as settings change, with a brief visual highlight when the calculated results change
+7. If you only have certain jets on hand, enter them in the available-parts override fields and review the Configuration Health Score
+8. Recommendations update live as settings change, with a brief visual highlight when the calculated results change
 
 ## Engine Coverage
 
