@@ -532,8 +532,23 @@
             border-color: #d69e2e;
         }
 
+        .jet-card.user-selected,
+        .setup-hero.user-selected,
+        .health-score-box.user-selected {
+            padding-top: 34px;
+        }
+
         .jet-card.user-selected {
             border-left-color: #d69e2e;
+        }
+
+        .health-score-box.user-selected .health-score-top {
+            padding-right: 112px;
+            min-height: 26px;
+        }
+
+        .setup-hero.user-selected .setup-hero-copy {
+            padding-right: 112px;
         }
 
         .selection-badge {
@@ -549,6 +564,12 @@
             letter-spacing: 0.6px;
             text-transform: uppercase;
             box-shadow: 0 4px 12px rgba(214, 158, 46, 0.22);
+            max-width: calc(100% - 16px);
+            pointer-events: none;
+        }
+
+        .selection-badge::after {
+            content: '';
         }
 
         .jet-card:hover {
@@ -940,6 +961,11 @@
 
             .setup-hero-media {
                 min-height: 96px;
+            }
+
+            .health-score-box.user-selected .health-score-top,
+            .setup-hero.user-selected .setup-hero-copy {
+                padding-right: 0;
             }
         }
 
