@@ -1086,6 +1086,18 @@
                     </div>
                 </div>
 
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="altitude">Altitude (ft)</label>
+                        <input type="number" id="altitude" value="0" min="0" max="10000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="temp">Temp (°F)</label>
+                        <input type="number" id="temp" value="70" min="0" max="120">
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="carbSetup">Carburetor Setup</label>
                     <select id="carbSetup">
@@ -1134,18 +1146,6 @@
                             <option value="F9" selected>F9 (Std)</option>
                             <option value="F11">F11 (Rich)</option>
                         </select>
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label for="altitude">Altitude (ft)</label>
-                        <input type="number" id="altitude" value="0" min="0" max="10000">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="temp">Temp (°F)</label>
-                        <input type="number" id="temp" value="70" min="0" max="120">
                     </div>
                 </div>
 
@@ -1297,6 +1297,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-23 06:59 UTC</span></p>
                     </div>
                 </div>
 
@@ -1646,6 +1647,7 @@
 
     <script>
         const DONATION_URL = '#';
+        const APP_VERSION = '2026-03-23 06:59 UTC';
 
         // Engine database with specs
         const engineCatalog = {
@@ -3468,6 +3470,8 @@
                 calculateJets();
             });
         });
+
+        document.getElementById('versionValue').textContent = APP_VERSION;
 
         const donationButton = document.getElementById('donationButton');
         donationButton.setAttribute('href', DONATION_URL);
