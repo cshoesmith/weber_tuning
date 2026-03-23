@@ -609,24 +609,11 @@
                         </div>
                     </div>
                     <div class="override-notice">
-                        💡 Pick a make first, then choose an engine. Specs auto-fill after engine selection, and you can still override them below.
+                        💡 Pick a make first, then choose an engine. Specs auto-fill after engine selection, including an approximate stock peak-power RPM, and you can still override them below.
                     </div>
                 </div>
 
                 <div class="section-title">Engine Configuration</div>
-
-                <div class="form-group">
-                    <label for="carbSetup">Carburetor Setup</label>
-                    <select id="carbSetup" onchange="updateCarburetorUI()">
-                        <option value="dcoe_single" selected>DCOE Single</option>
-                        <option value="dcoe_double">DCOE Twin</option>
-                        <option value="dcoe_triple">DCOE Triple</option>
-                        <option value="idf_single">IDF Single</option>
-                        <option value="idf_double">IDF Twin</option>
-                        <option value="progressive_single">32/36 Progressive Single</option>
-                    </select>
-                    <div class="override-notice" id="setupHelp">Single, twin, and triple DCOE plus single and twin IDF are supported here.</div>
-                </div>
 
                 <div class="grid-2">
                     <div class="form-group">
@@ -659,6 +646,19 @@
                             <option value="race">Race</option>
                         </select>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="carbSetup">Carburetor Setup</label>
+                    <select id="carbSetup">
+                        <option value="dcoe_single" selected>DCOE Single</option>
+                        <option value="dcoe_double">DCOE Twin</option>
+                        <option value="dcoe_triple">DCOE Triple</option>
+                        <option value="idf_single">IDF Single</option>
+                        <option value="idf_double">IDF Twin</option>
+                        <option value="progressive_single">32/36 Progressive Single</option>
+                    </select>
+                    <div class="override-notice" id="setupHelp">Confirm the cam profile first, then choose the suggested carb setup or override it manually.</div>
                 </div>
 
                 <div class="section-title">Carburetor Specs</div>
@@ -1090,60 +1090,60 @@
         // Engine database with specs
         const engineCatalog = {
             toyota: [
-                { key: 'toyota_2k', label: '2K (1000cc, 4cyl, 5200rpm)' },
-                { key: 'toyota_3k', label: '3K (1166cc, 4cyl, 5200rpm)' },
-                { key: 'toyota_4k', label: '4K (1290cc, 4cyl, 5200rpm)' },
-                { key: 'toyota_2e', label: '2E (1295cc, 4cyl, 5600rpm)' },
-                { key: 'toyota_2tc', label: '2TC (1588cc, 4cyl, 5800rpm)' },
-                { key: 'toyota_3tc', label: '3TC (1770cc, 4cyl, 5600rpm)' },
+                { key: 'toyota_2k', label: '2K (1000cc, 4cyl, 5600rpm)' },
+                { key: 'toyota_3k', label: '3K (1166cc, 4cyl, 5800rpm)' },
+                { key: 'toyota_4k', label: '4K (1290cc, 4cyl, 5600rpm)' },
+                { key: 'toyota_2e', label: '2E (1295cc, 4cyl, 6000rpm)' },
+                { key: 'toyota_2tc', label: '2TC (1588cc, 4cyl, 6000rpm)' },
+                { key: 'toyota_3tc', label: '3TC (1770cc, 4cyl, 6000rpm)' },
                 { key: 'toyota_2tg', label: '2T-G / 2T-GEU (1588cc, 4cyl, 6400rpm)' },
-                { key: 'toyota_4age_16v', label: '4A-GE 16V (1587cc, 4cyl, 7200rpm)' },
-                { key: 'toyota_4age_20v', label: '4A-GE 20V (1587cc, 4cyl, 8000rpm)' },
-                { key: 'toyota_18rg', label: '18R-G (1968cc, 4cyl, 6500rpm)' },
+                { key: 'toyota_4age_16v', label: '4A-GE 16V (1587cc, 4cyl, 6600rpm)' },
+                { key: 'toyota_4age_20v', label: '4A-GE 20V (1587cc, 4cyl, 7800rpm)' },
+                { key: 'toyota_18rg', label: '18R-G (1968cc, 4cyl, 6400rpm)' },
                 { key: 'toyota_22r', label: '22R/22RE (2367cc, 4cyl, 4800rpm)' },
-                { key: 'toyota_3sge', label: '3S-GE Gen1/2 (1998cc, 4cyl, 6800rpm)' },
-                { key: 'toyota_3sgte', label: '3S-GTE (1998cc, 4cyl, 7000rpm)' },
-                { key: 'toyota_5sfe', label: '5S-FE (2164cc, 4cyl, 5800rpm)' },
-                { key: 'toyota_7mge', label: '7M-GE (2954cc, 6cyl, 6000rpm)' },
+                { key: 'toyota_3sge', label: '3S-GE Gen1/2 (1998cc, 4cyl, 6600rpm)' },
+                { key: 'toyota_3sgte', label: '3S-GTE (1998cc, 4cyl, 6000rpm)' },
+                { key: 'toyota_5sfe', label: '5S-FE (2164cc, 4cyl, 5400rpm)' },
+                { key: 'toyota_7mge', label: '7M-GE (2954cc, 6cyl, 5600rpm)' },
                 { key: 'toyota_1jz', label: '1JZ-GTE (2492cc, 6cyl, 6200rpm)' },
-                { key: 'toyota_2jz', label: '2JZ-GTE (2997cc, 6cyl, 6200rpm)' }
+                { key: 'toyota_2jz', label: '2JZ-GTE (2997cc, 6cyl, 5600rpm)' }
             ],
             honda: [
-                { key: 'honda_eb', label: 'EB1/EB2 (1169cc, 4cyl, 6000rpm)' },
-                { key: 'honda_ej', label: 'EJ (1237cc, 4cyl, 6000rpm)' },
-                { key: 'honda_ew', label: 'EW (1237cc, 4cyl, 6500rpm)' },
-                { key: 'honda_zc', label: 'ZC (1488cc, 4cyl, 6800rpm)' },
-                { key: 'honda_d16', label: 'D16A (1590cc, 4cyl, 6800rpm)' },
-                { key: 'honda_b16a', label: 'B16A (1595cc, 4cyl, 8000rpm)' },
-                { key: 'honda_b16b', label: 'B16B (1595cc, 4cyl, 9000rpm)' },
-                { key: 'honda_b18c', label: 'B18C (1797cc, 4cyl, 8000rpm)' },
-                { key: 'honda_h22', label: 'H22A (2157cc, 4cyl, 7800rpm)' },
-                { key: 'honda_f20c', label: 'F20C (1997cc, 4cyl, 9000rpm)' },
-                { key: 'honda_k20', label: 'K20A (1998cc, 4cyl, 8600rpm)' },
-                { key: 'honda_k24', label: 'K24A (2354cc, 4cyl, 7000rpm)' }
+                { key: 'honda_eb', label: 'EB1/EB2 (1169cc, 4cyl, 5500rpm)' },
+                { key: 'honda_ej', label: 'EJ (1237cc, 4cyl, 5500rpm)' },
+                { key: 'honda_ew', label: 'EW (1237cc, 4cyl, 6300rpm)' },
+                { key: 'honda_zc', label: 'ZC (1488cc, 4cyl, 6500rpm)' },
+                { key: 'honda_d16', label: 'D16A (1590cc, 4cyl, 6600rpm)' },
+                { key: 'honda_b16a', label: 'B16A (1595cc, 4cyl, 7600rpm)' },
+                { key: 'honda_b16b', label: 'B16B (1595cc, 4cyl, 8200rpm)' },
+                { key: 'honda_b18c', label: 'B18C (1797cc, 4cyl, 7600rpm)' },
+                { key: 'honda_h22', label: 'H22A (2157cc, 4cyl, 6800rpm)' },
+                { key: 'honda_f20c', label: 'F20C (1997cc, 4cyl, 8300rpm)' },
+                { key: 'honda_k20', label: 'K20A (1998cc, 4cyl, 8000rpm)' },
+                { key: 'honda_k24', label: 'K24A (2354cc, 4cyl, 6800rpm)' }
             ],
             mazda: [
                 { key: 'mazda_pc', label: 'PC (985cc, 4cyl, 5500rpm)' },
-                { key: 'mazda_pb', label: 'PB (1272cc, 4cyl, 5500rpm)' },
-                { key: 'mazda_b3', label: 'B3 (1324cc, 4cyl, 5500rpm)' },
-                { key: 'mazda_b6', label: 'B6 (1597cc, 4cyl, 6000rpm)' },
-                { key: 'mazda_bp', label: 'BP-ZE (1839cc, 4cyl, 7000rpm)' },
+                { key: 'mazda_pb', label: 'PB (1272cc, 4cyl, 6000rpm)' },
+                { key: 'mazda_b3', label: 'B3 (1324cc, 4cyl, 5600rpm)' },
+                { key: 'mazda_b6', label: 'B6 (1597cc, 4cyl, 6500rpm)' },
+                { key: 'mazda_bp', label: 'BP-ZE (1839cc, 4cyl, 6500rpm)' },
                 { key: 'mazda_fs', label: 'FS-DE (1991cc, 4cyl, 6000rpm)' },
-                { key: 'mazda_fe', label: 'FE-DOHC (1998cc, 4cyl, 6500rpm)' },
-                { key: 'mazda_kl', label: 'KL-ZE (2497cc, 6cyl, 7000rpm)' },
-                { key: 'mazda_13b', label: '13B Rotary (1308cc, 2rotor, 7000rpm)' },
-                { key: 'mazda_20b', label: '20B Rotary (1962cc, 3rotor, 7500rpm)' }
+                { key: 'mazda_fe', label: 'FE-DOHC (1998cc, 4cyl, 6000rpm)' },
+                { key: 'mazda_kl', label: 'KL-ZE (2497cc, 6cyl, 6500rpm)' },
+                { key: 'mazda_13b', label: '13B Rotary (1308cc, 2rotor, 6500rpm)' },
+                { key: 'mazda_20b', label: '20B Rotary (1962cc, 3rotor, 6500rpm)' }
             ],
             nissan: [
-                { key: 'nissan_a10', label: 'A10 (998cc, 4cyl, 5200rpm)' },
-                { key: 'nissan_a12', label: 'A12 (1171cc, 4cyl, 5600rpm)' },
+                { key: 'nissan_a10', label: 'A10 (998cc, 4cyl, 6000rpm)' },
+                { key: 'nissan_a12', label: 'A12 (1171cc, 4cyl, 6000rpm)' },
                 { key: 'nissan_a14', label: 'A14 (1397cc, 4cyl, 5600rpm)' },
                 { key: 'nissan_a15', label: 'A15 (1487cc, 4cyl, 5600rpm)' },
                 { key: 'nissan_l16', label: 'L16 (1595cc, 4cyl, 6000rpm)' },
                 { key: 'nissan_l18', label: 'L18 (1770cc, 4cyl, 6000rpm)' },
-                { key: 'nissan_l20b', label: 'L20B (1952cc, 4cyl, 5800rpm)' },
+                { key: 'nissan_l20b', label: 'L20B (1952cc, 4cyl, 5600rpm)' },
                 { key: 'nissan_l24', label: 'L24 (2393cc, 6cyl, 5600rpm)' },
-                { key: 'nissan_l28', label: 'L28 (2753cc, 6cyl, 5400rpm)' },
+                { key: 'nissan_l28', label: 'L28 (2753cc, 6cyl, 5200rpm)' },
                 { key: 'nissan_ca18', label: 'CA18DET (1809cc, 4cyl, 6400rpm)' },
                 { key: 'nissan_sr20', label: 'SR20DET (1998cc, 4cyl, 6400rpm)' },
                 { key: 'nissan_rb25', label: 'RB25DET (2498cc, 6cyl, 6400rpm)' },
@@ -1151,73 +1151,73 @@
                 { key: 'nissan_vq35', label: 'VQ35DE (3498cc, 6cyl, 6200rpm)' }
             ],
             alfa: [
-                { key: 'alfa_twinspark_16', label: 'Twin Spark 1.6 (1570cc, 4cyl, 6000rpm)' },
+                { key: 'alfa_twinspark_16', label: 'Twin Spark 1.6 (1570cc, 4cyl, 6500rpm)' },
                 { key: 'alfa_twinspark_18', label: 'Twin Spark 1.8 (1773cc, 4cyl, 6500rpm)' },
                 { key: 'alfa_twinspark_20', label: 'Twin Spark 2.0 (1962cc, 4cyl, 6200rpm)' },
                 { key: 'alfa_nord_16', label: 'Nord 1.6 (1570cc, 4cyl, 6000rpm)' },
                 { key: 'alfa_nord_18', label: 'Nord 1.8 (1779cc, 4cyl, 6000rpm)' },
-                { key: 'alfa_nord_20', label: 'Nord 2.0 (1962cc, 4cyl, 5800rpm)' },
-                { key: 'alfa_busso_25', label: 'Busso V6 2.5 (2492cc, 6cyl, 5800rpm)' },
-                { key: 'alfa_busso_30', label: 'Busso V6 3.0 (2959cc, 6cyl, 6200rpm)' }
+                { key: 'alfa_nord_20', label: 'Nord 2.0 (1962cc, 4cyl, 5500rpm)' },
+                { key: 'alfa_busso_25', label: 'Busso V6 2.5 (2492cc, 6cyl, 6000rpm)' },
+                { key: 'alfa_busso_30', label: 'Busso V6 3.0 (2959cc, 6cyl, 5800rpm)' }
             ]
         };
 
         const engineDatabase = {
             // Toyota
-            toyota_2k: { disp: 1000, cyl: 4, rpm: 5200 },
-            toyota_3k: { disp: 1166, cyl: 4, rpm: 5200 },
-            toyota_4k: { disp: 1290, cyl: 4, rpm: 5200 },
-            toyota_2e: { disp: 1295, cyl: 4, rpm: 5600 },
-            toyota_2tc: { disp: 1588, cyl: 4, rpm: 5800 },
-            toyota_3tc: { disp: 1770, cyl: 4, rpm: 5600 },
+            toyota_2k: { disp: 1000, cyl: 4, rpm: 5600 },
+            toyota_3k: { disp: 1166, cyl: 4, rpm: 5800 },
+            toyota_4k: { disp: 1290, cyl: 4, rpm: 5600 },
+            toyota_2e: { disp: 1295, cyl: 4, rpm: 6000 },
+            toyota_2tc: { disp: 1588, cyl: 4, rpm: 6000 },
+            toyota_3tc: { disp: 1770, cyl: 4, rpm: 6000 },
             toyota_2tg: { disp: 1588, cyl: 4, rpm: 6400 },
-            toyota_4age_16v: { disp: 1587, cyl: 4, rpm: 7200 },
-            toyota_4age_20v: { disp: 1587, cyl: 4, rpm: 8000 },
-            toyota_18rg: { disp: 1968, cyl: 4, rpm: 6500 },
+            toyota_4age_16v: { disp: 1587, cyl: 4, rpm: 6600 },
+            toyota_4age_20v: { disp: 1587, cyl: 4, rpm: 7800 },
+            toyota_18rg: { disp: 1968, cyl: 4, rpm: 6400 },
             toyota_22r: { disp: 2367, cyl: 4, rpm: 4800 },
-            toyota_3sge: { disp: 1998, cyl: 4, rpm: 6800 },
-            toyota_3sgte: { disp: 1998, cyl: 4, rpm: 7000 },
-            toyota_5sfe: { disp: 2164, cyl: 4, rpm: 5800 },
-            toyota_7mge: { disp: 2954, cyl: 6, rpm: 6000 },
+            toyota_3sge: { disp: 1998, cyl: 4, rpm: 6600 },
+            toyota_3sgte: { disp: 1998, cyl: 4, rpm: 6000 },
+            toyota_5sfe: { disp: 2164, cyl: 4, rpm: 5400 },
+            toyota_7mge: { disp: 2954, cyl: 6, rpm: 5600 },
             toyota_1jz: { disp: 2492, cyl: 6, rpm: 6200 },
-            toyota_2jz: { disp: 2997, cyl: 6, rpm: 6200 },
+            toyota_2jz: { disp: 2997, cyl: 6, rpm: 5600 },
 
             // Honda
-            honda_eb: { disp: 1169, cyl: 4, rpm: 6000 },
-            honda_ej: { disp: 1237, cyl: 4, rpm: 6000 },
-            honda_ew: { disp: 1237, cyl: 4, rpm: 6500 },
-            honda_zc: { disp: 1488, cyl: 4, rpm: 6800 },
-            honda_d16: { disp: 1590, cyl: 4, rpm: 6800 },
-            honda_b16a: { disp: 1595, cyl: 4, rpm: 8000 },
-            honda_b16b: { disp: 1595, cyl: 4, rpm: 9000 },
-            honda_b18c: { disp: 1797, cyl: 4, rpm: 8000 },
-            honda_h22: { disp: 2157, cyl: 4, rpm: 7800 },
-            honda_f20c: { disp: 1997, cyl: 4, rpm: 9000 },
-            honda_k20: { disp: 1998, cyl: 4, rpm: 8600 },
-            honda_k24: { disp: 2354, cyl: 4, rpm: 7000 },
+            honda_eb: { disp: 1169, cyl: 4, rpm: 5500 },
+            honda_ej: { disp: 1237, cyl: 4, rpm: 5500 },
+            honda_ew: { disp: 1237, cyl: 4, rpm: 6300 },
+            honda_zc: { disp: 1488, cyl: 4, rpm: 6500 },
+            honda_d16: { disp: 1590, cyl: 4, rpm: 6600 },
+            honda_b16a: { disp: 1595, cyl: 4, rpm: 7600 },
+            honda_b16b: { disp: 1595, cyl: 4, rpm: 8200 },
+            honda_b18c: { disp: 1797, cyl: 4, rpm: 7600 },
+            honda_h22: { disp: 2157, cyl: 4, rpm: 6800 },
+            honda_f20c: { disp: 1997, cyl: 4, rpm: 8300 },
+            honda_k20: { disp: 1998, cyl: 4, rpm: 8000 },
+            honda_k24: { disp: 2354, cyl: 4, rpm: 6800 },
 
             // Mazda
             mazda_pc: { disp: 985, cyl: 4, rpm: 5500 },
-            mazda_pb: { disp: 1272, cyl: 4, rpm: 5500 },
-            mazda_b3: { disp: 1324, cyl: 4, rpm: 5500 },
-            mazda_b6: { disp: 1597, cyl: 4, rpm: 6000 },
-            mazda_bp: { disp: 1839, cyl: 4, rpm: 7000 },
+            mazda_pb: { disp: 1272, cyl: 4, rpm: 6000 },
+            mazda_b3: { disp: 1324, cyl: 4, rpm: 5600 },
+            mazda_b6: { disp: 1597, cyl: 4, rpm: 6500 },
+            mazda_bp: { disp: 1839, cyl: 4, rpm: 6500 },
             mazda_fs: { disp: 1991, cyl: 4, rpm: 6000 },
-            mazda_fe: { disp: 1998, cyl: 4, rpm: 6500 },
-            mazda_kl: { disp: 2497, cyl: 6, rpm: 7000 },
-            mazda_13b: { disp: 1308, cyl: 2, rpm: 7000 },
-            mazda_20b: { disp: 1962, cyl: 3, rpm: 7500 },
+            mazda_fe: { disp: 1998, cyl: 4, rpm: 6000 },
+            mazda_kl: { disp: 2497, cyl: 6, rpm: 6500 },
+            mazda_13b: { disp: 1308, cyl: 2, rpm: 6500 },
+            mazda_20b: { disp: 1962, cyl: 3, rpm: 6500 },
 
             // Nissan/Datsun
-            nissan_a10: { disp: 998, cyl: 4, rpm: 5200 },
-            nissan_a12: { disp: 1171, cyl: 4, rpm: 5600 },
+            nissan_a10: { disp: 998, cyl: 4, rpm: 6000 },
+            nissan_a12: { disp: 1171, cyl: 4, rpm: 6000 },
             nissan_a14: { disp: 1397, cyl: 4, rpm: 5600 },
             nissan_a15: { disp: 1487, cyl: 4, rpm: 5600 },
             nissan_l16: { disp: 1595, cyl: 4, rpm: 6000 },
             nissan_l18: { disp: 1770, cyl: 4, rpm: 6000 },
-            nissan_l20b: { disp: 1952, cyl: 4, rpm: 5800 },
+            nissan_l20b: { disp: 1952, cyl: 4, rpm: 5600 },
             nissan_l24: { disp: 2393, cyl: 6, rpm: 5600 },
-            nissan_l28: { disp: 2753, cyl: 6, rpm: 5400 },
+            nissan_l28: { disp: 2753, cyl: 6, rpm: 5200 },
             nissan_ca18: { disp: 1809, cyl: 4, rpm: 6400 },
             nissan_sr20: { disp: 1998, cyl: 4, rpm: 6400 },
             nissan_rb25: { disp: 2498, cyl: 6, rpm: 6400 },
@@ -1225,14 +1225,14 @@
             nissan_vq35: { disp: 3498, cyl: 6, rpm: 6200 },
 
             // Alfa Romeo
-            alfa_twinspark_16: { disp: 1570, cyl: 4, rpm: 6000 },
+            alfa_twinspark_16: { disp: 1570, cyl: 4, rpm: 6500 },
             alfa_twinspark_18: { disp: 1773, cyl: 4, rpm: 6500 },
             alfa_twinspark_20: { disp: 1962, cyl: 4, rpm: 6200 },
             alfa_nord_16: { disp: 1570, cyl: 4, rpm: 6000 },
             alfa_nord_18: { disp: 1779, cyl: 4, rpm: 6000 },
-            alfa_nord_20: { disp: 1962, cyl: 4, rpm: 5800 },
-            alfa_busso_25: { disp: 2492, cyl: 6, rpm: 5800 },
-            alfa_busso_30: { disp: 2959, cyl: 6, rpm: 6200 }
+            alfa_nord_20: { disp: 1962, cyl: 4, rpm: 5500 },
+            alfa_busso_25: { disp: 2492, cyl: 6, rpm: 6000 },
+            alfa_busso_30: { disp: 2959, cyl: 6, rpm: 5800 }
         };
 
         const carbFamilies = {
@@ -1307,6 +1307,10 @@
             idf_single: { familyKey: 'idf', label: 'IDF Single', carbCount: 1, help: 'Single IDF setup on a shared-plenum or center manifold.' },
             idf_double: { familyKey: 'idf', label: 'IDF Twin', carbCount: 2, help: 'Twin IDF setup on dual-manifold installations.' },
             progressive_single: { familyKey: 'progressive', label: '32/36 Progressive Single', carbCount: 1, help: 'Common single progressive installation with staged primary/secondary throttles.' }
+        };
+
+        const carbSetupSuggestionState = {
+            manualOverride: false
         };
 
         function roundToStep(value, step) {
@@ -1402,13 +1406,51 @@
             }
         }
 
+        function suggestCarbSetup(displacement, cylinders, cam) {
+            if (cylinders >= 6 || cylinders === 3) {
+                return 'dcoe_triple';
+            }
+
+            if (cylinders === 2) {
+                return displacement >= 1200 || cam === 'race' ? 'dcoe_double' : 'dcoe_single';
+            }
+
+            if (cam === 'race' || displacement >= 1900) {
+                return 'dcoe_double';
+            }
+
+            return 'dcoe_single';
+        }
+
+        function applySuggestedCarbSetup(force = false) {
+            if (!force && carbSetupSuggestionState.manualOverride) {
+                return document.getElementById('carbSetup').value;
+            }
+
+            const displacement = parseFloat(document.getElementById('displacement').value) || 2000;
+            const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
+            const cam = document.getElementById('cam').value;
+            const suggestedSetup = suggestCarbSetup(displacement, cylinders, cam);
+            document.getElementById('carbSetup').value = suggestedSetup;
+            return suggestedSetup;
+        }
+
         function updateCarburetorUI(shouldRecalculate = true) {
             const setupKey = document.getElementById('carbSetup').value;
             const setup = carbSetups[setupKey];
             const familyKey = setup.familyKey;
             const family = carbFamilies[familyKey];
 
-            document.getElementById('setupHelp').textContent = setup.help;
+            const displacement = parseFloat(document.getElementById('displacement').value) || 2000;
+            const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
+            const maxRpm = parseInt(document.getElementById('maxRpm').value, 10) || 6000;
+            const cam = document.getElementById('cam').value;
+            const suggestedSetupKey = suggestCarbSetup(displacement, cylinders, cam);
+            const suggestedSetupLabel = carbSetups[suggestedSetupKey].label;
+
+            document.getElementById('setupHelp').textContent = carbSetupSuggestionState.manualOverride && suggestedSetupKey !== setupKey
+                ? `${setup.help} Suggested from current engine + cam: ${suggestedSetupLabel}. Manual override is active.`
+                : `${setup.help} Suggested from current engine + cam: ${suggestedSetupLabel}. You can override it.`;
             document.getElementById('venturiLabel').textContent = family.venturiLabel;
             document.getElementById('carbBodyLabel').textContent = family.bodyLabel;
             document.getElementById('airBleedLabel').textContent = family.airBleedLabel;
@@ -1416,11 +1458,6 @@
             populateSelect('venturi', family.venturiOptions);
             populateSelect('carbBody', family.bodyOptions);
             populateSelect('airBleed', family.airBleedOptions);
-
-            const displacement = parseFloat(document.getElementById('displacement').value) || 2000;
-            const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
-            const maxRpm = parseInt(document.getElementById('maxRpm').value, 10) || 6000;
-            const cam = document.getElementById('cam').value;
 
             if (familyKey === 'progressive') {
                 document.getElementById('venturi').value = suggestProgressiveVenturi(displacement, maxRpm, cam);
@@ -1475,6 +1512,8 @@
                 document.getElementById('displacement').value = engine.disp;
                 document.getElementById('cylinders').value = engine.cyl;
                 document.getElementById('maxRpm').value = engine.rpm;
+                carbSetupSuggestionState.manualOverride = false;
+                applySuggestedCarbSetup(true);
                 updateCarburetorUI();
             }
         }
@@ -1975,10 +2014,25 @@
         }
 
         // Event listeners
+        document.getElementById('carbSetup').addEventListener('change', () => {
+            carbSetupSuggestionState.manualOverride = true;
+            updateCarburetorUI();
+        });
+
         document.querySelectorAll('input, select').forEach(input => {
-            if (input.id !== 'carbSetup') {
-                input.addEventListener('change', calculateJets);
+            if (['carbSetup', 'makeSelect', 'engineSelect'].includes(input.id)) {
+                return;
             }
+
+            input.addEventListener('change', () => {
+                if (['displacement', 'cylinders', 'cam'].includes(input.id)) {
+                    applySuggestedCarbSetup();
+                    updateCarburetorUI();
+                    return;
+                }
+
+                calculateJets();
+            });
         });
 
         ['referenceModal', 'referenceLinksModal'].forEach(modalId => {
@@ -1997,6 +2051,7 @@
 
         window.onload = () => {
             selectMake();
+            applySuggestedCarbSetup(true);
             updateCarburetorUI(false);
             calculateJets();
         };

@@ -10,18 +10,18 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 - **Baseline Weber Formulas**: Family-specific main and air correction rules, plus idle/emulsion/needle starting points
 - **Supports**: 4-cyl, 6-cyl, and rotary engines (985cc - 3500cc)
 - **Configurations**: DCOE single/twin/triple, IDF single/twin, and 32/36 progressive single
-- **Auto-venturi**: Suggests appropriate choke size based on displacement and peak RPM
+- **Auto-venturi**: Suggests appropriate choke size based on displacement and approximate stock peak-power RPM
 - **Reference Tables Button**: Opens all lookup tables and advisory material directly from the main page
 - **Reference Links Button**: Opens source links formatted in Chicago-style bibliography form
 
 ## Usage
 
-1. Open `weber_dcoe_calculator.html` in any web browser
+1. Open `index.html` or `weber_calculator.html` in any web browser
 2. Select your vehicle make from the first dropdown
 3. Select your engine from the connected engine dropdown (auto-fills specs)
-4. Override displacement/RPM if modified
-5. Choose the carburetor setup you want to model
-6. Adjust carb body, venturi, and supporting settings as needed
+4. Confirm the cam profile for the engine or your build
+5. The calculator suggests a carburetor setup after the cam choice; keep it or override it manually
+6. Override displacement/RPM and adjust carb body, venturi, and supporting settings as needed
 7. Get instant baseline jetting recommendations
 
 ## Engine Coverage
