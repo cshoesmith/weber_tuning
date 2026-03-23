@@ -12,6 +12,7 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 - **Configurations**: DCOE single/twin/triple, IDF single/twin, and 32/36 progressive single
 - **Auto-venturi**: Suggests appropriate choke size based on displacement and peak RPM
 - **Reference Tables Button**: Opens all lookup tables and advisory material directly from the main page
+- **Reference Links Button**: Opens source links formatted in Chicago-style bibliography form
 
 ## Usage
 

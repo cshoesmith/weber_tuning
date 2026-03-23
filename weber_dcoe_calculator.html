@@ -504,6 +504,36 @@
             line-height: 1.5;
         }
 
+        .citation-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .citation-list li {
+            padding: 14px;
+            border-bottom: 1px solid #e8eef4;
+            line-height: 1.6;
+            color: #344454;
+            font-size: 0.88em;
+        }
+
+        .citation-list li:last-child {
+            border-bottom: none;
+        }
+
+        .citation-list a {
+            color: #1f4f82;
+            word-break: break-all;
+        }
+
+        .citation-style-note {
+            padding: 12px 14px 14px;
+            color: #54606c;
+            font-size: 0.8em;
+            line-height: 1.5;
+        }
+
         @media (max-width: 900px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -550,6 +580,7 @@
             <p>DCOE, IDF & 32/36 Baseline Jetting - Classic JDM & European Motors (1960-2010)</p>
             <div class="header-actions">
                 <button type="button" class="secondary-btn" id="referenceButton" onclick="openReferenceModal()">📚 Reference Tables</button>
+                <button type="button" class="secondary-btn" id="referenceLinksButton" onclick="openReferenceLinksModal()">🔗 Reference Links</button>
             </div>
         </div>
 
@@ -1024,6 +1055,37 @@
         </div>
     </div>
 
+    <div class="reference-modal" id="referenceLinksModal" aria-hidden="true">
+        <div class="reference-dialog" role="dialog" aria-modal="true" aria-labelledby="referenceLinksTitle">
+            <div class="reference-header">
+                <div>
+                    <h2 id="referenceLinksTitle">Reference Links</h2>
+                    <p>Source links presented in Chicago-style bibliography format for the web references used by this calculator.</p>
+                </div>
+                <button type="button" class="close-btn" aria-label="Close reference links" onclick="closeReferenceLinksModal()">×</button>
+            </div>
+
+            <div class="reference-grid">
+                <section class="reference-card">
+                    <h3>Chicago-Style Web References</h3>
+                    <ul class="citation-list">
+                        <li>
+                            240-260-280. n.d. “DCOE Theory &amp; Tuning.” Accessed March 23, 2026.
+                            <a href="https://www.240260280.com/" target="_blank" rel="noopener noreferrer">https://www.240260280.com/</a>.
+                        </li>
+                        <li>
+                            Andrews, Dave. n.d. “Weber Carburettor Tuning Guides.” Accessed March 23, 2026.
+                            <a href="https://www.sidedraught.com/" target="_blank" rel="noopener noreferrer">https://www.sidedraught.com/</a>.
+                        </li>
+                    </ul>
+                    <div class="citation-style-note">
+                        Citations are formatted in a Chicago-style bibliography pattern for online sources: organization or author, no-date marker when publication year is unavailable, title in quotation marks, access date, then the URL.
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Engine database with specs
         const engineCatalog = {
@@ -1381,6 +1443,23 @@
             const modal = document.getElementById('referenceModal');
             modal.classList.remove('show');
             modal.setAttribute('aria-hidden', 'true');
+        }
+
+        function openReferenceLinksModal() {
+            const modal = document.getElementById('referenceLinksModal');
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeReferenceLinksModal() {
+            const modal = document.getElementById('referenceLinksModal');
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        function closeAllModals() {
+            closeReferenceModal();
+            closeReferenceLinksModal();
         }
 
         function selectEngine() {
@@ -1902,15 +1981,17 @@
             }
         });
 
-        document.getElementById('referenceModal').addEventListener('click', event => {
-            if (event.target.id === 'referenceModal') {
-                closeReferenceModal();
-            }
+        ['referenceModal', 'referenceLinksModal'].forEach(modalId => {
+            document.getElementById(modalId).addEventListener('click', event => {
+                if (event.target.id === modalId) {
+                    closeAllModals();
+                }
+            });
         });
 
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape') {
-                closeReferenceModal();
+                closeAllModals();
             }
         });
 
