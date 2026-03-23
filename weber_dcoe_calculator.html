@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weber Carburetor Jetting Calculator - Engine Database Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 5px solid #ffd700;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            margin-top: 18px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .secondary-btn {
+            padding: 10px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            font-size: 0.85em;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(3px);
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .input-section {
+            padding: 25px;
+            background: #f8f9fa;
+            border-right: 2px solid #e0e0e0;
+            max-height: 900px;
+            overflow-y: auto;
+        }
+
+        .results-section {
+            padding: 25px;
+            background: white;
+            max-height: 900px;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #c41e3a;
+            box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .engine-selector {
+            background: linear-gradient(135deg, #e8f4f8 0%, #d1e7dd 100%);
+            border: 2px solid #17a2b8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .engine-selector label {
+            color: #0c5460;
+            font-size: 0.9em;
+        }
+
+        .engine-selector select {
+            border-color: #17a2b8;
+            font-weight: 500;
+        }
+
+        .override-notice {
+            font-size: 0.75em;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .radio-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .radio-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 8px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 0;
+            text-transform: none;
+            font-weight: 500;
+            font-size: 0.85em;
+        }
+
+        .radio-option input:checked + label {
+            background: #c41e3a;
+            color: white;
+            border-color: #c41e3a;
+        }
+
+        .radio-option input:disabled + label {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f1f3f5;
+            color: #6c757d;
+            border-color: #d3d9df;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(196, 30, 58, 0.4);
+        }
+
+        .results-title {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #c41e3a;
+        }
+
+        .jet-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 4px solid #c41e3a;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .jet-card:hover {
+            transform: translateX(3px);
+        }
+
+        .jet-name {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+
+        .jet-value {
+            font-size: 1.4em;
+            color: #c41e3a;
+            font-weight: 700;
+        }
+
+        .jet-note {
+            font-size: 0.75em;
+            color: #666;
+            margin-top: 3px;
+            font-style: italic;
+            line-height: 1.3;
+        }
+
+        .formula-info {
+            margin-top: 15px;
+            padding: 12px;
+            background: #e8f4f8;
+            border-radius: 8px;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .formula-info h3 {
+            color: #17a2b8;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+
+        .formula-info p {
+            font-size: 0.8em;
+            line-height: 1.4;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .formula-box {
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            color: #c41e3a;
+            margin: 6px 0;
+            border: 1px solid #ddd;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 12px;
+            font-size: 0.8em;
+            color: #856404;
+            display: none;
+        }
+
+        .warning-box.show {
+            display: block;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .section-title {
+            font-size: 1em;
+            color: #2c3e50;
+            margin: 15px 0 8px 0;
+            padding-bottom: 4px;
+            border-bottom: 2px solid #e0e0e0;
+            font-weight: 600;
+        }
+
+        .disclaimer {
+            background: #2c3e50;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.75em;
+        }
+
+        .reference-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 30, 48, 0.72);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 1000;
+        }
+
+        .reference-modal.show {
+            display: flex;
+        }
+
+        .reference-dialog {
+            width: min(1100px, 100%);
+            max-height: 88vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.35);
+            padding: 24px;
+        }
+
+        .reference-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .reference-header h2 {
+            color: #2c3e50;
+            font-size: 1.5em;
+        }
+
+        .reference-header p {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+
+        .close-btn {
+            border: none;
+            background: #f1f3f5;
+            color: #2c3e50;
+            border-radius: 999px;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .reference-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .reference-card {
+            border: 1px solid #d9e2ec;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fbfdff;
+        }
+
+        .reference-card h3 {
+            background: linear-gradient(135deg, #eef6ff 0%, #e5f4ff 100%);
+            color: #1f4f82;
+            font-size: 0.95em;
+            padding: 12px 14px;
+            border-bottom: 1px solid #d9e2ec;
+        }
+
+        .reference-table-wrap {
+            overflow-x: auto;
+        }
+
+        .reference-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+
+        .reference-table th,
+        .reference-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e8eef4;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .reference-table th {
+            background: #f5f8fb;
+            color: #2c3e50;
+            font-size: 0.78em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .reference-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .reference-footnote {
+            padding: 12px 14px 14px;
+            color: #54606c;
+            font-size: 0.8em;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .input-section {
+                border-right: none;
+                border-bottom: 2px solid #e0e0e0;
+                max-height: none;
+            }
+            .results-section {
+                max-height: none;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .reference-header {
+                align-items: flex-start;
+            }
+
+            .reference-dialog {
+                padding: 18px;
+            }
+        }
+
+        .optgroup-label {
+            font-weight: bold;
+            color: #c41e3a;
+        }
+
+        .engine-code {
+            font-family: monospace;
+            background: #f0f0f0;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Weber Carburetor Jetting Calculator</h1>
+            <p>DCOE, IDF & 32/36 Baseline Jetting - Classic JDM & European Motors (1960-2010)</p>
+            <div class="header-actions">
+                <button type="button" class="secondary-btn" id="referenceButton" onclick="openReferenceModal()">📚 Reference Tables</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+
+                <div class="engine-selector">
+                    <label for="engineSelect">🚗 Select Engine (Auto-fills specs)</label>
+                    <select id="engineSelect" onchange="selectEngine()">
+                        <option value="custom">-- Custom / Other --</option>
+
+                        <optgroup label="Toyota">
+                            <option value="toyota_2k">2K (1000cc, 4cyl, 5200rpm)</option>
+                            <option value="toyota_3k">3K (1166cc, 4cyl, 5200rpm)</option>
+                            <option value="toyota_4k">4K (1290cc, 4cyl, 5200rpm)</option>
+                            <option value="toyota_2e">2E (1295cc, 4cyl, 5600rpm)</option>
+                            <option value="toyota_2tc">2TC (1588cc, 4cyl, 5800rpm)</option>
+                            <option value="toyota_3tc">3TC (1770cc, 4cyl, 5600rpm)</option>
+                            <option value="toyota_2tg">2T-G / 2T-GEU (1588cc, 4cyl, 6400rpm)</option>
+                            <option value="toyota_4age_16v">4A-GE 16V (1587cc, 4cyl, 7200rpm)</option>
+                            <option value="toyota_4age_20v">4A-GE 20V (1587cc, 4cyl, 8000rpm)</option>
+                            <option value="toyota_18rg">18R-G (1968cc, 4cyl, 6500rpm)</option>
+                            <option value="toyota_22r">22R/22RE (2367cc, 4cyl, 4800rpm)</option>
+                            <option value="toyota_3sge">3S-GE Gen1/2 (1998cc, 4cyl, 6800rpm)</option>
+                            <option value="toyota_3sgte">3S-GTE (1998cc, 4cyl, 7000rpm)</option>
+                            <option value="toyota_5sfe">5S-FE (2164cc, 4cyl, 5800rpm)</option>
+                            <option value="toyota_7mge">7M-GE (2954cc, 6cyl, 6000rpm)</option>
+                            <option value="toyota_1jz">1JZ-GTE (2492cc, 6cyl, 6200rpm)</option>
+                            <option value="toyota_2jz">2JZ-GTE (2997cc, 6cyl, 6200rpm)</option>
+                        </optgroup>
+
+                        <optgroup label="Honda">
+                            <option value="honda_eb">EB1/EB2 (1169cc, 4cyl, 6000rpm)</option>
+                            <option value="honda_ej">EJ (1237cc, 4cyl, 6000rpm)</option>
+                            <option value="honda_ew">EW (1237cc, 4cyl, 6500rpm)</option>
+                            <option value="honda_zc">ZC (1488cc, 4cyl, 6800rpm)</option>
+                            <option value="honda_d16">D16A (1590cc, 4cyl, 6800rpm)</option>
+                            <option value="honda_b16a">B16A (1595cc, 4cyl, 8000rpm)</option>
+                            <option value="honda_b16b">B16B (1595cc, 4cyl, 9000rpm)</option>
+                            <option value="honda_b18c">B18C (1797cc, 4cyl, 8000rpm)</option>
+                            <option value="honda_h22">H22A (2157cc, 4cyl, 7800rpm)</option>
+                            <option value="honda_f20c">F20C (1997cc, 4cyl, 9000rpm)</option>
+                            <option value="honda_k20">K20A (1998cc, 4cyl, 8600rpm)</option>
+                            <option value="honda_k24">K24A (2354cc, 4cyl, 7000rpm)</option>
+                        </optgroup>
+
+                        <optgroup label="Mazda">
+                            <option value="mazda_pc">PC (985cc, 4cyl, 5500rpm)</option>
+                            <option value="mazda_pb">PB (1272cc, 4cyl, 5500rpm)</option>
+                            <option value="mazda_b3">B3 (1324cc, 4cyl, 5500rpm)</option>
+                            <option value="mazda_b6">B6 (1597cc, 4cyl, 6000rpm)</option>
+                            <option value="mazda_bp">BP-ZE (1839cc, 4cyl, 7000rpm)</option>
+                            <option value="mazda_fs">FS-DE (1991cc, 4cyl, 6000rpm)</option>
+                            <option value="mazda_fe">FE-DOHC (1998cc, 4cyl, 6500rpm)</option>
+                            <option value="mazda_kl">KL-ZE (2497cc, 6cyl, 7000rpm)</option>
+                            <option value="mazda_13b">13B Rotary (1308cc, 2rotor, 7000rpm)</option>
+                            <option value="mazda_20b">20B Rotary (1962cc, 3rotor, 7500rpm)</option>
+                        </optgroup>
+
+                        <optgroup label="Nissan / Datsun">
+                            <option value="nissan_a10">A10 (998cc, 4cyl, 5200rpm)</option>
+                            <option value="nissan_a12">A12 (1171cc, 4cyl, 5600rpm)</option>
+                            <option value="nissan_a14">A14 (1397cc, 4cyl, 5600rpm)</option>
+                            <option value="nissan_a15">A15 (1487cc, 4cyl, 5600rpm)</option>
+                            <option value="nissan_l16">L16 (1595cc, 4cyl, 6000rpm)</option>
+                            <option value="nissan_l18">L18 (1770cc, 4cyl, 6000rpm)</option>
+                            <option value="nissan_l20b">L20B (1952cc, 4cyl, 5800rpm)</option>
+                            <option value="nissan_l24">L24 (2393cc, 6cyl, 5600rpm)</option>
+                            <option value="nissan_l28">L28 (2753cc, 6cyl, 5400rpm)</option>
+                            <option value="nissan_ca18">CA18DET (1809cc, 4cyl, 6400rpm)</option>
+                            <option value="nissan_sr20">SR20DET (1998cc, 4cyl, 6400rpm)</option>
+                            <option value="nissan_rb25">RB25DET (2498cc, 6cyl, 6400rpm)</option>
+                            <option value="nissan_rb26">RB26DETT (2568cc, 6cyl, 6800rpm)</option>
+                            <option value="nissan_vq35">VQ35DE (3498cc, 6cyl, 6200rpm)</option>
+                        </optgroup>
+
+                        <optgroup label="Alfa Romeo">
+                            <option value="alfa_twinspark_16">Twin Spark 1.6 (1570cc, 4cyl, 6000rpm)</option>
+                            <option value="alfa_twinspark_18">Twin Spark 1.8 (1773cc, 4cyl, 6500rpm)</option>
+                            <option value="alfa_twinspark_20">Twin Spark 2.0 (1962cc, 4cyl, 6200rpm)</option>
+                            <option value="alfa_nord_16">Nord 1.6 (1570cc, 4cyl, 6000rpm)</option>
+                            <option value="alfa_nord_18">Nord 1.8 (1779cc, 4cyl, 6000rpm)</option>
+                            <option value="alfa_nord_20">Nord 2.0 (1962cc, 4cyl, 5800rpm)</option>
+                            <option value="alfa_busso_25">Busso V6 2.5 (2492cc, 6cyl, 5800rpm)</option>
+                            <option value="alfa_busso_30">Busso V6 3.0 (2959cc, 6cyl, 6200rpm)</option>
+                        </optgroup>
+                    </select>
+                    <div class="override-notice">
+                        💡 Auto-fills displacement & RPM. Override below if modified.
+                    </div>
+                </div>
+
+                <div class="section-title">Engine Configuration</div>
+
+                <div class="form-group">
+                    <label for="carbSetup">Carburetor Setup</label>
+                    <select id="carbSetup" onchange="updateCarburetorUI()">
+                        <option value="dcoe_single" selected>DCOE Single</option>
+                        <option value="dcoe_double">DCOE Twin</option>
+                        <option value="dcoe_triple">DCOE Triple</option>
+                        <option value="idf_single">IDF Single</option>
+                        <option value="idf_double">IDF Twin</option>
+                        <option value="progressive_single">32/36 Progressive Single</option>
+                    </select>
+                    <div class="override-notice" id="setupHelp">Single, twin, and triple DCOE plus single and twin IDF are supported here.</div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="displacement">Displacement (cc)</label>
+                        <input type="number" id="displacement" value="2000" min="1000" max="4000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cylinders">Cylinders</label>
+                        <select id="cylinders">
+                            <option value="4" selected>4 Cyl</option>
+                            <option value="6">6 Cyl</option>
+                            <option value="3">3 Rotor</option>
+                            <option value="2">2 Rotor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="maxRpm">Peak Power RPM</label>
+                        <input type="number" id="maxRpm" value="6000" min="4000" max="10000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cam">Cam Profile</label>
+                        <select id="cam">
+                            <option value="stock">Stock</option>
+                            <option value="street" selected>Street Perf</option>
+                            <option value="race">Race</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-title">Carburetor Specs</div>
+
+                <div class="form-group">
+                    <label for="venturi" id="venturiLabel">Main Venturi/Choke (mm)</label>
+                    <select id="venturi">
+                        <option value="28">28mm (Small)</option>
+                        <option value="30">30mm</option>
+                        <option value="32">32mm</option>
+                        <option value="34" selected>34mm (1600-1800cc)</option>
+                        <option value="36">36mm (1800-2000cc)</option>
+                        <option value="38">38mm (2000-2200cc)</option>
+                        <option value="40">40mm (Race)</option>
+                    </select>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="carbBody" id="carbBodyLabel">DCOE Body</label>
+                        <select id="carbBody">
+                            <option value="40">40 DCOE</option>
+                            <option value="45" selected>45 DCOE</option>
+                            <option value="48">48 DCOE</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="airBleed" id="airBleedLabel">Idle Air Bleed</label>
+                        <select id="airBleed">
+                            <option value="F8">F8 (Lean)</option>
+                            <option value="F9" selected>F9 (Std)</option>
+                            <option value="F11">F11 (Rich)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="altitude">Altitude (ft)</label>
+                        <input type="number" id="altitude" value="0" min="0" max="10000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="temp">Temp (°F)</label>
+                        <input type="number" id="temp" value="70" min="0" max="120">
+                    </div>
+                </div>
+
+                <button class="calculate-btn" onclick="calculateJets()">Calculate Jetting</button>
+
+                <div class="warning-box" id="altWarning">
+                    ⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h2 class="results-title">📊 Recommended Baseline</h2>
+
+                <div id="resultsCards"></div>
+
+                <div class="formula-info">
+                    <h3 id="formulaTitle">📐 Technical Formulas</h3>
+                    <p id="formulaDescription1"><strong>Main Jet:</strong> Venturi × 4 baseline, then altitude/cam adjustments, then rounded to the nearest 5.</p>
+                    <div class="formula-box" id="mainJetFormula">34 × 4 = 136 → street cam +0 → round = 135</div>
+
+                    <p id="formulaDescription2"><strong>Air Corrector:</strong> Main Jet + 50, rounded to the nearest 5.</p>
+                    <div class="formula-box" id="airCorrFormula">135 + 50 = 185</div>
+
+                    <p id="formulaDescription3"><strong>Emulsion Tube by Cylinder Size:</strong></p>
+                    <div class="formula-box" id="supportFormula" style="font-size: 0.7em;">
+                        &lt;325cc: F11 | 325-400cc: F15<br>
+                        400-475cc: F16 | &gt;475cc: F2
+                    </div>
+                </div>
+
+                <div class="formula-info">
+                    <h3>📝 Advisory Notes</h3>
+                    <div class="formula-box" id="carbFamilySummary">Setup: DCOE Single • Weber DCOE / sidedraft • 45 body</div>
+                    <div class="formula-box" id="venturiRecommendation">Suggested venturi: 34mm</div>
+                    <p id="advisorySummary">Baseline recommendations shown. Temperature and carb body inputs are advisory only.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> Starting recommendations based on Weber carburetor baseline references. 
+            Final tuning requires dyno or wideband O2. Engine database covers popular JDM/Euro motors 1960-2010.
+        </div>
+    </div>
+
+    <div class="reference-modal" id="referenceModal" aria-hidden="true">
+        <div class="reference-dialog" role="dialog" aria-modal="true" aria-labelledby="referenceTitle">
+            <div class="reference-header">
+                <div>
+                    <h2 id="referenceTitle">Reference Tables</h2>
+                    <p>All calculator lookup material in one spot: DCOE, IDF, and 32/36 formulas, ranges, heuristics, and advisory baselines.</p>
+                </div>
+                <button type="button" class="close-btn" aria-label="Close reference tables" onclick="closeReferenceModal()">×</button>
+            </div>
+
+            <div class="reference-grid">
+                <section class="reference-card">
+                    <h3>Carburetor Family Overview</h3>
+                    <div class="reference-table-wrap">
+                        <table class="reference-table">
+                            <thead>
+                                <tr>
+                                    <th>Family</th>
+                                    <th>Typical Use</th>
+                                    <th>Calculator Coverage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>DCOE / sidedraft</td>
+                                    <td>Individual-runner side-draft setups on naturally aspirated or period-style performance builds.</td>
+                                    <td>Supports single, twin, and triple carb layouts, removable chokes, main jets, air correctors, idle jets, emulsion tubes, pump jets, auxiliary venturis, and needle valves.</td>
+                                </tr>
+                                <tr>
+                                    <td>IDF / downdraft</td>
+                                    <td>Downdraft dual-throat performance carburetors on manifolds for upright or downdraft applications.</td>
+                                    <td>Supports single and twin carb layouts, removable vents, main jets, air correctors, idle jets, emulsion tubes, pump jets, boosters, and needle valves.</td>
+                                </tr>
+                                <tr>
+                                    <td>32/36 progressive</td>
+                                    <td>Street-oriented single-carb conversions with fixed progressive primary/secondary throttles.</td>
+                                    <td>Supports common 32/36 models, fixed venturi pairs, primary/secondary mains, primary/secondary air correctors, idle jet, emulsion tube family, and needle valve suggestions.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="reference-card">
+                    <h3>DCOE / Sidedraft Baselines</h3>
+                    <div class="reference-table-wrap">
+                        <table class="reference-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Range</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Main Jet</td>
+                                    <td>Venturi × 4 baseline, then altitude/cam correction</td>
+                                    <td>Rounded to nearest 5, clamped to 115-180</td>
+                                </tr>
+                                <tr>
+                                    <td>Air Corrector</td>
+                                    <td>Final main + 50</td>
+                                    <td>Rounded to nearest 5</td>
+                                </tr>
+                                <tr>
+                                    <td>Emulsion Tube</td>
+                                    <td>&lt;325cc / 325-399 / 400-474 / 475cc+</td>
+                                    <td>F11 / F15 / F16 / F2</td>
+                                </tr>
+                                <tr>
+                                    <td>Idle Jet Size</td>
+                                    <td>≤1600 / ≤1800 / ≤2000 / ≤2200 / 2201cc+ effective displacement</td>
+                                    <td>40 / 45 / 50 / 55 / 60</td>
+                                </tr>
+                                <tr>
+                                    <td>Pump Jet</td>
+                                    <td>Small engine / street / race</td>
+                                    <td>35 / 40 / 45</td>
+                                </tr>
+                                <tr>
+                                    <td>Auxiliary Venturi</td>
+                                    <td>Venturi ≤30 / 32-36 / ≥38</td>
+                                    <td>4.0 / 4.5 / 5.0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="reference-card">
+                    <h3>Venturi Suggestion Reference</h3>
+                    <div class="reference-table-wrap">
+                        <table class="reference-table">
+                            <thead>
+                                <tr>
+                                    <th>Per-Cylinder / Rotor Capacity</th>
+                                    <th>Base Choke Suggestion</th>
+                                    <th>RPM Modifier</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Below 300cc</td>
+                                    <td>28mm</td>
+                                    <td rowspan="6">Add 2mm at 7500 RPM or above. Subtract 2mm at 5500 RPM or below. Final result is capped between 28mm and 40mm.</td>
+                                </tr>
+                                <tr>
+                                    <td>300-374cc</td>
+                                    <td>30mm</td>
+                                </tr>
+                                <tr>
+                                    <td>375-449cc</td>
+                                    <td>32mm</td>
+                                </tr>
+                                <tr>
+                                    <td>450-524cc</td>
+                                    <td>34mm</td>
+                                </tr>
+                                <tr>
+                                    <td>525-649cc</td>
+                                    <td>36mm</td>
+                                </tr>
+                                <tr>
+                                    <td>650cc and above</td>
+                                    <td>38mm</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="reference-card">
+                    <h3>IDF / Downdraft Baselines</h3>
+                    <div class="reference-table-wrap">
+                        <table class="reference-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Range</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Main Jet</td>
+                                    <td>Venturi × 4.1 baseline, then altitude/cam correction</td>
+                                    <td>Rounded to nearest 5, clamped to 115-190</td>
+                                </tr>
+                                <tr>
+                                    <td>Air Corrector</td>
+                                    <td>Final main + 55</td>
+                                    <td>Rounded to nearest 5</td>
+                                </tr>
+                                <tr>
+                                    <td>Emulsion Tube</td>
+                                    <td>&lt;350cc / 350-449 / 450cc+</td>
+                                    <td>F11 / F7 / F2</td>
+                                </tr>
+                                <tr>
+                                    <td>Idle Jet Size</td>
+                                    <td>≤1600 / ≤1900 / ≤2200 / ≤2600 / 2601cc+ effective displacement</td>
+                                    <td>45 / 50 / 52 / 55 / 60</td>
+                                </tr>
+                                <tr>
+                                    <td>Pump Jet</td>
+                                    <td>Small engine / street / race</td>
+                                    <td>40 / 45 / 50</td>
+                                </tr>
+                                <tr>
+                                    <td>Booster / Aux</td>
+                                    <td>Venturi ≤30 / 32-36 / ≥38</td>
+                                    <td>4.0 / 4.5 / 5.0 reference</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="reference-card">
+                    <h3>32/36 Progressive Baselines</h3>
+                    <div class="reference-table-wrap">
+                        <table class="reference-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Range</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Venturi Pair</td>
+                                    <td>Street baseline / hotter street-performance</td>
+                                    <td>26/27mm / 27/29mm</td>
+                                </tr>
+                                <tr>
+                                    <td>Primary Main Jet</td>
+                                    <td>Engine-size baseline plus altitude/cam correction</td>
+                                    <td>Rounded to nearest 5, clamped to 125-165</td>
+                                </tr>
+                                <tr>
+                                    <td>Secondary Main Jet</td>
+                                    <td>Primary main + 10 to 15</td>
+                                    <td>Rounded to nearest 5, clamped to 135-175</td>
+                                </tr>
+                                <tr>
+                                    <td>Primary / Secondary Air</td>
+                                    <td>Primary main + 35 / secondary main + 45</td>
+                                    <td>Rounded to nearest 5</td>
+                                </tr>
+                                <tr>
+                                    <td>Idle Jet</td>
+                                    <td>≤1600 / ≤2000 / 2001cc+</td>
+                                    <td>50 / 55 / 60</td>
+                                </tr>
+                                <tr>
+                                    <td>Emulsion Series</td>
+                                    <td>Street / broad baseline / sportier transition</td>
+                                    <td>F50 / F66 / F6</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="reference-footnote">
+                        The 32/36 mode models the common single progressive installation. Dual progressive setups are intentionally not modeled in this version because their linkage and manifold behavior vary wildly.
+                    </div>
+                </section>
+
+                <section class="reference-card">
+                    <h3>Shared Advisories</h3>
+                    <div class="reference-table-wrap">
+                        <table class="reference-table">
+                            <thead>
+                                <tr>
+                                    <th>Reference Topic</th>
+                                    <th>Range / Selection</th>
+                                    <th>Advisory</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Altitude</td>
+                                    <td>Above sea level</td>
+                                    <td>Baseline logic reduces the main jet by 2% per 1000 feet. A visible warning is shown above 2000 feet.</td>
+                                </tr>
+                                <tr>
+                                    <td>Temperature</td>
+                                    <td>40°F and below</td>
+                                    <td>Colder air is denser, so real-world tuning often ends up slightly richer than the baseline.</td>
+                                </tr>
+                                <tr>
+                                    <td>Temperature</td>
+                                    <td>41°F to 94°F</td>
+                                    <td>Moderate temperature range; no extra numerical correction is applied.</td>
+                                </tr>
+                                <tr>
+                                    <td>Temperature</td>
+                                    <td>95°F and above</td>
+                                    <td>Hotter air is thinner, so real-world tuning often ends up slightly leaner than the baseline.</td>
+                                </tr>
+                                <tr>
+                                    <td>DCOE / IDF Body</td>
+                                    <td>40 body with venturi above 34mm</td>
+                                    <td>Unusual pairing; verify signal strength and throttle response.</td>
+                                </tr>
+                                <tr>
+                                    <td>DCOE / IDF Body</td>
+                                    <td>45 body with venturi below 32mm or 44 IDF with very small vents</td>
+                                    <td>Can work, but low-speed signal may be softer than a 40 DCOE.</td>
+                                </tr>
+                                <tr>
+                                    <td>DCOE / IDF Body</td>
+                                    <td>48 body with venturi below 36mm</td>
+                                    <td>Usually happier with larger chokes and higher-RPM combinations.</td>
+                                </tr>
+                                <tr>
+                                    <td>32/36 Progressive</td>
+                                    <td>Any listed model</td>
+                                    <td>Primary barrels handle cruise and progression; secondary barrels come in later, so response depends heavily on linkage, manifold heat, and distributor curve.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="reference-footnote">
+                        Source basis: Weber tuning references summarized into conservative starting rules. Use the calculator for baseline setup only; final jetting should still be confirmed with plugs, wideband data, or dyno testing.
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Engine database with specs
+        const engineDatabase = {
+            // Toyota
+            toyota_2k: { disp: 1000, cyl: 4, rpm: 5200 },
+            toyota_3k: { disp: 1166, cyl: 4, rpm: 5200 },
+            toyota_4k: { disp: 1290, cyl: 4, rpm: 5200 },
+            toyota_2e: { disp: 1295, cyl: 4, rpm: 5600 },
+            toyota_2tc: { disp: 1588, cyl: 4, rpm: 5800 },
+            toyota_3tc: { disp: 1770, cyl: 4, rpm: 5600 },
+            toyota_2tg: { disp: 1588, cyl: 4, rpm: 6400 },
+            toyota_4age_16v: { disp: 1587, cyl: 4, rpm: 7200 },
+            toyota_4age_20v: { disp: 1587, cyl: 4, rpm: 8000 },
+            toyota_18rg: { disp: 1968, cyl: 4, rpm: 6500 },
+            toyota_22r: { disp: 2367, cyl: 4, rpm: 4800 },
+            toyota_3sge: { disp: 1998, cyl: 4, rpm: 6800 },
+            toyota_3sgte: { disp: 1998, cyl: 4, rpm: 7000 },
+            toyota_5sfe: { disp: 2164, cyl: 4, rpm: 5800 },
+            toyota_7mge: { disp: 2954, cyl: 6, rpm: 6000 },
+            toyota_1jz: { disp: 2492, cyl: 6, rpm: 6200 },
+            toyota_2jz: { disp: 2997, cyl: 6, rpm: 6200 },
+
+            // Honda
+            honda_eb: { disp: 1169, cyl: 4, rpm: 6000 },
+            honda_ej: { disp: 1237, cyl: 4, rpm: 6000 },
+            honda_ew: { disp: 1237, cyl: 4, rpm: 6500 },
+            honda_zc: { disp: 1488, cyl: 4, rpm: 6800 },
+            honda_d16: { disp: 1590, cyl: 4, rpm: 6800 },
+            honda_b16a: { disp: 1595, cyl: 4, rpm: 8000 },
+            honda_b16b: { disp: 1595, cyl: 4, rpm: 9000 },
+            honda_b18c: { disp: 1797, cyl: 4, rpm: 8000 },
+            honda_h22: { disp: 2157, cyl: 4, rpm: 7800 },
+            honda_f20c: { disp: 1997, cyl: 4, rpm: 9000 },
+            honda_k20: { disp: 1998, cyl: 4, rpm: 8600 },
+            honda_k24: { disp: 2354, cyl: 4, rpm: 7000 },
+
+            // Mazda
+            mazda_pc: { disp: 985, cyl: 4, rpm: 5500 },
+            mazda_pb: { disp: 1272, cyl: 4, rpm: 5500 },
+            mazda_b3: { disp: 1324, cyl: 4, rpm: 5500 },
+            mazda_b6: { disp: 1597, cyl: 4, rpm: 6000 },
+            mazda_bp: { disp: 1839, cyl: 4, rpm: 7000 },
+            mazda_fs: { disp: 1991, cyl: 4, rpm: 6000 },
+            mazda_fe: { disp: 1998, cyl: 4, rpm: 6500 },
+            mazda_kl: { disp: 2497, cyl: 6, rpm: 7000 },
+            mazda_13b: { disp: 1308, cyl: 2, rpm: 7000 },
+            mazda_20b: { disp: 1962, cyl: 3, rpm: 7500 },
+
+            // Nissan/Datsun
+            nissan_a10: { disp: 998, cyl: 4, rpm: 5200 },
+            nissan_a12: { disp: 1171, cyl: 4, rpm: 5600 },
+            nissan_a14: { disp: 1397, cyl: 4, rpm: 5600 },
+            nissan_a15: { disp: 1487, cyl: 4, rpm: 5600 },
+            nissan_l16: { disp: 1595, cyl: 4, rpm: 6000 },
+            nissan_l18: { disp: 1770, cyl: 4, rpm: 6000 },
+            nissan_l20b: { disp: 1952, cyl: 4, rpm: 5800 },
+            nissan_l24: { disp: 2393, cyl: 6, rpm: 5600 },
+            nissan_l28: { disp: 2753, cyl: 6, rpm: 5400 },
+            nissan_ca18: { disp: 1809, cyl: 4, rpm: 6400 },
+            nissan_sr20: { disp: 1998, cyl: 4, rpm: 6400 },
+            nissan_rb25: { disp: 2498, cyl: 6, rpm: 6400 },
+            nissan_rb26: { disp: 2568, cyl: 6, rpm: 6800 },
+            nissan_vq35: { disp: 3498, cyl: 6, rpm: 6200 },
+
+            // Alfa Romeo
+            alfa_twinspark_16: { disp: 1570, cyl: 4, rpm: 6000 },
+            alfa_twinspark_18: { disp: 1773, cyl: 4, rpm: 6500 },
+            alfa_twinspark_20: { disp: 1962, cyl: 4, rpm: 6200 },
+            alfa_nord_16: { disp: 1570, cyl: 4, rpm: 6000 },
+            alfa_nord_18: { disp: 1779, cyl: 4, rpm: 6000 },
+            alfa_nord_20: { disp: 1962, cyl: 4, rpm: 5800 },
+            alfa_busso_25: { disp: 2492, cyl: 6, rpm: 5800 },
+            alfa_busso_30: { disp: 2959, cyl: 6, rpm: 6200 }
+        };
+
+        const carbFamilies = {
+            dcoe: {
+                name: 'Weber DCOE / sidedraft',
+                bodyLabel: 'DCOE Body',
+                bodyOptions: [
+                    { value: '40', label: '40 DCOE' },
+                    { value: '45', label: '45 DCOE', selected: true },
+                    { value: '48', label: '48 DCOE' }
+                ],
+                venturiLabel: 'Main Venturi/Choke (mm)',
+                venturiOptions: [28, 30, 32, 34, 36, 38, 40].map(value => ({
+                    value: String(value),
+                    label: `${value}mm${value === 34 ? ' (1600-1800cc)' : value === 36 ? ' (1800-2000cc)' : value === 38 ? ' (2000-2200cc)' : value === 40 ? ' (Race)' : ''}`,
+                    selected: value === 34
+                })),
+                airBleedLabel: 'Idle Air Bleed',
+                airBleedOptions: [
+                    { value: 'F8', label: 'F8 (Lean)' },
+                    { value: 'F9', label: 'F9 (Std)', selected: true },
+                    { value: 'F11', label: 'F11 (Rich)' }
+                ]
+            },
+            idf: {
+                name: 'Weber IDF / downdraft',
+                bodyLabel: 'IDF Body',
+                bodyOptions: [
+                    { value: '40', label: '40 IDF', selected: true },
+                    { value: '44', label: '44 IDF' },
+                    { value: '48', label: '48 IDF' }
+                ],
+                venturiLabel: 'Main Venturi/Choke (mm)',
+                venturiOptions: [28, 30, 32, 34, 36, 38, 40].map(value => ({
+                    value: String(value),
+                    label: `${value}mm${value === 32 ? ' (street baseline)' : value === 36 ? ' (sport / 2.0L+)' : value === 40 ? ' (race / 48 IDF)' : ''}`,
+                    selected: value === 32
+                })),
+                airBleedLabel: 'Idle Jet Holder',
+                airBleedOptions: [
+                    { value: 'F7', label: 'F7 (clean transition)' },
+                    { value: 'F11', label: 'F11 (broad baseline)', selected: true },
+                    { value: 'F15', label: 'F15 (richer progression)' }
+                ]
+            },
+            progressive: {
+                name: 'Weber 32/36 progressive',
+                bodyLabel: '32/36 Model',
+                bodyOptions: [
+                    { value: '32/36_dgev', label: '32/36 DGEV (electric choke)', selected: true },
+                    { value: '32/36_dgav', label: '32/36 DGAV (water choke)' },
+                    { value: '32/36_dgv', label: '32/36 DGV (manual choke)' }
+                ],
+                venturiLabel: 'Primary / Secondary Venturi',
+                venturiOptions: [
+                    { value: '26|27', label: '26/27mm (street baseline)', selected: true },
+                    { value: '27|29', label: '27/29mm (sport / higher RPM)' }
+                ],
+                airBleedLabel: 'Emulsion Series',
+                airBleedOptions: [
+                    { value: 'F50', label: 'F50 (street smoothness)' },
+                    { value: 'F66', label: 'F66 (broad baseline)', selected: true },
+                    { value: 'F6', label: 'F6 (sportier top end)' }
+                ]
+            }
+        };
+
+        const carbSetups = {
+            dcoe_single: { familyKey: 'dcoe', label: 'DCOE Single', carbCount: 1, help: 'Single sidedraft setup using one DCOE body.' },
+            dcoe_double: { familyKey: 'dcoe', label: 'DCOE Twin', carbCount: 2, help: 'Twin DCOE setup for paired-cylinder manifolds.' },
+            dcoe_triple: { familyKey: 'dcoe', label: 'DCOE Triple', carbCount: 3, help: 'Triple DCOE setup for six-cylinder engines or exotic individual-runner layouts.' },
+            idf_single: { familyKey: 'idf', label: 'IDF Single', carbCount: 1, help: 'Single IDF setup on a shared-plenum or center manifold.' },
+            idf_double: { familyKey: 'idf', label: 'IDF Twin', carbCount: 2, help: 'Twin IDF setup on dual-manifold installations.' },
+            progressive_single: { familyKey: 'progressive', label: '32/36 Progressive Single', carbCount: 1, help: 'Common single progressive installation with staged primary/secondary throttles.' }
+        };
+
+        function roundToStep(value, step) {
+            return Math.round(value / step) * step;
+        }
+
+        function clamp(value, min, max) {
+            return Math.max(min, Math.min(max, value));
+        }
+
+        function getCylinderCapacity(displacement, cylinders) {
+            if (cylinders === 2) return displacement / 2;
+            if (cylinders === 3) return displacement / 3;
+            return displacement / Math.max(cylinders, 1);
+        }
+
+        function suggestVenturi(displacement, cylinders, maxRpm, familyKey = 'dcoe') {
+            const cylCapacity = getCylinderCapacity(displacement, cylinders);
+            let suggested = 28;
+
+            if (cylCapacity >= 300) suggested = 30;
+            if (cylCapacity >= 375) suggested = 32;
+            if (cylCapacity >= 450) suggested = 34;
+            if (cylCapacity >= 525) suggested = 36;
+            if (cylCapacity >= 650) suggested = 38;
+
+            if (maxRpm >= 7500) suggested += 2;
+            else if (maxRpm <= 5500) suggested -= 2;
+
+            if (familyKey === 'idf' && suggested > 38) suggested = 38;
+
+            return clamp(suggested, 28, 40);
+        }
+
+        function suggestProgressiveVenturi(displacement, maxRpm, cam) {
+            if (displacement > 2000 || maxRpm >= 6500 || cam === 'race') {
+                return '27|29';
+            }
+
+            return '26|27';
+        }
+
+        function getTemperatureAdvisory(temp) {
+            if (temp <= 40) {
+                return 'Cold air is denser, so real-world tuning often ends up slightly richer than the baseline.';
+            }
+
+            if (temp >= 95) {
+                return 'Hot air is thinner, so real-world tuning often ends up slightly leaner than the baseline.';
+            }
+
+            return 'Ambient temperature is moderate; no extra temperature correction is applied to the baseline.';
+        }
+
+        function getCarbBodyAdvisory(familyKey, carbBody, venturiValue) {
+            const numericVenturi = typeof venturiValue === 'number'
+                ? venturiValue
+                : parseInt(String(venturiValue).split('|')[0], 10);
+
+            if (familyKey === 'progressive') {
+                if (String(carbBody).includes('dgev')) {
+                    return 'Electric-choke 32/36s are friendly street carbs; manifold heat and distributor curve still matter a lot.';
+                }
+
+                if (String(carbBody).includes('dgav')) {
+                    return 'Water-choke 32/36s behave similarly to DGEV models once warm; coolant routing quality affects drivability.';
+                }
+
+                return 'Manual-choke 32/36s are simple and tunable, but cold-start manners depend heavily on the driver.';
+            }
+
+            if (carbBody === 40 && numericVenturi > 34) {
+                return `40 ${familyKey.toUpperCase()} with venturis above 34mm is unusual; verify signal strength and throttle response.`;
+            }
+
+            if ((carbBody === 45 || carbBody === 44) && numericVenturi < 32) {
+                return `${carbBody} ${familyKey.toUpperCase()} with very small chokes can work, but low-speed signal may be softer than a smaller body.`;
+            }
+
+            if (carbBody === 48 && numericVenturi < 36) {
+                return `48 ${familyKey.toUpperCase()} bodies are usually happiest with larger chokes and higher-RPM combinations.`;
+            }
+
+            return `${carbBody} ${familyKey.toUpperCase()} body is a sensible match for the selected choke size.`;
+        }
+
+        function populateSelect(selectId, options) {
+            const select = document.getElementById(selectId);
+            const currentValue = select.value;
+            select.innerHTML = options.map(option => `<option value="${option.value}"${option.selected ? ' selected' : ''}>${option.label}</option>`).join('');
+            if (options.some(option => option.value === currentValue)) {
+                select.value = currentValue;
+            }
+        }
+
+        function updateCarburetorUI(shouldRecalculate = true) {
+            const setupKey = document.getElementById('carbSetup').value;
+            const setup = carbSetups[setupKey];
+            const familyKey = setup.familyKey;
+            const family = carbFamilies[familyKey];
+
+            document.getElementById('setupHelp').textContent = setup.help;
+            document.getElementById('venturiLabel').textContent = family.venturiLabel;
+            document.getElementById('carbBodyLabel').textContent = family.bodyLabel;
+            document.getElementById('airBleedLabel').textContent = family.airBleedLabel;
+
+            populateSelect('venturi', family.venturiOptions);
+            populateSelect('carbBody', family.bodyOptions);
+            populateSelect('airBleed', family.airBleedOptions);
+
+            const displacement = parseFloat(document.getElementById('displacement').value) || 2000;
+            const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
+            const maxRpm = parseInt(document.getElementById('maxRpm').value, 10) || 6000;
+            const cam = document.getElementById('cam').value;
+
+            if (familyKey === 'progressive') {
+                document.getElementById('venturi').value = suggestProgressiveVenturi(displacement, maxRpm, cam);
+            } else {
+                document.getElementById('venturi').value = String(suggestVenturi(displacement, cylinders, maxRpm, familyKey));
+            }
+
+            if (shouldRecalculate) {
+                calculateJets();
+            }
+        }
+
+        function openReferenceModal() {
+            const modal = document.getElementById('referenceModal');
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeReferenceModal() {
+            const modal = document.getElementById('referenceModal');
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        function selectEngine() {
+            const select = document.getElementById('engineSelect');
+            const engineKey = select.value;
+
+            if (engineKey === 'custom') {
+                return;
+            }
+
+            const engine = engineDatabase[engineKey];
+            if (engine) {
+                document.getElementById('displacement').value = engine.disp;
+                document.getElementById('cylinders').value = engine.cyl;
+                document.getElementById('maxRpm').value = engine.rpm;
+                updateCarburetorUI();
+            }
+        }
+
+        function renderResults(cards) {
+            const container = document.getElementById('resultsCards');
+            container.innerHTML = cards.map((card, index) => `
+                <div class="jet-card">
+                    <div class="jet-name">${card.name}</div>
+                    <div class="jet-value" id="resultValue${index}">${card.value}</div>
+                    <div class="jet-note">${card.note}</div>
+                </div>
+            `).join('');
+        }
+
+        function applyCalculatedState(result) {
+            renderResults(result.cards);
+            document.getElementById('formulaTitle').textContent = result.formulaTitle;
+            document.getElementById('formulaDescription1').innerHTML = result.formulaDescription1;
+            document.getElementById('formulaDescription2').innerHTML = result.formulaDescription2;
+            document.getElementById('formulaDescription3').innerHTML = result.formulaDescription3;
+            document.getElementById('mainJetFormula').textContent = result.mainJetFormula;
+            document.getElementById('airCorrFormula').textContent = result.airCorrFormula;
+            document.getElementById('supportFormula').innerHTML = result.supportFormula;
+            document.getElementById('carbFamilySummary').textContent = result.carbFamilySummary;
+            document.getElementById('venturiRecommendation').textContent = result.venturiRecommendation;
+            document.getElementById('advisorySummary').textContent = result.advisorySummary;
+
+            const altWarning = document.getElementById('altWarning');
+            altWarning.textContent = result.altitudeWarning;
+            altWarning.classList.toggle('show', result.showAltitudeWarning);
+        }
+
+        function calculateDCOE(context) {
+            const cylCapacity = getCylinderCapacity(context.displacement, context.cylinders);
+            const venturi = parseInt(context.venturiValue, 10) || 34;
+            const suggestedVenturi = suggestVenturi(context.displacement, context.cylinders, context.maxRpm, 'dcoe');
+            const baselineMainJet = venturi * 4;
+            const altitudeCorrection = context.altitude > 0 ? (context.altitude / 1000 * 0.02) : 0;
+            let mainJetRaw = baselineMainJet;
+            if (context.altitude > 0) {
+                mainJetRaw = Math.round(mainJetRaw * (1 - altitudeCorrection));
+            }
+
+            const camAdjustments = { stock: -5, street: 0, race: 5 };
+            const camAdjustment = camAdjustments[context.cam] || 0;
+            const camAdjustedMainJet = mainJetRaw + camAdjustment;
+            const mainJet = clamp(roundToStep(camAdjustedMainJet, 5), 115, 180);
+            const rawAirCorrector = mainJet + 50;
+            const airCorrector = roundToStep(rawAirCorrector, 5);
+
+            let emulsionTube = 'F16';
+            if (cylCapacity < 325) emulsionTube = 'F11';
+            else if (cylCapacity < 400) emulsionTube = 'F15';
+            else if (cylCapacity >= 475) emulsionTube = 'F2';
+
+            const effectiveDisp = context.displacement / context.carbCount;
+            let idleJetSize = 40;
+            if (effectiveDisp > 1600) idleJetSize = 45;
+            if (effectiveDisp > 1800) idleJetSize = 50;
+            if (effectiveDisp > 2000) idleJetSize = 55;
+            if (effectiveDisp > 2200) idleJetSize = 60;
+
+            let pumpJet = 40;
+            if (context.displacement < 1600) pumpJet = 35;
+            if (context.cam === 'race') pumpJet = 45;
+
+            let auxVenturi = '4.5';
+            if (venturi >= 38) auxVenturi = '5.0';
+            if (venturi <= 30) auxVenturi = '4.0';
+
+            let needleValve = '1.75mm';
+            if (context.displacement < 1600 && context.carbCount === 1) needleValve = '1.5mm';
+            if (context.carbCount === 2 && context.displacement > 1800) needleValve = '2.0mm';
+            if (context.carbCount === 3 && context.displacement > 2400) needleValve = '2.25mm';
+            else if (context.displacement > 2200) needleValve = '2.0mm';
+
+            const venturiDifference = venturi - suggestedVenturi;
+            const venturiAdvisory = Math.abs(venturiDifference) <= 2
+                ? `Selected venturi is close to the ${suggestedVenturi}mm baseline suggestion for ${Math.round(cylCapacity)}cc per cylinder at ${context.maxRpm} RPM.`
+                : `Selected venturi is ${Math.abs(venturiDifference)}mm ${venturiDifference > 0 ? 'larger' : 'smaller'} than the ${suggestedVenturi}mm baseline suggestion for ${Math.round(cylCapacity)}cc per cylinder at ${context.maxRpm} RPM.`;
+
+            const mainJetSteps = [`${venturi} × 4 = ${baselineMainJet}`];
+            if (context.altitude > 0) mainJetSteps.push(`altitude ${context.altitude}ft = ${mainJetRaw}`);
+            mainJetSteps.push(camAdjustment !== 0 ? `${context.cam} cam ${camAdjustment >= 0 ? '+' : ''}${camAdjustment} = ${camAdjustedMainJet}` : `${context.cam} cam +0`);
+            if (mainJet !== camAdjustedMainJet) mainJetSteps.push(`round/clamp = ${mainJet}`);
+
+            return {
+                cards: [
+                    { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: 'Determines airflow capacity. Match to cylinder capacity and peak RPM.' },
+                    { name: 'Main Jet', value: String(mainJet), note: 'Controls WOT fuel flow. Baseline starts at venturi × 4.' },
+                    { name: 'Air Corrector Jet', value: String(airCorrector), note: 'Leans the mixture as RPM rises. Baseline is main + 50.' },
+                    { name: 'Emulsion Tube', value: emulsionTube, note: `Selected from ${Math.round(cylCapacity)}cc per cylinder.` },
+                    { name: 'Idle Jet', value: `${idleJetSize}${context.airBleed}`, note: 'Progression and cruise circuit. Format: fuel jet + air bleed.' },
+                    { name: 'Pump Jet', value: String(pumpJet), note: 'Accelerator pump discharge. 35-45 is a useful DCOE starting window.' },
+                    { name: 'Auxiliary Venturi', value: auxVenturi, note: 'Main-circuit signal booster. Smaller chokes prefer smaller aux venturis.' },
+                    { name: 'Needle Valve', value: needleValve, note: 'Float chamber refill rate matched to total fuel demand.' }
+                ],
+                formulaTitle: '📐 DCOE Baseline Formulas',
+                formulaDescription1: '<strong>Main Jet:</strong> Venturi × 4 baseline, then altitude/cam adjustments, then rounded to the nearest 5.',
+                formulaDescription2: '<strong>Air Corrector:</strong> Main Jet + 50, rounded to the nearest 5.',
+                formulaDescription3: '<strong>DCOE Reference:</strong>',
+                mainJetFormula: mainJetSteps.join(' → '),
+                airCorrFormula: rawAirCorrector === airCorrector ? `${mainJet} + 50 = ${airCorrector}` : `${mainJet} + 50 = ${rawAirCorrector} → round = ${airCorrector}`,
+                supportFormula: '&lt;325cc: F11 | 325-399cc: F15<br>400-474cc: F16 | 475cc+: F2',
+                carbFamilySummary: `Setup: ${context.setupLabel} • ${carbFamilies.dcoe.name} • ${context.carbBody} body`,
+                venturiRecommendation: `Suggested venturi: ${suggestedVenturi}mm`,
+                advisorySummary: `${venturiAdvisory} ${getCarbBodyAdvisory('dcoe', context.carbBody, venturi)} ${getTemperatureAdvisory(context.temp)}`,
+                altitudeWarning: '⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.',
+                showAltitudeWarning: context.altitude > 2000
+            };
+        }
+
+        function calculateIDF(context) {
+            const cylCapacity = getCylinderCapacity(context.displacement, context.cylinders);
+            const venturi = parseInt(context.venturiValue, 10) || 32;
+            const suggestedVenturi = suggestVenturi(context.displacement, context.cylinders, context.maxRpm, 'idf');
+            const baselineMainJet = Math.round(venturi * 4.1);
+            const altitudeCorrection = context.altitude > 0 ? (context.altitude / 1000 * 0.02) : 0;
+            let mainJetRaw = baselineMainJet;
+            if (context.altitude > 0) {
+                mainJetRaw = Math.round(mainJetRaw * (1 - altitudeCorrection));
+            }
+
+            const camAdjustments = { stock: -5, street: 0, race: 7 };
+            const camAdjustment = camAdjustments[context.cam] || 0;
+            const camAdjustedMainJet = mainJetRaw + camAdjustment;
+            const mainJet = clamp(roundToStep(camAdjustedMainJet, 5), 115, 190);
+            const rawAirCorrector = mainJet + 55;
+            const airCorrector = roundToStep(rawAirCorrector, 5);
+
+            let emulsionTube = 'F11';
+            if (cylCapacity >= 350) emulsionTube = 'F7';
+            if (cylCapacity >= 450) emulsionTube = 'F2';
+
+            const effectiveDisp = context.displacement / context.carbCount;
+            let idleJetSize = 45;
+            if (effectiveDisp > 1600) idleJetSize = 50;
+            if (effectiveDisp > 1900) idleJetSize = 52;
+            if (effectiveDisp > 2200) idleJetSize = 55;
+            if (effectiveDisp > 2600) idleJetSize = 60;
+
+            let pumpJet = 45;
+            if (context.displacement < 1600) pumpJet = 40;
+            if (context.cam === 'race') pumpJet = 50;
+
+            let booster = '4.5';
+            if (venturi <= 30) booster = '4.0';
+            if (venturi >= 38) booster = '5.0';
+
+            let needleValve = '1.75mm';
+            if (context.displacement > 2200 || context.carbCount === 2) needleValve = '2.00mm';
+            if (context.displacement > 3000 && context.carbCount === 2) needleValve = '2.25mm';
+
+            const venturiDifference = venturi - suggestedVenturi;
+            const venturiAdvisory = Math.abs(venturiDifference) <= 2
+                ? `Selected venturi is close to the ${suggestedVenturi}mm IDF baseline suggestion for ${Math.round(cylCapacity)}cc per cylinder at ${context.maxRpm} RPM.`
+                : `Selected venturi is ${Math.abs(venturiDifference)}mm ${venturiDifference > 0 ? 'larger' : 'smaller'} than the ${suggestedVenturi}mm IDF baseline suggestion for ${Math.round(cylCapacity)}cc per cylinder at ${context.maxRpm} RPM.`;
+
+            const mainJetSteps = [`${venturi} × 4.1 ≈ ${baselineMainJet}`];
+            if (context.altitude > 0) mainJetSteps.push(`altitude ${context.altitude}ft = ${mainJetRaw}`);
+            mainJetSteps.push(camAdjustment !== 0 ? `${context.cam} cam ${camAdjustment >= 0 ? '+' : ''}${camAdjustment} = ${camAdjustedMainJet}` : `${context.cam} cam +0`);
+            if (mainJet !== camAdjustedMainJet) mainJetSteps.push(`round/clamp = ${mainJet}`);
+
+            return {
+                cards: [
+                    { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: 'IDF vent selection still follows cylinder capacity and RPM more than overall displacement.' },
+                    { name: 'Main Jet', value: String(mainJet), note: 'Downdraft IDF baseline starts slightly richer than DCOE at venturi × 4.1.' },
+                    { name: 'Air Corrector Jet', value: String(airCorrector), note: 'A slightly larger air corrector spread helps IDF top-end cleanup.' },
+                    { name: 'Emulsion Tube', value: emulsionTube, note: `Chosen from ${Math.round(cylCapacity)}cc per cylinder.` },
+                    { name: 'Idle Jet', value: `${idleJetSize}${context.airBleed}`, note: 'IDF idle circuit has huge drivability influence. Format: fuel jet + holder family.' },
+                    { name: 'Pump Jet', value: String(pumpJet), note: 'Pump jet baseline is a touch richer than DCOE because IDFs often need a stronger transition shot.' },
+                    { name: 'Booster / Aux Reference', value: booster, note: 'Reference size for signal strength. Larger vents tend to want the larger booster range.' },
+                    { name: 'Needle Valve', value: needleValve, note: 'Supply rate recommendation for the float bowl.' }
+                ],
+                formulaTitle: '📐 IDF Baseline Formulas',
+                formulaDescription1: '<strong>Main Jet:</strong> Venturi × 4.1 baseline, then altitude/cam adjustments, then rounded to the nearest 5.',
+                formulaDescription2: '<strong>Air Corrector:</strong> Main Jet + 55, rounded to the nearest 5.',
+                formulaDescription3: '<strong>IDF Reference:</strong>',
+                mainJetFormula: mainJetSteps.join(' → '),
+                airCorrFormula: rawAirCorrector === airCorrector ? `${mainJet} + 55 = ${airCorrector}` : `${mainJet} + 55 = ${rawAirCorrector} → round = ${airCorrector}`,
+                supportFormula: '&lt;350cc: F11 | 350-449cc: F7<br>450cc+: F2 | Idle sizes: 45 / 50 / 52 / 55 / 60',
+                carbFamilySummary: `Setup: ${context.setupLabel} • ${carbFamilies.idf.name} • ${context.carbBody} body`,
+                venturiRecommendation: `Suggested venturi: ${suggestedVenturi}mm`,
+                advisorySummary: `${venturiAdvisory} ${getCarbBodyAdvisory('idf', context.carbBody, venturi)} ${getTemperatureAdvisory(context.temp)}`,
+                altitudeWarning: '⚠️ High altitude: IDF baseline applies a 2% main jet reduction per 1000ft above sea level.',
+                showAltitudeWarning: context.altitude > 2000
+            };
+        }
+
+        function calculateProgressive(context) {
+            const [primaryVenturi, secondaryVenturi] = context.venturiValue.split('|').map(value => parseInt(value, 10));
+            const suggestedPair = suggestProgressiveVenturi(context.displacement, context.maxRpm, context.cam);
+            const suggestedPairLabel = suggestedPair.replace('|', '/');
+            const altitudeCorrection = context.altitude > 0 ? (context.altitude / 1000 * 0.02) : 0;
+
+            let primaryMainBase = 130;
+            if (context.displacement > 1400) primaryMainBase = 135;
+            if (context.displacement > 1800) primaryMainBase = 140;
+            if (context.displacement > 2200) primaryMainBase = 145;
+            if (context.displacement > 2600) primaryMainBase = 150;
+
+            const camAdjustments = { stock: -5, street: 0, race: 5 };
+            const camAdjustment = camAdjustments[context.cam] || 0;
+            let primaryRaw = primaryMainBase;
+            if (context.altitude > 0) {
+                primaryRaw = Math.round(primaryRaw * (1 - altitudeCorrection));
+            }
+            const primaryAdjusted = primaryRaw + camAdjustment;
+            const primaryMain = clamp(roundToStep(primaryAdjusted, 5), 125, 165);
+            const secondaryMain = clamp(roundToStep(primaryMain + 10 + (context.cam === 'race' ? 5 : 0), 5), 135, 175);
+            const primaryAir = roundToStep(primaryMain + 35, 5);
+            const secondaryAir = roundToStep(secondaryMain + 45, 5);
+
+            let idleJet = 50;
+            if (context.displacement > 1600) idleJet = 55;
+            if (context.displacement > 2000) idleJet = 60;
+
+            const needleValve = context.displacement > 2200 ? '2.00mm' : '1.75mm';
+            const selectedPairLabel = `${primaryVenturi}/${secondaryVenturi}`;
+            const venturiAdvisory = selectedPairLabel === suggestedPairLabel
+                ? `Selected venturi pair matches the ${suggestedPairLabel} progressive baseline for this engine.`
+                : `Selected venturi pair is ${selectedPairLabel}; the baseline suggestion for this engine is ${suggestedPairLabel}.`;
+
+            return {
+                cards: [
+                    { name: 'Venturi Pair', value: `${primaryVenturi}/${secondaryVenturi}mm`, note: 'Progressive carbs use fixed primary and secondary venturis rather than removable chokes.' },
+                    { name: 'Primary Main Jet', value: String(primaryMain), note: 'Controls cruise-to-midrange fueling on the primary barrel.' },
+                    { name: 'Secondary Main Jet', value: String(secondaryMain), note: 'Secondary barrel typically wants a little more jet than the primary once it opens.' },
+                    { name: 'Primary Air Corrector', value: String(primaryAir), note: 'Primary high-RPM trim. Baseline uses primary main + 35.' },
+                    { name: 'Secondary Air Corrector', value: String(secondaryAir), note: 'Secondary high-RPM trim. Baseline uses secondary main + 45.' },
+                    { name: 'Idle Jet', value: String(idleJet), note: 'Single-barrel progression baseline for street drivability.' },
+                    { name: 'Emulsion Series', value: context.airBleed, note: 'Progressive emulsion family selection used as the baseline reference.' },
+                    { name: 'Needle Valve', value: needleValve, note: 'Float valve recommendation for the common single progressive installation.' }
+                ],
+                formulaTitle: '📐 32/36 Progressive Baselines',
+                formulaDescription1: '<strong>Primary Main:</strong> Engine-size baseline, then altitude/cam adjustment, then rounded to the nearest 5.',
+                formulaDescription2: '<strong>Secondary Main & Airs:</strong> Secondary main follows the primary; air correctors are derived from each main circuit.',
+                formulaDescription3: '<strong>Progressive Reference:</strong>',
+                mainJetFormula: `primary baseline ${primaryMainBase}${context.altitude > 0 ? ` → altitude ${context.altitude}ft = ${primaryRaw}` : ''} → ${context.cam} cam ${camAdjustment >= 0 ? '+' : ''}${camAdjustment} = ${primaryAdjusted}${primaryMain !== primaryAdjusted ? ` → round = ${primaryMain}` : ''}`,
+                airCorrFormula: `secondary main = ${primaryMain} + ${context.cam === 'race' ? '15' : '10'} = ${secondaryMain} • airs: ${primaryAir}/${secondaryAir}`,
+                supportFormula: 'Vent pairs: 26/27 street or 27/29 sport<br>Idle sizes: 50 / 55 / 60 • Emulsion families: F50 / F66 / F6',
+                carbFamilySummary: `Setup: ${context.setupLabel} • ${carbFamilies.progressive.name} • ${context.carbBody.replace('32/36_', '32/36 ').toUpperCase()}`,
+                venturiRecommendation: `Suggested venturi pair: ${suggestedPairLabel}mm`,
+                advisorySummary: `${venturiAdvisory} ${getCarbBodyAdvisory('progressive', context.carbBody, context.venturiValue)} ${getTemperatureAdvisory(context.temp)}`,
+                altitudeWarning: '⚠️ High altitude: Progressive baseline trims both primary and secondary mains by roughly 2% per 1000ft above sea level.',
+                showAltitudeWarning: context.altitude > 2000
+            };
+        }
+
+        function calculateJets() {
+            const setupKey = document.getElementById('carbSetup').value;
+            const setup = carbSetups[setupKey];
+            const familyKey = setup.familyKey;
+            const context = {
+                setupKey,
+                setupLabel: setup.label,
+                familyKey,
+                carbCount: setup.carbCount,
+                displacement: parseFloat(document.getElementById('displacement').value) || 2000,
+                cylinders: parseInt(document.getElementById('cylinders').value, 10) || 4,
+                venturiValue: document.getElementById('venturi').value,
+                maxRpm: parseInt(document.getElementById('maxRpm').value, 10) || 6000,
+                cam: document.getElementById('cam').value,
+                altitude: parseInt(document.getElementById('altitude').value, 10) || 0,
+                carbBody: document.getElementById('carbBody').value,
+                airBleed: document.getElementById('airBleed').value,
+                temp: parseInt(document.getElementById('temp').value, 10) || 70
+            };
+
+            let result;
+            if (familyKey === 'idf') {
+                result = calculateIDF(context);
+            } else if (familyKey === 'progressive') {
+                result = calculateProgressive(context);
+            } else {
+                result = calculateDCOE(context);
+            }
+
+            applyCalculatedState(result);
+        }
+
+        function animateValue(id, value) {
+            const element = document.getElementById(id);
+            const start = parseInt(element.textContent, 10) || 0;
+            const end = typeof value === 'number' ? value : parseInt(value, 10);
+            if (isNaN(end)) {
+                element.textContent = value;
+                return;
+            }
+
+            const duration = 400;
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeProgress = 1 - Math.pow(1 - progress, 3);
+                const current = Math.round(start + (end - start) * easeProgress);
+                element.textContent = current;
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // Event listeners
+        document.querySelectorAll('input, select').forEach(input => {
+            if (input.id !== 'carbSetup') {
+                input.addEventListener('change', calculateJets);
+            }
+        });
+
+        document.getElementById('referenceModal').addEventListener('click', event => {
+            if (event.target.id === 'referenceModal') {
+                closeReferenceModal();
+            }
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                closeReferenceModal();
+            }
+        });
+
+        window.onload = () => {
+            updateCarburetorUI(false);
+            calculateJets();
+        };
+    </script>
+</body>
+</html>
