@@ -534,6 +534,66 @@
             line-height: 1.5;
         }
 
+        .about-stack {
+            display: grid;
+            gap: 14px;
+        }
+
+        .about-copy {
+            color: #425466;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .about-link {
+            color: #1f4f82;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .about-link:hover {
+            text-decoration: underline;
+        }
+
+        .license-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #f4f8fb;
+            border: 1px solid #d8e2eb;
+            color: #425466;
+            font-size: 0.85em;
+            font-weight: 700;
+        }
+
+        .primary-link-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            padding: 11px 16px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            box-shadow: 0 10px 24px rgba(196, 30, 58, 0.2);
+        }
+
+        .primary-link-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .about-note {
+            color: #6b7785;
+            font-size: 0.8em;
+            line-height: 1.5;
+        }
+
         @media (max-width: 900px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -579,6 +639,7 @@
             <h1>🔧 Weber Carburetor Jetting Calculator</h1>
             <p>DCOE, IDF & 32/36 Baseline Jetting - Classic JDM & European Motors (1960-2010)</p>
             <div class="header-actions">
+                <button type="button" class="secondary-btn" id="aboutButton" onclick="openAboutModal()">ℹ️ About</button>
                 <button type="button" class="secondary-btn" id="referenceButton" onclick="openReferenceModal()">📚 Reference Tables</button>
                 <button type="button" class="secondary-btn" id="referenceLinksButton" onclick="openReferenceLinksModal()">🔗 Reference Links</button>
             </div>
@@ -760,6 +821,44 @@
         <div class="disclaimer">
             <strong>Disclaimer:</strong> Starting recommendations based on Weber carburetor baseline references. 
             Final tuning requires dyno or wideband O2. Engine database covers popular JDM/Euro motors 1960-2010.
+        </div>
+    </div>
+
+    <div class="reference-modal" id="aboutModal" aria-hidden="true">
+        <div class="reference-dialog" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+            <div class="reference-header">
+                <div>
+                    <h2 id="aboutTitle">About</h2>
+                    <p>Project information, contact details, licensing, and a spot for future support links.</p>
+                </div>
+                <button type="button" class="close-btn" aria-label="Close about dialog" onclick="closeAboutModal()">×</button>
+            </div>
+
+            <div class="about-stack">
+                <div class="reference-card">
+                    <h3>Developer</h3>
+                    <div class="reference-footnote about-copy">
+                        <strong>Chris Shoesmith</strong><br>
+                        Contact: <a class="about-link" href="mailto:cshoesmith@gmail.com">cshoesmith@gmail.com</a>
+                    </div>
+                </div>
+
+                <div class="reference-card">
+                    <h3>License</h3>
+                    <div class="reference-footnote about-copy">
+                        <span class="license-pill">MIT License</span>
+                        <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
+                    </div>
+                </div>
+
+                <div class="reference-card">
+                    <h3>Support Development</h3>
+                    <div class="reference-footnote about-copy">
+                        <a class="primary-link-btn" id="donationButton" href="#" title="Placeholder donation link">💛 Donations for Development</a>
+                        <p class="about-note" style="margin-top: 10px;">Donation button is in place with a placeholder link for now. When you have a Ko-fi, PayPal, Buy Me a Coffee, or GitHub Sponsors URL, it can be swapped in quickly.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1087,6 +1186,8 @@
     </div>
 
     <script>
+        const DONATION_URL = '#';
+
         // Engine database with specs
         const engineCatalog = {
             toyota: [
@@ -1476,6 +1577,18 @@
             modal.setAttribute('aria-hidden', 'false');
         }
 
+        function openAboutModal() {
+            const modal = document.getElementById('aboutModal');
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeAboutModal() {
+            const modal = document.getElementById('aboutModal');
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
         function closeReferenceModal() {
             const modal = document.getElementById('referenceModal');
             modal.classList.remove('show');
@@ -1495,6 +1608,7 @@
         }
 
         function closeAllModals() {
+            closeAboutModal();
             closeReferenceModal();
             closeReferenceLinksModal();
         }
@@ -2035,7 +2149,17 @@
             });
         });
 
-        ['referenceModal', 'referenceLinksModal'].forEach(modalId => {
+        const donationButton = document.getElementById('donationButton');
+        donationButton.setAttribute('href', DONATION_URL);
+        if (DONATION_URL === '#') {
+            donationButton.addEventListener('click', event => event.preventDefault());
+            donationButton.setAttribute('aria-disabled', 'true');
+        } else {
+            donationButton.setAttribute('target', '_blank');
+            donationButton.setAttribute('rel', 'noopener noreferrer');
+        }
+
+        ['aboutModal', 'referenceModal', 'referenceLinksModal'].forEach(modalId => {
             document.getElementById(modalId).addEventListener('click', event => {
                 if (event.target.id === modalId) {
                     closeAllModals();

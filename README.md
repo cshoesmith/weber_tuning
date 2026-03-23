@@ -11,6 +11,7 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 - **Supports**: 4-cyl, 6-cyl, and rotary engines (985cc - 3500cc)
 - **Configurations**: DCOE single/twin/triple, IDF single/twin, and 32/36 progressive single
 - **Auto-venturi**: Suggests appropriate choke size based on displacement and approximate stock peak-power RPM
+- **About Button**: Shows project contact details, MIT license information, and a donation placeholder button
 - **Reference Tables Button**: Opens all lookup tables and advisory material directly from the main page
 - **Reference Links Button**: Opens source links formatted in Chicago-style bibliography form
 
@@ -52,6 +53,10 @@ The calculator uses Weber baseline formulas for main and air corrector jets, the
 ## Disclaimer
 
 These are starting recommendations only. Final tuning requires dyno testing or wideband O2 sensor verification.
+
+## License
+
+Released under the MIT License. See `LICENSE` for the full text.
 
 ---
 Built: March 2026
