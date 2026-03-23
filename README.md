@@ -16,11 +16,12 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 ## Usage
 
 1. Open `weber_dcoe_calculator.html` in any web browser
-2. Select your engine from the dropdown (auto-fills specs)
-3. Override displacement/RPM if modified
-4. Choose the carburetor setup you want to model
-5. Adjust carb body, venturi, and supporting settings as needed
-6. Get instant baseline jetting recommendations
+2. Select your vehicle make from the first dropdown
+3. Select your engine from the connected engine dropdown (auto-fills specs)
+4. Override displacement/RPM if modified
+5. Choose the carburetor setup you want to model
+6. Adjust carb body, venturi, and supporting settings as needed
+7. Get instant baseline jetting recommendations
 
 ## Engine Coverage
 

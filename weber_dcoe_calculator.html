@@ -299,6 +299,60 @@
             border: 1px solid #ddd;
         }
 
+        .afr-chart-wrap {
+            background: white;
+            border: 1px solid #d8e2eb;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0 8px;
+        }
+
+        .afr-chart-wrap svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .afr-summary {
+            font-size: 0.8em;
+            line-height: 1.45;
+            color: #4b5a68;
+            margin-top: 8px;
+        }
+
+        .afr-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .afr-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.76em;
+            color: #425466;
+            background: #f4f8fb;
+            border: 1px solid #d8e2eb;
+            border-radius: 999px;
+            padding: 5px 10px;
+        }
+
+        .afr-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .afr-note {
+            color: #6b7785;
+            font-size: 0.76em;
+            margin-top: 8px;
+            line-height: 1.45;
+        }
+
         .warning-box {
             background: #fff3cd;
             border: 2px solid #ffc107;
@@ -503,88 +557,28 @@
             <div class="input-section">
 
                 <div class="engine-selector">
-                    <label for="engineSelect">🚗 Select Engine (Auto-fills specs)</label>
-                    <select id="engineSelect" onchange="selectEngine()">
-                        <option value="custom">-- Custom / Other --</option>
-
-                        <optgroup label="Toyota">
-                            <option value="toyota_2k">2K (1000cc, 4cyl, 5200rpm)</option>
-                            <option value="toyota_3k">3K (1166cc, 4cyl, 5200rpm)</option>
-                            <option value="toyota_4k">4K (1290cc, 4cyl, 5200rpm)</option>
-                            <option value="toyota_2e">2E (1295cc, 4cyl, 5600rpm)</option>
-                            <option value="toyota_2tc">2TC (1588cc, 4cyl, 5800rpm)</option>
-                            <option value="toyota_3tc">3TC (1770cc, 4cyl, 5600rpm)</option>
-                            <option value="toyota_2tg">2T-G / 2T-GEU (1588cc, 4cyl, 6400rpm)</option>
-                            <option value="toyota_4age_16v">4A-GE 16V (1587cc, 4cyl, 7200rpm)</option>
-                            <option value="toyota_4age_20v">4A-GE 20V (1587cc, 4cyl, 8000rpm)</option>
-                            <option value="toyota_18rg">18R-G (1968cc, 4cyl, 6500rpm)</option>
-                            <option value="toyota_22r">22R/22RE (2367cc, 4cyl, 4800rpm)</option>
-                            <option value="toyota_3sge">3S-GE Gen1/2 (1998cc, 4cyl, 6800rpm)</option>
-                            <option value="toyota_3sgte">3S-GTE (1998cc, 4cyl, 7000rpm)</option>
-                            <option value="toyota_5sfe">5S-FE (2164cc, 4cyl, 5800rpm)</option>
-                            <option value="toyota_7mge">7M-GE (2954cc, 6cyl, 6000rpm)</option>
-                            <option value="toyota_1jz">1JZ-GTE (2492cc, 6cyl, 6200rpm)</option>
-                            <option value="toyota_2jz">2JZ-GTE (2997cc, 6cyl, 6200rpm)</option>
-                        </optgroup>
-
-                        <optgroup label="Honda">
-                            <option value="honda_eb">EB1/EB2 (1169cc, 4cyl, 6000rpm)</option>
-                            <option value="honda_ej">EJ (1237cc, 4cyl, 6000rpm)</option>
-                            <option value="honda_ew">EW (1237cc, 4cyl, 6500rpm)</option>
-                            <option value="honda_zc">ZC (1488cc, 4cyl, 6800rpm)</option>
-                            <option value="honda_d16">D16A (1590cc, 4cyl, 6800rpm)</option>
-                            <option value="honda_b16a">B16A (1595cc, 4cyl, 8000rpm)</option>
-                            <option value="honda_b16b">B16B (1595cc, 4cyl, 9000rpm)</option>
-                            <option value="honda_b18c">B18C (1797cc, 4cyl, 8000rpm)</option>
-                            <option value="honda_h22">H22A (2157cc, 4cyl, 7800rpm)</option>
-                            <option value="honda_f20c">F20C (1997cc, 4cyl, 9000rpm)</option>
-                            <option value="honda_k20">K20A (1998cc, 4cyl, 8600rpm)</option>
-                            <option value="honda_k24">K24A (2354cc, 4cyl, 7000rpm)</option>
-                        </optgroup>
-
-                        <optgroup label="Mazda">
-                            <option value="mazda_pc">PC (985cc, 4cyl, 5500rpm)</option>
-                            <option value="mazda_pb">PB (1272cc, 4cyl, 5500rpm)</option>
-                            <option value="mazda_b3">B3 (1324cc, 4cyl, 5500rpm)</option>
-                            <option value="mazda_b6">B6 (1597cc, 4cyl, 6000rpm)</option>
-                            <option value="mazda_bp">BP-ZE (1839cc, 4cyl, 7000rpm)</option>
-                            <option value="mazda_fs">FS-DE (1991cc, 4cyl, 6000rpm)</option>
-                            <option value="mazda_fe">FE-DOHC (1998cc, 4cyl, 6500rpm)</option>
-                            <option value="mazda_kl">KL-ZE (2497cc, 6cyl, 7000rpm)</option>
-                            <option value="mazda_13b">13B Rotary (1308cc, 2rotor, 7000rpm)</option>
-                            <option value="mazda_20b">20B Rotary (1962cc, 3rotor, 7500rpm)</option>
-                        </optgroup>
-
-                        <optgroup label="Nissan / Datsun">
-                            <option value="nissan_a10">A10 (998cc, 4cyl, 5200rpm)</option>
-                            <option value="nissan_a12">A12 (1171cc, 4cyl, 5600rpm)</option>
-                            <option value="nissan_a14">A14 (1397cc, 4cyl, 5600rpm)</option>
-                            <option value="nissan_a15">A15 (1487cc, 4cyl, 5600rpm)</option>
-                            <option value="nissan_l16">L16 (1595cc, 4cyl, 6000rpm)</option>
-                            <option value="nissan_l18">L18 (1770cc, 4cyl, 6000rpm)</option>
-                            <option value="nissan_l20b">L20B (1952cc, 4cyl, 5800rpm)</option>
-                            <option value="nissan_l24">L24 (2393cc, 6cyl, 5600rpm)</option>
-                            <option value="nissan_l28">L28 (2753cc, 6cyl, 5400rpm)</option>
-                            <option value="nissan_ca18">CA18DET (1809cc, 4cyl, 6400rpm)</option>
-                            <option value="nissan_sr20">SR20DET (1998cc, 4cyl, 6400rpm)</option>
-                            <option value="nissan_rb25">RB25DET (2498cc, 6cyl, 6400rpm)</option>
-                            <option value="nissan_rb26">RB26DETT (2568cc, 6cyl, 6800rpm)</option>
-                            <option value="nissan_vq35">VQ35DE (3498cc, 6cyl, 6200rpm)</option>
-                        </optgroup>
-
-                        <optgroup label="Alfa Romeo">
-                            <option value="alfa_twinspark_16">Twin Spark 1.6 (1570cc, 4cyl, 6000rpm)</option>
-                            <option value="alfa_twinspark_18">Twin Spark 1.8 (1773cc, 4cyl, 6500rpm)</option>
-                            <option value="alfa_twinspark_20">Twin Spark 2.0 (1962cc, 4cyl, 6200rpm)</option>
-                            <option value="alfa_nord_16">Nord 1.6 (1570cc, 4cyl, 6000rpm)</option>
-                            <option value="alfa_nord_18">Nord 1.8 (1779cc, 4cyl, 6000rpm)</option>
-                            <option value="alfa_nord_20">Nord 2.0 (1962cc, 4cyl, 5800rpm)</option>
-                            <option value="alfa_busso_25">Busso V6 2.5 (2492cc, 6cyl, 5800rpm)</option>
-                            <option value="alfa_busso_30">Busso V6 3.0 (2959cc, 6cyl, 6200rpm)</option>
-                        </optgroup>
-                    </select>
+                    <label>🚗 Select Make & Engine (Auto-fills specs)</label>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="makeSelect">Make</label>
+                            <select id="makeSelect" onchange="selectMake()">
+                                <option value="custom" selected>-- Custom / Other --</option>
+                                <option value="toyota">Toyota</option>
+                                <option value="honda">Honda</option>
+                                <option value="mazda">Mazda</option>
+                                <option value="nissan">Nissan / Datsun</option>
+                                <option value="alfa">Alfa Romeo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="engineSelect">Engine</label>
+                            <select id="engineSelect" onchange="selectEngine()">
+                                <option value="custom">-- Select Engine --</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="override-notice">
-                        💡 Auto-fills displacement & RPM. Override below if modified.
+                        💡 Pick a make first, then choose an engine. Specs auto-fill after engine selection, and you can still override them below.
                     </div>
                 </div>
 
@@ -715,6 +709,19 @@
                     <div class="formula-box" id="carbFamilySummary">Setup: DCOE Single • Weber DCOE / sidedraft • 45 body</div>
                     <div class="formula-box" id="venturiRecommendation">Suggested venturi: 34mm</div>
                     <p id="advisorySummary">Baseline recommendations shown. Temperature and carb body inputs are advisory only.</p>
+                </div>
+
+                <div class="formula-info">
+                    <h3>📈 Estimated AFR Chart</h3>
+                    <p>Estimated by operating zone from the selected baseline jetting. This is a directional tuning aid, not a substitute for a wideband.</p>
+                    <div class="afr-chart-wrap" id="afrChart"></div>
+                    <div class="afr-summary" id="afrSummary">Estimated AFR trend will appear here after calculation.</div>
+                    <div class="afr-legend">
+                        <span class="afr-pill"><span class="afr-dot" style="background:#9ad8a5;"></span>Target range</span>
+                        <span class="afr-pill"><span class="afr-dot" style="background:#c41e3a;"></span>Estimated AFR line</span>
+                        <span class="afr-pill"><span class="afr-dot" style="background:#1f4f82;"></span>Operating point</span>
+                    </div>
+                    <div class="afr-note">Targets are biased toward safe street/performance baselines: slightly leaner at cruise, richer under acceleration and WOT.</div>
                 </div>
             </div>
         </div>
@@ -1019,6 +1026,80 @@
 
     <script>
         // Engine database with specs
+        const engineCatalog = {
+            toyota: [
+                { key: 'toyota_2k', label: '2K (1000cc, 4cyl, 5200rpm)' },
+                { key: 'toyota_3k', label: '3K (1166cc, 4cyl, 5200rpm)' },
+                { key: 'toyota_4k', label: '4K (1290cc, 4cyl, 5200rpm)' },
+                { key: 'toyota_2e', label: '2E (1295cc, 4cyl, 5600rpm)' },
+                { key: 'toyota_2tc', label: '2TC (1588cc, 4cyl, 5800rpm)' },
+                { key: 'toyota_3tc', label: '3TC (1770cc, 4cyl, 5600rpm)' },
+                { key: 'toyota_2tg', label: '2T-G / 2T-GEU (1588cc, 4cyl, 6400rpm)' },
+                { key: 'toyota_4age_16v', label: '4A-GE 16V (1587cc, 4cyl, 7200rpm)' },
+                { key: 'toyota_4age_20v', label: '4A-GE 20V (1587cc, 4cyl, 8000rpm)' },
+                { key: 'toyota_18rg', label: '18R-G (1968cc, 4cyl, 6500rpm)' },
+                { key: 'toyota_22r', label: '22R/22RE (2367cc, 4cyl, 4800rpm)' },
+                { key: 'toyota_3sge', label: '3S-GE Gen1/2 (1998cc, 4cyl, 6800rpm)' },
+                { key: 'toyota_3sgte', label: '3S-GTE (1998cc, 4cyl, 7000rpm)' },
+                { key: 'toyota_5sfe', label: '5S-FE (2164cc, 4cyl, 5800rpm)' },
+                { key: 'toyota_7mge', label: '7M-GE (2954cc, 6cyl, 6000rpm)' },
+                { key: 'toyota_1jz', label: '1JZ-GTE (2492cc, 6cyl, 6200rpm)' },
+                { key: 'toyota_2jz', label: '2JZ-GTE (2997cc, 6cyl, 6200rpm)' }
+            ],
+            honda: [
+                { key: 'honda_eb', label: 'EB1/EB2 (1169cc, 4cyl, 6000rpm)' },
+                { key: 'honda_ej', label: 'EJ (1237cc, 4cyl, 6000rpm)' },
+                { key: 'honda_ew', label: 'EW (1237cc, 4cyl, 6500rpm)' },
+                { key: 'honda_zc', label: 'ZC (1488cc, 4cyl, 6800rpm)' },
+                { key: 'honda_d16', label: 'D16A (1590cc, 4cyl, 6800rpm)' },
+                { key: 'honda_b16a', label: 'B16A (1595cc, 4cyl, 8000rpm)' },
+                { key: 'honda_b16b', label: 'B16B (1595cc, 4cyl, 9000rpm)' },
+                { key: 'honda_b18c', label: 'B18C (1797cc, 4cyl, 8000rpm)' },
+                { key: 'honda_h22', label: 'H22A (2157cc, 4cyl, 7800rpm)' },
+                { key: 'honda_f20c', label: 'F20C (1997cc, 4cyl, 9000rpm)' },
+                { key: 'honda_k20', label: 'K20A (1998cc, 4cyl, 8600rpm)' },
+                { key: 'honda_k24', label: 'K24A (2354cc, 4cyl, 7000rpm)' }
+            ],
+            mazda: [
+                { key: 'mazda_pc', label: 'PC (985cc, 4cyl, 5500rpm)' },
+                { key: 'mazda_pb', label: 'PB (1272cc, 4cyl, 5500rpm)' },
+                { key: 'mazda_b3', label: 'B3 (1324cc, 4cyl, 5500rpm)' },
+                { key: 'mazda_b6', label: 'B6 (1597cc, 4cyl, 6000rpm)' },
+                { key: 'mazda_bp', label: 'BP-ZE (1839cc, 4cyl, 7000rpm)' },
+                { key: 'mazda_fs', label: 'FS-DE (1991cc, 4cyl, 6000rpm)' },
+                { key: 'mazda_fe', label: 'FE-DOHC (1998cc, 4cyl, 6500rpm)' },
+                { key: 'mazda_kl', label: 'KL-ZE (2497cc, 6cyl, 7000rpm)' },
+                { key: 'mazda_13b', label: '13B Rotary (1308cc, 2rotor, 7000rpm)' },
+                { key: 'mazda_20b', label: '20B Rotary (1962cc, 3rotor, 7500rpm)' }
+            ],
+            nissan: [
+                { key: 'nissan_a10', label: 'A10 (998cc, 4cyl, 5200rpm)' },
+                { key: 'nissan_a12', label: 'A12 (1171cc, 4cyl, 5600rpm)' },
+                { key: 'nissan_a14', label: 'A14 (1397cc, 4cyl, 5600rpm)' },
+                { key: 'nissan_a15', label: 'A15 (1487cc, 4cyl, 5600rpm)' },
+                { key: 'nissan_l16', label: 'L16 (1595cc, 4cyl, 6000rpm)' },
+                { key: 'nissan_l18', label: 'L18 (1770cc, 4cyl, 6000rpm)' },
+                { key: 'nissan_l20b', label: 'L20B (1952cc, 4cyl, 5800rpm)' },
+                { key: 'nissan_l24', label: 'L24 (2393cc, 6cyl, 5600rpm)' },
+                { key: 'nissan_l28', label: 'L28 (2753cc, 6cyl, 5400rpm)' },
+                { key: 'nissan_ca18', label: 'CA18DET (1809cc, 4cyl, 6400rpm)' },
+                { key: 'nissan_sr20', label: 'SR20DET (1998cc, 4cyl, 6400rpm)' },
+                { key: 'nissan_rb25', label: 'RB25DET (2498cc, 6cyl, 6400rpm)' },
+                { key: 'nissan_rb26', label: 'RB26DETT (2568cc, 6cyl, 6800rpm)' },
+                { key: 'nissan_vq35', label: 'VQ35DE (3498cc, 6cyl, 6200rpm)' }
+            ],
+            alfa: [
+                { key: 'alfa_twinspark_16', label: 'Twin Spark 1.6 (1570cc, 4cyl, 6000rpm)' },
+                { key: 'alfa_twinspark_18', label: 'Twin Spark 1.8 (1773cc, 4cyl, 6500rpm)' },
+                { key: 'alfa_twinspark_20', label: 'Twin Spark 2.0 (1962cc, 4cyl, 6200rpm)' },
+                { key: 'alfa_nord_16', label: 'Nord 1.6 (1570cc, 4cyl, 6000rpm)' },
+                { key: 'alfa_nord_18', label: 'Nord 1.8 (1779cc, 4cyl, 6000rpm)' },
+                { key: 'alfa_nord_20', label: 'Nord 2.0 (1962cc, 4cyl, 5800rpm)' },
+                { key: 'alfa_busso_25', label: 'Busso V6 2.5 (2492cc, 6cyl, 5800rpm)' },
+                { key: 'alfa_busso_30', label: 'Busso V6 3.0 (2959cc, 6cyl, 6200rpm)' }
+            ]
+        };
+
         const engineDatabase = {
             // Toyota
             toyota_2k: { disp: 1000, cyl: 4, rpm: 5200 },
@@ -1319,6 +1400,23 @@
             }
         }
 
+        function selectMake() {
+            const makeKey = document.getElementById('makeSelect').value;
+            const engineSelect = document.getElementById('engineSelect');
+            const engines = engineCatalog[makeKey] || [];
+
+            if (!engines.length) {
+                engineSelect.innerHTML = '<option value="custom">-- Select Engine --</option>';
+                engineSelect.value = 'custom';
+                return;
+            }
+
+            engineSelect.innerHTML = ['<option value="custom">-- Select Engine --</option>']
+                .concat(engines.map(engine => `<option value="${engine.key}">${engine.label}</option>`))
+                .join('');
+            engineSelect.value = 'custom';
+        }
+
         function renderResults(cards) {
             const container = document.getElementById('resultsCards');
             container.innerHTML = cards.map((card, index) => `
@@ -1328,6 +1426,143 @@
                     <div class="jet-note">${card.note}</div>
                 </div>
             `).join('');
+        }
+
+        function clampAfr(value) {
+            return clamp(Number(value.toFixed(2)), 11.2, 16.5);
+        }
+
+        function getAirBleedEffect(familyKey, airBleed) {
+            const maps = {
+                dcoe: { F8: 0.22, F9: 0, F11: -0.18 },
+                idf: { F7: 0.08, F11: 0, F15: -0.12 },
+                progressive: { F50: 0.08, F66: 0, F6: -0.1 }
+            };
+
+            return maps[familyKey]?.[airBleed] ?? 0;
+        }
+
+        function renderAfrChart(profile) {
+            const chart = document.getElementById('afrChart');
+            const minAfr = 11.5;
+            const maxAfr = 16.5;
+            const width = 620;
+            const height = 250;
+            const padding = { top: 18, right: 18, bottom: 58, left: 46 };
+            const plotWidth = width - padding.left - padding.right;
+            const plotHeight = height - padding.top - padding.bottom;
+            const xStep = profile.length > 1 ? plotWidth / (profile.length - 1) : plotWidth;
+            const bandWidth = Math.min(82, xStep * 0.7);
+            const yForAfr = afr => padding.top + ((maxAfr - afr) / (maxAfr - minAfr)) * plotHeight;
+            const xForIndex = index => padding.left + index * xStep;
+
+            const gridLines = [12, 13, 14, 15, 16].map(value => `
+                <line x1="${padding.left}" y1="${yForAfr(value)}" x2="${width - padding.right}" y2="${yForAfr(value)}" stroke="#d8e2eb" stroke-width="1" />
+                <text x="${padding.left - 10}" y="${yForAfr(value) + 4}" text-anchor="end" font-size="11" fill="#607080">${value.toFixed(1)}</text>
+            `).join('');
+
+            const targetBands = profile.map((point, index) => {
+                const x = xForIndex(index) - bandWidth / 2;
+                const y = yForAfr(point.targetHigh);
+                const rectHeight = Math.max(8, yForAfr(point.targetLow) - y);
+                return `<rect x="${x}" y="${y}" width="${bandWidth}" height="${rectHeight}" rx="8" fill="#9ad8a5" fill-opacity="0.45" stroke="#6bb37b" stroke-opacity="0.4" />`;
+            }).join('');
+
+            const linePoints = profile.map((point, index) => `${xForIndex(index)},${yForAfr(point.value)}`).join(' ');
+            const pointMarkup = profile.map((point, index) => {
+                const x = xForIndex(index);
+                const y = yForAfr(point.value);
+                return `
+                    <circle cx="${x}" cy="${y}" r="5" fill="#1f4f82" stroke="#ffffff" stroke-width="2" />
+                    <text x="${x}" y="${y - 10}" text-anchor="middle" font-size="11" font-weight="700" fill="#c41e3a">${point.value.toFixed(1)}</text>
+                    <text x="${x}" y="${height - 20}" text-anchor="middle" font-size="11" fill="#425466">${point.label}</text>
+                `;
+            }).join('');
+
+            chart.innerHTML = `
+                <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Estimated AFR chart by operating zone">
+                    <rect x="0" y="0" width="${width}" height="${height}" fill="#ffffff" rx="12" />
+                    ${gridLines}
+                    ${targetBands}
+                    <polyline points="${linePoints}" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                    ${pointMarkup}
+                    <text x="18" y="${padding.top - 2}" font-size="11" fill="#607080" transform="rotate(-90 18 ${padding.top - 2})">AFR</text>
+                </svg>
+            `;
+        }
+
+        function summarizeAfrProfile(profile) {
+            const describePoint = point => {
+                const targetMid = (point.targetLow + point.targetHigh) / 2;
+                const deviation = point.value - targetMid;
+                if (deviation > 0.25) return `${point.label} is a touch lean`;
+                if (deviation < -0.25) return `${point.label} is a touch rich`;
+                return `${point.label} is near target`;
+            };
+
+            const cruisePoint = profile[Math.min(1, profile.length - 1)];
+            const wotPoint = profile[profile.length - 1];
+            const averageDeviation = profile.reduce((sum, point) => sum + (point.value - ((point.targetLow + point.targetHigh) / 2)), 0) / profile.length;
+            const overallTrend = averageDeviation > 0.2 ? 'Overall estimate trends slightly lean.' : averageDeviation < -0.2 ? 'Overall estimate trends slightly rich.' : 'Overall estimate is broadly near baseline targets.';
+            return `${overallTrend} ${describePoint(cruisePoint)} at about ${cruisePoint.value.toFixed(1)}:1, and ${describePoint(wotPoint)} at about ${wotPoint.value.toFixed(1)}:1.`;
+        }
+
+        function buildAfrProfile(points) {
+            return points.map(point => ({
+                ...point,
+                value: clampAfr(point.value)
+            }));
+        }
+
+        function estimateDcoeAfr(context, values) {
+            const airBleedEffect = getAirBleedEffect('dcoe', context.airBleed);
+            const tempShift = context.temp <= 40 ? -0.18 : context.temp >= 95 ? 0.18 : 0;
+            const venturiSignal = (values.venturi - values.suggestedVenturi) * 0.05;
+            const mainShift = -((values.mainJet - values.referenceMainJet) / 5) * 0.08;
+            const idleShift = -((values.idleJetSize - 50) / 5) * 0.12 + airBleedEffect + tempShift * 0.6;
+            const pumpShift = -((values.pumpJet - 40) / 5) * 0.08;
+            const airCorrShift = ((values.airCorrector - (values.mainJet + 50)) / 5) * 0.05;
+
+            return buildAfrProfile([
+                { label: 'Idle', value: 14.0 + idleShift, targetLow: 13.5, targetHigh: 14.4 },
+                { label: 'Cruise', value: 14.4 + idleShift * 0.75 + venturiSignal * 0.3, targetLow: 14.0, targetHigh: 14.8 },
+                { label: 'Tip-in', value: 13.6 + idleShift * 0.4 + pumpShift, targetLow: 13.2, targetHigh: 13.9 },
+                { label: 'Midrange', value: 13.1 + mainShift + venturiSignal * 0.35, targetLow: 12.8, targetHigh: 13.4 },
+                { label: 'WOT', value: 12.8 + mainShift + airCorrShift + tempShift * 0.3, targetLow: 12.4, targetHigh: 13.0 }
+            ]);
+        }
+
+        function estimateIdfAfr(context, values) {
+            const airBleedEffect = getAirBleedEffect('idf', context.airBleed);
+            const tempShift = context.temp <= 40 ? -0.16 : context.temp >= 95 ? 0.16 : 0;
+            const venturiSignal = (values.venturi - values.suggestedVenturi) * 0.045;
+            const mainShift = -((values.mainJet - values.referenceMainJet) / 5) * 0.08;
+            const idleShift = -((values.idleJetSize - 50) / 5) * 0.11 + airBleedEffect + tempShift * 0.55;
+            const pumpShift = -((values.pumpJet - 45) / 5) * 0.08;
+            const airCorrShift = ((values.airCorrector - (values.mainJet + 55)) / 5) * 0.05;
+
+            return buildAfrProfile([
+                { label: 'Idle', value: 13.9 + idleShift, targetLow: 13.4, targetHigh: 14.2 },
+                { label: 'Cruise', value: 14.2 + idleShift * 0.7 + venturiSignal * 0.25, targetLow: 13.8, targetHigh: 14.6 },
+                { label: 'Tip-in', value: 13.4 + idleShift * 0.35 + pumpShift, targetLow: 13.0, targetHigh: 13.7 },
+                { label: 'Midrange', value: 12.9 + mainShift + venturiSignal * 0.3, targetLow: 12.6, targetHigh: 13.2 },
+                { label: 'WOT', value: 12.6 + mainShift + airCorrShift + tempShift * 0.25, targetLow: 12.3, targetHigh: 12.9 }
+            ]);
+        }
+
+        function estimateProgressiveAfr(context, values) {
+            const emulsionEffect = getAirBleedEffect('progressive', context.airBleed);
+            const tempShift = context.temp <= 40 ? -0.14 : context.temp >= 95 ? 0.14 : 0;
+            const primaryShift = -((values.primaryMain - values.primaryBaseline) / 5) * 0.09;
+            const secondaryShift = -((values.secondaryMain - (values.primaryMain + values.secondaryOffset)) / 5) * 0.08;
+
+            return buildAfrProfile([
+                { label: 'Idle', value: 14.1 - ((values.idleJet - 55) / 5) * 0.1 + emulsionEffect + tempShift * 0.5, targetLow: 13.7, targetHigh: 14.5 },
+                { label: 'Primary', value: 14.4 + primaryShift + emulsionEffect * 0.7, targetLow: 14.0, targetHigh: 14.8 },
+                { label: 'Transition', value: 13.7 + primaryShift * 0.6 + emulsionEffect * 0.45, targetLow: 13.3, targetHigh: 14.0 },
+                { label: 'Secondary', value: 13.2 + secondaryShift + tempShift * 0.25, targetLow: 12.8, targetHigh: 13.5 },
+                { label: 'WOT', value: 12.8 + secondaryShift + tempShift * 0.2, targetLow: 12.5, targetHigh: 13.1 }
+            ]);
         }
 
         function applyCalculatedState(result) {
@@ -1342,6 +1577,8 @@
             document.getElementById('carbFamilySummary').textContent = result.carbFamilySummary;
             document.getElementById('venturiRecommendation').textContent = result.venturiRecommendation;
             document.getElementById('advisorySummary').textContent = result.advisorySummary;
+            renderAfrChart(result.afrProfile);
+            document.getElementById('afrSummary').textContent = result.afrSummary;
 
             const altWarning = document.getElementById('altWarning');
             altWarning.textContent = result.altitudeWarning;
@@ -1402,6 +1639,16 @@
             mainJetSteps.push(camAdjustment !== 0 ? `${context.cam} cam ${camAdjustment >= 0 ? '+' : ''}${camAdjustment} = ${camAdjustedMainJet}` : `${context.cam} cam +0`);
             if (mainJet !== camAdjustedMainJet) mainJetSteps.push(`round/clamp = ${mainJet}`);
 
+            const afrProfile = estimateDcoeAfr(context, {
+                venturi,
+                suggestedVenturi,
+                mainJet,
+                referenceMainJet: roundToStep(venturi * 4, 5),
+                airCorrector,
+                idleJetSize,
+                pumpJet
+            });
+
             return {
                 cards: [
                     { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: 'Determines airflow capacity. Match to cylinder capacity and peak RPM.' },
@@ -1423,6 +1670,8 @@
                 carbFamilySummary: `Setup: ${context.setupLabel} • ${carbFamilies.dcoe.name} • ${context.carbBody} body`,
                 venturiRecommendation: `Suggested venturi: ${suggestedVenturi}mm`,
                 advisorySummary: `${venturiAdvisory} ${getCarbBodyAdvisory('dcoe', context.carbBody, venturi)} ${getTemperatureAdvisory(context.temp)}`,
+                afrProfile,
+                afrSummary: summarizeAfrProfile(afrProfile),
                 altitudeWarning: '⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.',
                 showAltitudeWarning: context.altitude > 2000
             };
@@ -1479,6 +1728,16 @@
             mainJetSteps.push(camAdjustment !== 0 ? `${context.cam} cam ${camAdjustment >= 0 ? '+' : ''}${camAdjustment} = ${camAdjustedMainJet}` : `${context.cam} cam +0`);
             if (mainJet !== camAdjustedMainJet) mainJetSteps.push(`round/clamp = ${mainJet}`);
 
+            const afrProfile = estimateIdfAfr(context, {
+                venturi,
+                suggestedVenturi,
+                mainJet,
+                referenceMainJet: roundToStep(venturi * 4.1, 5),
+                airCorrector,
+                idleJetSize,
+                pumpJet
+            });
+
             return {
                 cards: [
                     { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: 'IDF vent selection still follows cylinder capacity and RPM more than overall displacement.' },
@@ -1500,6 +1759,8 @@
                 carbFamilySummary: `Setup: ${context.setupLabel} • ${carbFamilies.idf.name} • ${context.carbBody} body`,
                 venturiRecommendation: `Suggested venturi: ${suggestedVenturi}mm`,
                 advisorySummary: `${venturiAdvisory} ${getCarbBodyAdvisory('idf', context.carbBody, venturi)} ${getTemperatureAdvisory(context.temp)}`,
+                afrProfile,
+                afrSummary: summarizeAfrProfile(afrProfile),
                 altitudeWarning: '⚠️ High altitude: IDF baseline applies a 2% main jet reduction per 1000ft above sea level.',
                 showAltitudeWarning: context.altitude > 2000
             };
@@ -1539,6 +1800,14 @@
                 ? `Selected venturi pair matches the ${suggestedPairLabel} progressive baseline for this engine.`
                 : `Selected venturi pair is ${selectedPairLabel}; the baseline suggestion for this engine is ${suggestedPairLabel}.`;
 
+            const afrProfile = estimateProgressiveAfr(context, {
+                primaryMain,
+                primaryBaseline: roundToStep(primaryMainBase, 5),
+                secondaryMain,
+                secondaryOffset: context.cam === 'race' ? 15 : 10,
+                idleJet
+            });
+
             return {
                 cards: [
                     { name: 'Venturi Pair', value: `${primaryVenturi}/${secondaryVenturi}mm`, note: 'Progressive carbs use fixed primary and secondary venturis rather than removable chokes.' },
@@ -1560,6 +1829,8 @@
                 carbFamilySummary: `Setup: ${context.setupLabel} • ${carbFamilies.progressive.name} • ${context.carbBody.replace('32/36_', '32/36 ').toUpperCase()}`,
                 venturiRecommendation: `Suggested venturi pair: ${suggestedPairLabel}mm`,
                 advisorySummary: `${venturiAdvisory} ${getCarbBodyAdvisory('progressive', context.carbBody, context.venturiValue)} ${getTemperatureAdvisory(context.temp)}`,
+                afrProfile,
+                afrSummary: summarizeAfrProfile(afrProfile),
                 altitudeWarning: '⚠️ High altitude: Progressive baseline trims both primary and secondary mains by roughly 2% per 1000ft above sea level.',
                 showAltitudeWarning: context.altitude > 2000
             };
@@ -1644,6 +1915,7 @@
         });
 
         window.onload = () => {
+            selectMake();
             updateCarburetorUI(false);
             calculateJets();
         };
