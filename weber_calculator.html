@@ -2547,12 +2547,13 @@
 
             const selectedBody = document.getElementById('carbBody').value;
             let targetVenturiValue;
+            const displacementPerVenturi = getPerVenturiCapacity(displacement, setup.carbCount, familyKey);
 
             if (familyKey === 'progressive') {
                 targetVenturiValue = suggestProgressiveVenturi(displacement, maxRpm, cam);
                 populateSelect('venturi', family.venturiCatalog);
             } else {
-                const suggestedVenturi = suggestVenturi(displacement, cylinders, maxRpm, familyKey, cam);
+                const suggestedVenturi = suggestVenturiFromLoad(displacementPerVenturi, maxRpm, familyKey, cam);
                 targetVenturiValue = String(getNearestAvailableVenturi(familyKey, selectedBody, suggestedVenturi));
                 populateSelect('venturi', getVenturiOptionsForBody(familyKey, selectedBody, targetVenturiValue));
             }
