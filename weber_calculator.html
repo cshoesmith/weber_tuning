@@ -159,7 +159,7 @@
 
         .wizard-step-list {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(138px, 0.78fr);
             gap: 10px;
             margin-bottom: 14px;
         }
@@ -200,6 +200,29 @@
             border-color: #7ab58a;
             background: linear-gradient(135deg, #f4fff6 0%, #f8fbff 100%);
             color: #2f855a;
+        }
+
+        .wizard-step-btn.reset-step {
+            grid-template-columns: 1fr;
+            justify-items: center;
+            text-align: center;
+            padding: 10px 12px;
+            border-style: dashed;
+            background: linear-gradient(135deg, #f7fbff 0%, #ffffff 100%);
+            color: #1f4f82;
+        }
+
+        .wizard-step-btn.reset-step:hover {
+            border-color: #9fb8cf;
+            box-shadow: 0 10px 22px rgba(31, 79, 130, 0.08);
+        }
+
+        .wizard-step-btn.reset-step .wizard-step-index {
+            width: 26px;
+            height: 26px;
+            font-size: 0.78em;
+            background: #eef4fb;
+            color: #1f4f82;
         }
 
         .wizard-step-index {
@@ -1527,7 +1550,7 @@
             }
 
             .wizard-step-list {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
+                grid-template-columns: repeat(4, minmax(0, 1fr));
                 gap: 6px;
             }
 
@@ -1538,6 +1561,10 @@
                 padding: 8px 6px;
                 gap: 5px;
                 border-radius: 12px;
+            }
+
+            .wizard-step-btn.reset-step {
+                padding: 8px 5px;
             }
 
             .wizard-step-index {
@@ -1744,6 +1771,13 @@
                         <span>
                             <span class="wizard-step-label">Report</span>
                             <span class="wizard-step-meta">Review + edit</span>
+                        </span>
+                    </button>
+                    <button type="button" class="wizard-step-btn reset-step" id="wizardResetStep" data-wizard-reset="true">
+                        <span class="wizard-step-index">4</span>
+                        <span>
+                            <span class="wizard-step-label">Start over</span>
+                            <span class="wizard-step-meta">Fresh wizard</span>
                         </span>
                     </button>
                 </div>
@@ -2111,7 +2145,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 04:32 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 04:58 UTC</span></p>
                     </div>
                 </div>
 
@@ -2503,7 +2537,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 04:32 UTC';
+        const APP_VERSION = '2026-03-24 04:58 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -3165,6 +3199,37 @@
             }
 
             setActiveWizardStep(step, { preserveMessage: true });
+        }
+
+        function resetWizardFlow() {
+            closeAllModals();
+
+            document.getElementById('carbSetup').value = 'dcoe_single';
+            document.getElementById('makeSelect').value = 'custom';
+            selectMake();
+            document.getElementById('engineSelect').value = 'custom';
+            document.getElementById('displacement').value = '2000';
+            document.getElementById('cylinders').value = '4';
+            document.getElementById('maxRpm').value = '6000';
+            document.getElementById('cam').value = 'street';
+            document.getElementById('altitude').value = '0';
+            document.getElementById('temp').value = '70';
+
+            carbSetupSuggestionState.manualOverride = false;
+            carbControlSelectionState.familyKey = null;
+            carbControlSelectionState.bodyManualOverride = false;
+            wizardState.activeStep = 1;
+            wizardState.completedSteps = new Set();
+            wizardState.completionMessageTemplate = wizardStepMeta[1].defaultMessageTemplate;
+            lastRenderedSignature = null;
+
+            document.getElementById('finalReportSnapshot').innerHTML = '';
+
+            updateCarburetorUI({ resetSelections: true, shouldRecalculate: false, downgradeIncompatibleSetup: false });
+            syncSetupSelectionCards();
+            updateWizardUI();
+            calculateJets();
+            document.querySelector('.main-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function roundToStep(value, step) {
@@ -4809,6 +4874,12 @@
         document.querySelectorAll('[data-step-target]').forEach(button => {
             button.addEventListener('click', () => {
                 setActiveWizardStep(Number(button.dataset.stepTarget));
+            });
+        });
+
+        document.querySelectorAll('[data-wizard-reset]').forEach(button => {
+            button.addEventListener('click', () => {
+                resetWizardFlow();
             });
         });
 
