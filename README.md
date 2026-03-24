@@ -21,25 +21,25 @@ A standalone Weber carburetor jetting calculator built around baseline Weber for
 - **About Button**: Shows project contact details, MIT license information, and a donation placeholder button
 - **Reference Tables Button**: Opens all lookup tables and advisory material directly from the main page
 - **Reference Links Button**: Opens source links formatted in Chicago-style bibliography form
-- **Mobile-First Workflow**: On smaller screens, the app now leads with engine selection or manual entry instead of immediately showcasing the default 2.0L example
-- **Report-Style Results**: Mobile users now jump into a clearer tuning report once they begin their own setup, reusing the same calculated data and advisories
+- **Guided 3-Step Wizard**: The app now walks users through carburetor choice, engine selection/manual entry, and finally a tuning report with live tweak controls
+- **Progress & Completion Feedback**: Each stage shows where the user is in the flow and confirms when a setup step has been completed
+- **Report-Style Results**: The final screen keeps the existing calculated data, health score, formulas, advisories, and AFR view in a cleaner report layout
 
 ## Usage
 
 1. Open `index.html` or `weber_calculator.html` in any web browser
-2. Select your vehicle make from the first dropdown
-3. Select your engine from the connected engine dropdown (auto-fills specs)
-4. Confirm the cam profile for the engine or your build
-5. The calculator suggests a carburetor setup after the cam choice; only layouts with a realistic venturi count for that engine are available
-6. Override displacement/RPM and adjust carb body, venturi, and supporting settings as needed; the Recommended Baseline header echoes the active engine/setup summary
-7. If you only have certain jets on hand, enter them in the available-parts override fields, use the per-field Reset buttons to return any selector to Auto, and review the Configuration Health Score
-8. Recommendations update live as settings change, with a brief visual highlight when the calculated results change
+2. In step 1, choose the Weber carburetor family and count you want to tune
+3. In step 2, either select a make/engine from the database to auto-fill the basics or enter your build manually
+4. Continue to the report screen to review the calculated baseline, engine/setup summary, and health score
+5. Tweak carb body, venturi/choke, idle air bleed or holder family, and available-parts overrides directly from the report screen as needed
+6. Recommendations update live as settings change, with a brief visual highlight when the calculated results change
 
 ### Mobile Workflow Notes
 
-- On mobile-sized screens, the calculator starts with guided actions for selecting an engine, entering specs manually, or jumping to the report
-- The default 2000cc example is no longer presented as the initial mobile focus; the report stays tucked away until the user starts building their own setup
-- The report view still contains the same calculated baseline, health score, formulas, advisories, and AFR chart data as the desktop experience
+- On mobile-sized screens, the calculator now behaves like a true 3-screen wizard instead of stacking the full workflow onto one page
+- The default 2000cc example no longer leads the experience; users start by choosing a carburetor setup, then move into engine selection or manual entry
+- Compatibility filtering for carb layouts is applied after the engine step, so the first screen stays focused on carburetor choice without premature restrictions
+- The report view still contains the same calculated baseline, health score, formulas, advisories, and AFR chart data as the desktop experience, but now also hosts the tweak controls for available hardware
 
 ## Engine Coverage
 

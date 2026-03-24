@@ -78,38 +78,338 @@
 
         .main-content {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            gap: 0;
-            align-items: stretch;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            padding: 24px;
+            background: #f4f7fb;
         }
 
         .input-section {
-            padding: 25px;
-            background: #f8f9fa;
-            border-right: 2px solid #e0e0e0;
-            height: calc(100vh - 240px);
-            min-height: 620px;
-            max-height: 860px;
-            overflow-y: auto;
+            padding: 24px;
+            background: white;
+            border: 1px solid #d9e2ec;
+            border-radius: 20px;
+            box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
         }
 
         .results-section {
-            padding: 18px;
+            padding: 24px;
             background: white;
-            height: calc(100vh - 240px);
-            min-height: 620px;
-            max-height: 860px;
-            overflow-y: auto;
+            border: 1px solid #d9e2ec;
+            border-radius: 20px;
+            box-shadow: 0 14px 36px rgba(15, 23, 42, 0.08);
         }
 
-        .mobile-workflow {
+        .wizard-progress-panel {
+            padding: 20px 22px;
+            background: white;
+            border: 1px solid #d9e2ec;
+            border-radius: 20px;
+            box-shadow: 0 14px 36px rgba(15, 23, 42, 0.07);
+        }
+
+        .wizard-progress-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .wizard-title {
+            font-size: 1.32em;
+            color: #233647;
+            margin-bottom: 6px;
+        }
+
+        .wizard-copy {
+            color: #50606f;
+            font-size: 0.9em;
+            line-height: 1.55;
+            max-width: 760px;
+        }
+
+        .wizard-progress-status {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: #eef4fb;
+            border: 1px solid #d4e0ec;
+            color: #1f4f82;
+            font-size: 0.82em;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .wizard-progress-bar {
+            width: 100%;
+            height: 10px;
+            border-radius: 999px;
+            background: #e6edf5;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .wizard-progress-fill {
+            height: 100%;
+            width: 33.33%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #c41e3a 0%, #1f4f82 100%);
+            transition: width 0.25s ease;
+        }
+
+        .wizard-step-list {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .wizard-step-btn {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            gap: 10px;
+            align-items: center;
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d7e1ec;
+            border-radius: 16px;
+            background: #f9fbfd;
+            color: #425466;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .wizard-step-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(31, 79, 130, 0.10);
+        }
+
+        .wizard-step-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .wizard-step-btn.active {
+            border-color: #c41e3a;
+            background: linear-gradient(135deg, #fff4f6 0%, #fff9fb 100%);
+            color: #8b0000;
+        }
+
+        .wizard-step-btn.completed {
+            border-color: #7ab58a;
+            background: linear-gradient(135deg, #f4fff6 0%, #f8fbff 100%);
+            color: #2f855a;
+        }
+
+        .wizard-step-index {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 0.9em;
+            font-weight: 800;
+            background: #dfe8f2;
+            color: #425466;
+        }
+
+        .wizard-step-btn.active .wizard-step-index {
+            background: #c41e3a;
+            color: white;
+        }
+
+        .wizard-step-btn.completed .wizard-step-index {
+            background: #2f855a;
+            color: white;
+        }
+
+        .wizard-step-label {
+            font-size: 0.84em;
+            font-weight: 700;
+        }
+
+        .wizard-step-meta {
+            display: block;
+            margin-top: 2px;
+            font-size: 0.72em;
+            color: #6b7785;
+            line-height: 1.35;
+        }
+
+        .completion-note {
+            padding: 11px 14px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #eef7ff 0%, #f6fbff 100%);
+            border: 1px solid #d4e0ec;
+            color: #425466;
+            font-size: 0.84em;
+            line-height: 1.45;
+        }
+
+        .wizard-screen {
             display: none;
-            margin-bottom: 16px;
+        }
+
+        .wizard-screen.active {
+            display: block;
+        }
+
+        .screen-header {
+            font-size: 1.28em;
+            color: #233647;
+            margin-bottom: 8px;
+        }
+
+        .screen-copy {
+            color: #50606f;
+            font-size: 0.9em;
+            line-height: 1.55;
+            margin-bottom: 18px;
+        }
+
+        .setup-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .setup-option-card {
             padding: 16px;
             border-radius: 16px;
-            background: linear-gradient(135deg, #fff8ef 0%, #f3f8ff 100%);
+            border: 1px solid #d8e2eb;
+            background: #fbfdff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .setup-option-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(31, 79, 130, 0.10);
+        }
+
+        .setup-option-card.active {
+            border-color: #c41e3a;
+            background: linear-gradient(135deg, #fff4f6 0%, #fff9fb 100%);
+            box-shadow: 0 12px 28px rgba(196, 30, 58, 0.10);
+        }
+
+        .setup-option-title {
+            font-size: 0.96em;
+            font-weight: 800;
+            color: #233647;
+            margin-bottom: 4px;
+        }
+
+        .setup-option-meta {
+            font-size: 0.76em;
+            color: #8b0000;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .setup-option-copy {
+            font-size: 0.78em;
+            color: #5a6a79;
+            line-height: 1.45;
+        }
+
+        .screen-actions,
+        .report-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .screen-actions {
+            padding-top: 14px;
+            border-top: 1px solid #e6edf5;
+        }
+
+        .screen-hint {
+            color: #6b7785;
+            font-size: 0.82em;
+            line-height: 1.45;
+        }
+
+        .primary-btn,
+        .ghost-btn {
+            padding: 11px 16px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            font-size: 0.84em;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: white;
+            box-shadow: 0 12px 24px rgba(196, 30, 58, 0.18);
+        }
+
+        .primary-btn:hover,
+        .ghost-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .ghost-btn {
+            background: #f4f8fb;
+            color: #425466;
+            border-color: #d4e0ec;
+        }
+
+        .wizard-subcard {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
             border: 1px solid #d9e2ec;
-            box-shadow: 0 10px 30px rgba(31, 79, 130, 0.08);
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .wizard-subcard + .wizard-subcard {
+            margin-top: 14px;
+        }
+
+        .subcard-title {
+            font-size: 1em;
+            font-weight: 700;
+            color: #233647;
+            margin-bottom: 6px;
+        }
+
+        .subcard-copy {
+            font-size: 0.82em;
+            color: #5b6978;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .report-edit-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .report-section-spacer {
+            height: 6px;
+        }
+
+        .hidden-select {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
 
         .workflow-kicker {
@@ -121,95 +421,17 @@
             margin-bottom: 6px;
         }
 
-        .mobile-workflow h2,
         .report-intro h3 {
             font-size: 1.18em;
             color: #233647;
             margin-bottom: 6px;
         }
 
-        .mobile-workflow p,
         .report-intro p,
         .input-card-copy {
             color: #50606f;
             font-size: 0.86em;
             line-height: 1.55;
-        }
-
-        .workflow-actions {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 10px;
-            margin-top: 14px;
-        }
-
-        .workflow-action-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 4px;
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #d6e0ea;
-            border-radius: 14px;
-            background: #ffffff;
-            color: #233647;
-            text-align: left;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-        }
-
-        .workflow-action-btn:hover {
-            transform: translateY(-1px);
-            border-color: #9fb8cf;
-            box-shadow: 0 10px 24px rgba(31, 79, 130, 0.12);
-        }
-
-        .workflow-action-btn strong {
-            font-size: 0.9em;
-        }
-
-        .workflow-action-btn span {
-            font-size: 0.72em;
-            color: #6b7785;
-            line-height: 1.4;
-        }
-
-        .input-group-card {
-            margin-bottom: 14px;
-            scroll-margin-top: 18px;
-        }
-
-        .input-card-title {
-            display: none;
-        }
-
-        .input-card-copy {
-            display: none;
-        }
-
-        .mobile-only-note,
-        .mobile-report-jump,
-        .report-intro {
-            display: none;
-        }
-
-        .report-shell {
-            display: grid;
-            gap: 12px;
-        }
-
-        .report-content {
-            display: grid;
-            gap: 0;
-        }
-
-        .report-intro {
-            padding: 18px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #fff9f2 0%, #f5f9ff 100%);
-            border: 1px solid #d9e2ec;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
         }
 
         .form-group {
@@ -1064,6 +1286,51 @@
             line-height: 1.5;
         }
 
+        .region-switch {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .region-option {
+            position: relative;
+        }
+
+        .region-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .region-option span {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #d8e2eb;
+            background: #f8fbff;
+            color: #425466;
+            font-size: 0.84em;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .region-option input:checked + span {
+            border-color: #c41e3a;
+            background: linear-gradient(135deg, #fff4f6 0%, #fff9fb 100%);
+            color: #8b0000;
+            box-shadow: 0 10px 24px rgba(196, 30, 58, 0.12);
+        }
+
+        .region-help {
+            margin-top: 10px;
+            color: #6b7785;
+            font-size: 0.8em;
+            line-height: 1.5;
+        }
+
         @media (max-width: 900px) {
             body {
                 padding: 0;
@@ -1097,60 +1364,43 @@
             }
 
             .main-content {
-                grid-template-columns: 1fr;
+                padding: 16px;
+                gap: 16px;
             }
 
             .input-section {
-                padding: 16px;
-                border-right: none;
-                border-bottom: 2px solid #e0e0e0;
-                height: auto;
-                min-height: 0;
-                max-height: none;
+                padding: 18px;
             }
 
             .results-section {
-                padding: 16px;
-                height: auto;
-                min-height: 0;
-                max-height: none;
-                background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+                padding: 18px;
             }
 
             .grid-2 {
                 grid-template-columns: 1fr;
             }
 
-            .mobile-workflow,
-            .mobile-only-note,
-            .mobile-report-jump {
-                display: block;
+            .wizard-progress-top,
+            .screen-actions,
+            .report-toolbar {
+                flex-direction: column;
+                align-items: stretch;
             }
 
-            .workflow-actions {
+            .wizard-step-list,
+            .setup-selector-grid,
+            .report-edit-grid {
                 grid-template-columns: 1fr;
             }
 
-            .workflow-action-btn {
-                align-items: flex-start;
+            .wizard-progress-status {
+                white-space: normal;
             }
 
-            .input-group-card {
-                background: white;
-                border: 1px solid #d9e2ec;
-                border-radius: 16px;
-                padding: 14px;
-                margin-bottom: 12px;
-                box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
-            }
-
-            .input-card-title,
-            .input-card-copy {
-                display: block;
-            }
-
-            .engine-selector {
-                margin-bottom: 0;
+            .wizard-progress-panel,
+            .input-section,
+            .results-section {
+                border-radius: 18px;
             }
 
             .section-header {
@@ -1160,14 +1410,6 @@
 
             .section-reset-btn {
                 width: 100%;
-            }
-
-            body.workflow-awaiting-start .report-intro {
-                display: block;
-            }
-
-            body.workflow-awaiting-start .report-content {
-                display: none;
             }
 
             .reference-header {
@@ -1206,10 +1448,10 @@
         }
     </style>
 </head>
-<body class="workflow-awaiting-start">
+<body>
     <div class="container">
         <div class="header">
-            <h1>🔧 Weber Carburetor Jetting Calculator</h1>
+            <h1 data-regional-template="🔧 Weber {{carbSingularCap}} Jetting Calculator">🔧 Weber Carburetor Jetting Calculator</h1>
             <p>DCOE, IDF & 32/36 Baseline Jetting - Classic JDM & European Motors (1960-2010)</p>
             <div class="header-actions">
                 <button type="button" class="secondary-btn" id="aboutButton" onclick="openAboutModal()">ℹ️ About</button>
@@ -1219,31 +1461,103 @@
         </div>
 
         <div class="main-content">
-            <div class="input-section">
-
-                <div class="mobile-workflow" id="mobileWorkflow">
-                    <div class="workflow-kicker">Mobile workflow</div>
-                    <h2>Start with an engine or manual specs</h2>
-                    <p>Skip the baked-in 2.0L example and move straight into your own setup. Choose an engine from the database or enter the build details manually, then jump to the report.</p>
-                    <div class="workflow-actions">
-                        <button type="button" class="workflow-action-btn" data-scroll-target="engineSelectorCard">
-                            <strong>Choose engine</strong>
-                            <span>Use the engine database to auto-fill the basics.</span>
-                        </button>
-                        <button type="button" class="workflow-action-btn" data-scroll-target="engineConfigCard">
-                            <strong>Enter manually</strong>
-                            <span>Type in displacement, cylinders, RPM, and cam profile.</span>
-                        </button>
-                        <button type="button" class="workflow-action-btn" data-scroll-target="reportSection">
-                            <strong>View report</strong>
-                            <span>Jump to the tuning report once your setup is ready.</span>
-                        </button>
+            <div class="wizard-progress-panel">
+                <div class="wizard-progress-top">
+                    <div>
+                        <div class="workflow-kicker">Guided setup</div>
+                        <h2 class="wizard-title">Build your Weber baseline step by step</h2>
+                        <p class="wizard-copy" data-regional-template="Start with the {{carbSingular}} layout, then define the engine, then use the report screen to tweak the parts you actually have on the shelf.">Start with the carburetor layout, then define the engine, then use the report screen to tweak the parts you actually have on the shelf.</p>
                     </div>
+                    <div class="wizard-progress-status" id="wizardProgressStatus">Step 1 of 3 • Choose carburetors</div>
+                </div>
+                <div class="wizard-progress-bar"><div class="wizard-progress-fill" id="wizardProgressFill"></div></div>
+                <div class="wizard-step-list">
+                    <button type="button" class="wizard-step-btn active" id="wizardStep1" data-step-target="1">
+                        <span class="wizard-step-index">1</span>
+                        <span>
+                            <span class="wizard-step-label" data-regional-template="{{carbPluralCap}}">Carburetors</span>
+                            <span class="wizard-step-meta">Type + count first</span>
+                        </span>
+                    </button>
+                    <button type="button" class="wizard-step-btn" id="wizardStep2" data-step-target="2" disabled>
+                        <span class="wizard-step-index">2</span>
+                        <span>
+                            <span class="wizard-step-label">Engine</span>
+                            <span class="wizard-step-meta">Database or manual</span>
+                        </span>
+                    </button>
+                    <button type="button" class="wizard-step-btn" id="wizardStep3" data-step-target="3" disabled>
+                        <span class="wizard-step-index">3</span>
+                        <span>
+                            <span class="wizard-step-label">Report</span>
+                            <span class="wizard-step-meta">Review and tweak</span>
+                        </span>
+                    </button>
+                </div>
+                <div class="completion-note" id="wizardCompletionNote">Start by choosing the carburetor family and count you want to tune.</div>
+            </div>
+
+            <section class="input-section wizard-screen active" id="wizardScreen1" data-step="1">
+                <h2 class="screen-header" data-regional-template="1. Choose {{carbPlural}}">1. Choose carburetors</h2>
+                <p class="screen-copy" data-regional-template="This first screen is only about the {{carbSingular}} style and count. We’ll fit the engine to that choice on the next screen instead of mixing everything together up front.">This first screen is only about the carburetor style and count. We’ll fit the engine to that choice on the next screen instead of mixing everything together up front.</p>
+
+                <div class="setup-selector-grid" id="setupSelectorGrid">
+                    <button type="button" class="setup-option-card active" data-setup-value="dcoe_single">
+                        <div class="setup-option-title">DCOE Single</div>
+                        <div class="setup-option-meta">Sidedraft • 1 carb / 2 throats</div>
+                        <div class="setup-option-copy">Compact Weber sidedraft baseline for smaller or shared-manifold setups.</div>
+                    </button>
+                    <button type="button" class="setup-option-card" data-setup-value="dcoe_double">
+                        <div class="setup-option-title">DCOE Twin</div>
+                        <div class="setup-option-meta">Sidedraft • 2 carbs / 4 throats</div>
+                        <div class="setup-option-copy">Classic dual-DCOE layout for most 4-cylinder performance applications.</div>
+                    </button>
+                    <button type="button" class="setup-option-card" data-setup-value="dcoe_triple">
+                        <div class="setup-option-title">DCOE Triple</div>
+                        <div class="setup-option-meta">Sidedraft • 3 carbs / 6 throats</div>
+                        <div class="setup-option-copy">Six-throat DCOE arrangement for 6-cylinder or 3-rotor style builds.</div>
+                    </button>
+                    <button type="button" class="setup-option-card" data-setup-value="idf_single">
+                        <div class="setup-option-title">IDF Single</div>
+                        <div class="setup-option-meta">Downdraft • 1 carb / 2 throats</div>
+                        <div class="setup-option-copy">Single IDF baseline for shared-plenum and center-mount installations.</div>
+                    </button>
+                    <button type="button" class="setup-option-card" data-setup-value="idf_double">
+                        <div class="setup-option-title">IDF Twin</div>
+                        <div class="setup-option-meta">Downdraft • 2 carbs / 4 throats</div>
+                        <div class="setup-option-copy">Twin-IDF arrangement for dual-manifold downdraft builds.</div>
+                    </button>
+                    <button type="button" class="setup-option-card" data-setup-value="progressive_single">
+                        <div class="setup-option-title">32/36 Progressive</div>
+                        <div class="setup-option-meta">Progressive • 1 carb / staged barrels</div>
+                        <div class="setup-option-copy">Street-friendly progressive Weber baseline with fixed primary and secondary barrels.</div>
+                    </button>
                 </div>
 
-                <section class="input-group-card" id="engineSelectorCard">
-                    <div class="input-card-title">1. Choose an engine</div>
-                    <p class="input-card-copy">Use the built-in database when it matches your build. If not, skip straight to the manual setup card below.</p>
+                <select id="carbSetup" class="hidden-select" aria-label="Carburetor Setup" data-regional-aria-template="{{carbSingularCap}} Setup">
+                    <option value="dcoe_single" selected>DCOE Single</option>
+                    <option value="dcoe_double">DCOE Twin</option>
+                    <option value="dcoe_triple">DCOE Triple</option>
+                    <option value="idf_single">IDF Single</option>
+                    <option value="idf_double">IDF Twin</option>
+                    <option value="progressive_single">32/36 Progressive Single</option>
+                </select>
+
+                <div class="override-notice" id="setupHelp">Choose the carburetor layout you want to tune.</div>
+
+                <div class="screen-actions">
+                    <div class="screen-hint">Next you’ll choose a known engine from the database or enter your build manually.</div>
+                    <button type="button" class="primary-btn" data-nav-step="2">Continue to engine</button>
+                </div>
+            </section>
+
+            <section class="input-section wizard-screen" id="wizardScreen2" data-step="2">
+                <h2 class="screen-header">2. Choose an engine or enter it manually</h2>
+                <p class="screen-copy">Use the database when it matches, or treat the form below as a clean manual build sheet. Either route feeds the same report on the next screen.</p>
+
+                <div class="wizard-subcard">
+                    <div class="subcard-title">Use the engine database</div>
+                    <div class="subcard-copy">Pick a make and engine to auto-fill the core specs. You can still edit any of the values below afterwards.</div>
                     <div class="engine-selector">
                         <label>🚗 Select Make & Engine (Auto-fills specs)</label>
                         <div class="grid-2">
@@ -1265,24 +1579,19 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="override-notice">
-                            💡 Pick a make first, then choose an engine. Specs auto-fill after engine selection, including an approximate stock peak-power RPM, and you can still override them below.
-                        </div>
+                        <div class="override-notice">Pick a make first, then choose an engine to auto-fill displacement, cylinder/rotor count, and peak-power RPM.</div>
                     </div>
-                </section>
+                </div>
 
-                <section class="input-group-card" id="engineConfigCard">
-                    <div class="input-card-title">2. Enter engine details</div>
-                    <p class="input-card-copy">Manual entry works just as well as the database. Confirm the engine basics here and the report will build around them.</p>
-
-                    <div class="section-title">Engine Configuration</div>
+                <div class="wizard-subcard">
+                    <div class="subcard-title">Manual engine details</div>
+                    <div class="subcard-copy">These values are the foundation for the report. If you already know the build, enter it directly here.</div>
 
                     <div class="grid-2">
                         <div class="form-group">
                             <label for="displacement">Displacement (cc)</label>
                             <input type="number" id="displacement" value="2000" min="1000" max="4000">
                         </div>
-
                         <div class="form-group">
                             <label for="cylinders">Cylinders</label>
                             <select id="cylinders">
@@ -1299,7 +1608,6 @@
                             <label for="maxRpm">Peak Power RPM</label>
                             <input type="number" id="maxRpm" value="6000" min="4000" max="10000">
                         </div>
-
                         <div class="form-group">
                             <label for="cam">Cam Profile</label>
                             <select id="cam">
@@ -1315,218 +1623,195 @@
                             <label for="altitude">Altitude (ft)</label>
                             <input type="number" id="altitude" value="0" min="0" max="10000">
                         </div>
-
                         <div class="form-group">
                             <label for="temp">Temp (°F)</label>
                             <input type="number" id="temp" value="70" min="0" max="120">
                         </div>
                     </div>
-                </section>
+                </div>
 
-                <section class="input-group-card" id="carbSpecCard">
-                    <div class="input-card-title">3. Choose the carb setup</div>
-                    <p class="input-card-copy">Start with the suggested layout, then override the carb body, choke, or bleed family if your hardware calls for it.</p>
+                <div class="screen-actions">
+                    <button type="button" class="ghost-btn" data-nav-step="1" data-regional-template="Back to {{carbPlural}}">Back to carburetors</button>
+                    <button type="button" class="primary-btn" data-nav-step="3">Continue to report</button>
+                </div>
+            </section>
 
-                    <div class="form-group">
-                        <label for="carbSetup">Carburetor Setup</label>
-                        <select id="carbSetup">
-                            <option value="dcoe_single" selected>DCOE Single</option>
-                            <option value="dcoe_double">DCOE Twin</option>
-                            <option value="dcoe_triple">DCOE Triple</option>
-                            <option value="idf_single">IDF Single</option>
-                            <option value="idf_double">IDF Twin</option>
-                            <option value="progressive_single">32/36 Progressive Single</option>
-                        </select>
-                        <div class="override-notice" id="setupHelp">Confirm the cam profile first, then choose the suggested carb setup or override it manually.</div>
+            <section class="results-section wizard-screen" id="wizardScreen3" data-step="3">
+                <div class="report-toolbar">
+                    <div>
+                        <h2 class="screen-header">3. Review the report and tweak available parts</h2>
+                        <p class="screen-copy">This report screen is where the tuning summary lives. If the hardware on hand is different from the ideal baseline, tweak it here and the report updates live.</p>
                     </div>
+                    <button type="button" class="ghost-btn" data-nav-step="2">Back to engine details</button>
+                </div>
 
-                    <div class="section-header">
-                        <div class="section-title">Carburetor Specs</div>
-                        <button type="button" class="section-reset-btn" onclick="resetCarbSpecsToDefaults()">Reset Carb Defaults</button>
-                    </div>
+                <div class="report-edit-grid">
+                    <div class="wizard-subcard">
+                        <div class="subcard-title">Tweak carb components</div>
+                        <div class="subcard-copy">Adjust the carb body, choke, and bleed/holder family to match the hardware you actually have available.</div>
 
-                    <div class="form-group">
-                        <label for="venturi" id="venturiLabel">Main Venturi/Choke (mm)</label>
-                        <select id="venturi">
-                            <option value="28">28mm (Small)</option>
-                            <option value="30">30mm</option>
-                            <option value="32">32mm</option>
-                            <option value="34" selected>34mm (1600-1800cc)</option>
-                            <option value="36">36mm (1800-2000cc)</option>
-                            <option value="38">38mm (2000-2200cc)</option>
-                            <option value="40">40mm (Race)</option>
-                        </select>
-                    </div>
-
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label for="carbBody" id="carbBodyLabel">DCOE Body</label>
-                            <select id="carbBody">
-                                <option value="40">40 DCOE</option>
-                                <option value="45" selected>45 DCOE</option>
-                                <option value="48">48 DCOE</option>
-                            </select>
+                        <div class="section-header">
+                            <div class="section-title" data-regional-template="{{carbSingularCap}} Specs">Carburetor Specs</div>
+                            <button type="button" class="section-reset-btn" onclick="resetCarbSpecsToDefaults()">Reset Carb Defaults</button>
                         </div>
 
                         <div class="form-group">
-                            <label for="airBleed" id="airBleedLabel">Idle Air Bleed</label>
-                            <select id="airBleed">
-                                <option value="F8">F8 (Lean)</option>
-                                <option value="F9" selected>F9 (Std)</option>
-                                <option value="F11">F11 (Rich)</option>
+                            <label for="venturi" id="venturiLabel">Main Venturi/Choke (mm)</label>
+                            <select id="venturi">
+                                <option value="28">28mm (Small)</option>
+                                <option value="30">30mm</option>
+                                <option value="32">32mm</option>
+                                <option value="34" selected>34mm (1600-1800cc)</option>
+                                <option value="36">36mm (1800-2000cc)</option>
+                                <option value="38">38mm (2000-2200cc)</option>
+                                <option value="40">40mm (Race)</option>
                             </select>
                         </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="carbBody" id="carbBodyLabel">DCOE Body</label>
+                                <select id="carbBody">
+                                    <option value="40">40 DCOE</option>
+                                    <option value="45" selected>45 DCOE</option>
+                                    <option value="48">48 DCOE</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="airBleed" id="airBleedLabel">Idle Air Bleed</label>
+                                <select id="airBleed">
+                                    <option value="F8">F8 (Lean)</option>
+                                    <option value="F9" selected>F9 (Std)</option>
+                                    <option value="F11">F11 (Rich)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="warning-box" id="altWarning">⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.</div>
                     </div>
 
-                    <div class="warning-box" id="altWarning">
-                        ⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.
-                    </div>
-                </section>
+                    <div class="wizard-subcard">
+                        <div class="subcard-title">Tweak to the parts you have</div>
+                        <div class="subcard-copy">Use these only when you want the report to account for the jets and components already in your toolbox.</div>
 
-                <section class="input-group-card" id="partsOverrideCard">
-                    <div class="input-card-title">4. Optional: work with the parts you already own</div>
-                    <p class="input-card-copy">Only use these overrides when you need the calculator to build around the jets and parts already sitting in your toolbox.</p>
-                    <div class="section-title">Available Parts / Forced Overrides</div>
-                    <div class="override-panel">
-                        <p>Leave these blank for the normal recommendation. Fill them in when you only have certain jets on hand and the calculator will estimate whether the rest of the combo can compensate.</p>
-                        <div class="grid-2" id="overrideGrid">
-                            <div class="form-group override-control" id="overrideGroup1">
-                                <label for="overrideValue1" id="overrideLabel1">Available Main Jet</label>
-                                <div class="override-input-row">
-                                    <input type="number" class="override-input" id="overrideValue1" placeholder="Auto / baseline">
-                                    <button type="button" class="override-reset-btn" id="overrideReset1" onclick="resetOverrideField(1)">Reset</button>
+                        <div class="override-panel">
+                            <p>Leave these blank for the normal recommendation. Fill them in when you only have certain jets on hand and the calculator will estimate whether the rest of the combo can compensate.</p>
+                            <div class="grid-2" id="overrideGrid">
+                                <div class="form-group override-control" id="overrideGroup1">
+                                    <label for="overrideValue1" id="overrideLabel1">Available Main Jet</label>
+                                    <div class="override-input-row">
+                                        <input type="number" class="override-input" id="overrideValue1" placeholder="Auto / baseline">
+                                        <button type="button" class="override-reset-btn" id="overrideReset1" onclick="resetOverrideField(1)">Reset</button>
+                                    </div>
+                                </div>
+                                <div class="form-group override-control" id="overrideGroup2">
+                                    <label for="overrideValue2" id="overrideLabel2">Available Air Corrector</label>
+                                    <div class="override-input-row">
+                                        <input type="number" class="override-input" id="overrideValue2" placeholder="Auto / baseline">
+                                        <button type="button" class="override-reset-btn" id="overrideReset2" onclick="resetOverrideField(2)">Reset</button>
+                                    </div>
+                                </div>
+                                <div class="form-group override-control" id="overrideGroup3">
+                                    <label for="overrideValue3" id="overrideLabel3">Available Idle Jet</label>
+                                    <div class="override-input-row">
+                                        <input type="number" class="override-input" id="overrideValue3" placeholder="Auto / baseline">
+                                        <button type="button" class="override-reset-btn" id="overrideReset3" onclick="resetOverrideField(3)">Reset</button>
+                                    </div>
+                                </div>
+                                <div class="form-group override-control" id="overrideGroup4">
+                                    <label for="overrideValue4" id="overrideLabel4">Available Pump Jet</label>
+                                    <div class="override-input-row">
+                                        <input type="number" class="override-input" id="overrideValue4" placeholder="Auto / baseline">
+                                        <button type="button" class="override-reset-btn" id="overrideReset4" onclick="resetOverrideField(4)">Reset</button>
+                                    </div>
+                                </div>
+                                <div class="form-group override-control" id="overrideGroup5">
+                                    <label for="overrideValue5" id="overrideLabel5">Available Secondary Air</label>
+                                    <div class="override-input-row">
+                                        <input type="number" class="override-input" id="overrideValue5" placeholder="Auto / baseline">
+                                        <button type="button" class="override-reset-btn" id="overrideReset5" onclick="resetOverrideField(5)">Reset</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group override-control" id="overrideGroup2">
-                                <label for="overrideValue2" id="overrideLabel2">Available Air Corrector</label>
-                                <div class="override-input-row">
-                                    <input type="number" class="override-input" id="overrideValue2" placeholder="Auto / baseline">
-                                    <button type="button" class="override-reset-btn" id="overrideReset2" onclick="resetOverrideField(2)">Reset</button>
-                                </div>
-                            </div>
-                            <div class="form-group override-control" id="overrideGroup3">
-                                <label for="overrideValue3" id="overrideLabel3">Available Idle Jet</label>
-                                <div class="override-input-row">
-                                    <input type="number" class="override-input" id="overrideValue3" placeholder="Auto / baseline">
-                                    <button type="button" class="override-reset-btn" id="overrideReset3" onclick="resetOverrideField(3)">Reset</button>
-                                </div>
-                            </div>
-                            <div class="form-group override-control" id="overrideGroup4">
-                                <label for="overrideValue4" id="overrideLabel4">Available Pump Jet</label>
-                                <div class="override-input-row">
-                                    <input type="number" class="override-input" id="overrideValue4" placeholder="Auto / baseline">
-                                    <button type="button" class="override-reset-btn" id="overrideReset4" onclick="resetOverrideField(4)">Reset</button>
-                                </div>
-                            </div>
-                            <div class="form-group override-control" id="overrideGroup5">
-                                <label for="overrideValue5" id="overrideLabel5">Available Secondary Air</label>
-                                <div class="override-input-row">
-                                    <input type="number" class="override-input" id="overrideValue5" placeholder="Auto / baseline">
-                                    <button type="button" class="override-reset-btn" id="overrideReset5" onclick="resetOverrideField(5)">Reset</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="override-notice" id="overrideHelp">Use forced jet values only when you need to work with the parts you already own.</div>
-                    </div>
-                    <button type="button" class="workflow-action-btn mobile-report-jump" data-scroll-target="reportSection">
-                        <strong>View tuning report</strong>
-                        <span>Jump straight to the calculated report once your inputs look right.</span>
-                    </button>
-                </section>
-            </div>
-
-            <div class="results-section" id="reportSection">
-                <div class="report-shell">
-                    <div class="report-intro" id="reportIntro">
-                        <div class="workflow-kicker">Tuning report</div>
-                        <h3>Build your setup first</h3>
-                        <p>The mobile report now stays out of the way until you choose an engine or enter your own specs manually, so the default 2.0L example doesn’t steal the spotlight.</p>
-                        <div class="workflow-actions">
-                            <button type="button" class="workflow-action-btn" data-scroll-target="engineSelectorCard">
-                                <strong>Select engine</strong>
-                                <span>Use the engine database to auto-fill a known combination.</span>
-                            </button>
-                            <button type="button" class="workflow-action-btn" data-scroll-target="engineConfigCard">
-                                <strong>Enter build</strong>
-                                <span>Type in your own displacement, RPM, and cam details.</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="report-content" id="reportContent">
-                        <h2 class="results-title">📋 Tuning Report</h2>
-                        <div class="results-subtitle" id="engineSummaryHeader">Custom setup • 2000cc • 4 Cyl • 6000 RPM • Street Perf</div>
-
-                        <div class="setup-hero" id="setupHero">
-                            <div class="setup-hero-media" id="setupHeroVisual" aria-hidden="true"></div>
-                            <div class="setup-hero-copy">
-                                <div class="setup-hero-eyebrow">Selected Carburetor Setup</div>
-                                <h3 class="setup-hero-title" id="setupHeroTitle">DCOE Single</h3>
-                                <p class="setup-hero-text" id="setupHeroDescription">One DCOE body with two throats. Baseline shown as a per-venturi recommendation where applicable.</p>
-                                <div class="setup-badges">
-                                    <span class="setup-badge" id="setupHeroCount">1 carb / 2 throats</span>
-                                    <span class="setup-badge" id="setupHeroLoad">1000cc per venturi</span>
-                                    <span class="setup-badge" id="setupHeroMode">Per-venturi baseline</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="health-score-box good" id="healthScoreBox">
-                            <div class="health-score-top">
-                                <div class="health-score-title">Configuration Health Score</div>
-                                <div class="health-score-label" id="healthScoreLabel">Good</div>
-                            </div>
-                            <div class="health-score-value" id="healthScoreValue">86</div>
-                            <div class="health-score-bar"><div class="health-score-fill" id="healthScoreFill"></div></div>
-                            <div class="health-score-summary" id="healthScoreSummary">Baseline configuration is well matched and should respond normally to fine-tuning.</div>
-                            <ul class="health-score-details" id="healthScoreDetails">
-                                <li>No forced parts are active.</li>
-                            </ul>
-                        </div>
-
-                        <div id="resultsCards"></div>
-
-                        <div class="formula-info">
-                            <h3 id="formulaTitle">📐 Technical Formulas</h3>
-                            <p id="formulaDescription1"><strong>Main Jet:</strong> Venturi × 4 baseline, then altitude/cam adjustments, then rounded to the nearest 5.</p>
-                            <div class="formula-box" id="mainJetFormula">34 × 4 = 136 → street cam +0 → round = 135</div>
-
-                            <p id="formulaDescription2"><strong>Air Corrector:</strong> Main Jet + 50, rounded to the nearest 5.</p>
-                            <div class="formula-box" id="airCorrFormula">135 + 50 = 185</div>
-
-                            <p id="formulaDescription3"><strong>Emulsion Tube by Cylinder Size:</strong></p>
-                            <div class="formula-box" id="supportFormula" style="font-size: 0.7em;">
-                                &lt;325cc: F11 | 325-400cc: F15<br>
-                                400-475cc: F16 | &gt;475cc: F2
-                            </div>
-                        </div>
-
-                        <div class="formula-info">
-                            <h3>📝 Advisory Notes</h3>
-                            <div class="formula-box" id="carbFamilySummary">Setup: DCOE Single • Weber DCOE / sidedraft • 45 body</div>
-                            <div class="formula-box" id="venturiRecommendation">Suggested venturi: 34mm</div>
-                            <p id="advisorySummary">Baseline recommendations shown. Temperature and carb body inputs are advisory only.</p>
-                        </div>
-
-                        <div class="formula-info">
-                            <h3>📈 Estimated AFR Chart</h3>
-                            <p>Estimated by operating zone from the selected baseline jetting. This is a directional tuning aid, not a substitute for a wideband.</p>
-                            <div class="afr-chart-wrap" id="afrChart"></div>
-                            <div class="afr-summary" id="afrSummary">Estimated AFR trend will appear here after calculation.</div>
-                            <div class="afr-legend">
-                                <span class="afr-pill"><span class="afr-dot" style="background:#9ad8a5;"></span>Target range</span>
-                                <span class="afr-pill"><span class="afr-dot" style="background:#c41e3a;"></span>Estimated AFR line</span>
-                                <span class="afr-pill"><span class="afr-dot" style="background:#1f4f82;"></span>Operating point</span>
-                            </div>
-                            <div class="afr-note">Targets are biased toward safe street/performance baselines: slightly leaner at cruise, richer under acceleration and WOT.</div>
+                            <div class="override-notice" id="overrideHelp">Use forced jet values only when you need to work with the parts you already own.</div>
                         </div>
                     </div>
                 </div>
-            </div>
+
+                <div class="report-section-spacer"></div>
+
+                <h2 class="results-title">📋 Tuning Report</h2>
+                <div class="results-subtitle" id="engineSummaryHeader">Custom setup • 2000cc • 4 Cyl • 6000 RPM • Street Perf</div>
+
+                <div class="setup-hero" id="setupHero">
+                    <div class="setup-hero-media" id="setupHeroVisual" aria-hidden="true"></div>
+                    <div class="setup-hero-copy">
+                        <div class="setup-hero-eyebrow" data-regional-template="Selected {{carbSingularCap}} Setup">Selected Carburetor Setup</div>
+                        <h3 class="setup-hero-title" id="setupHeroTitle">DCOE Single</h3>
+                        <p class="setup-hero-text" id="setupHeroDescription">One DCOE body with two throats. Baseline shown as a per-venturi recommendation where applicable.</p>
+                        <div class="setup-badges">
+                            <span class="setup-badge" id="setupHeroCount">1 carb / 2 throats</span>
+                            <span class="setup-badge" id="setupHeroLoad">1000cc per venturi</span>
+                            <span class="setup-badge" id="setupHeroMode">Per-venturi baseline</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="health-score-box good" id="healthScoreBox">
+                    <div class="health-score-top">
+                        <div class="health-score-title">Configuration Health Score</div>
+                        <div class="health-score-label" id="healthScoreLabel">Good</div>
+                    </div>
+                    <div class="health-score-value" id="healthScoreValue">86</div>
+                    <div class="health-score-bar"><div class="health-score-fill" id="healthScoreFill"></div></div>
+                    <div class="health-score-summary" id="healthScoreSummary">Baseline configuration is well matched and should respond normally to fine-tuning.</div>
+                    <ul class="health-score-details" id="healthScoreDetails">
+                        <li>No forced parts are active.</li>
+                    </ul>
+                </div>
+
+                <div id="resultsCards"></div>
+
+                <div class="formula-info">
+                    <h3 id="formulaTitle">📐 Technical Formulas</h3>
+                    <p id="formulaDescription1"><strong>Main Jet:</strong> Venturi × 4 baseline, then altitude/cam adjustments, then rounded to the nearest 5.</p>
+                    <div class="formula-box" id="mainJetFormula">34 × 4 = 136 → street cam +0 → round = 135</div>
+
+                    <p id="formulaDescription2"><strong>Air Corrector:</strong> Main Jet + 50, rounded to the nearest 5.</p>
+                    <div class="formula-box" id="airCorrFormula">135 + 50 = 185</div>
+
+                    <p id="formulaDescription3"><strong>Emulsion Tube by Cylinder Size:</strong></p>
+                    <div class="formula-box" id="supportFormula" style="font-size: 0.7em;">
+                        &lt;325cc: F11 | 325-400cc: F15<br>
+                        400-475cc: F16 | &gt;475cc: F2
+                    </div>
+                </div>
+
+                <div class="formula-info">
+                    <h3>📝 Advisory Notes</h3>
+                    <div class="formula-box" id="carbFamilySummary">Setup: DCOE Single • Weber DCOE / sidedraft • 45 body</div>
+                    <div class="formula-box" id="venturiRecommendation">Suggested venturi: 34mm</div>
+                    <p id="advisorySummary">Baseline recommendations shown. Temperature and carb body inputs are advisory only.</p>
+                </div>
+
+                <div class="formula-info">
+                    <h3>📈 Estimated AFR Chart</h3>
+                    <p>Estimated by operating zone from the selected baseline jetting. This is a directional tuning aid, not a substitute for a wideband.</p>
+                    <div class="afr-chart-wrap" id="afrChart"></div>
+                    <div class="afr-summary" id="afrSummary">Estimated AFR trend will appear here after calculation.</div>
+                    <div class="afr-legend">
+                        <span class="afr-pill"><span class="afr-dot" style="background:#9ad8a5;"></span>Target range</span>
+                        <span class="afr-pill"><span class="afr-dot" style="background:#c41e3a;"></span>Estimated AFR line</span>
+                        <span class="afr-pill"><span class="afr-dot" style="background:#1f4f82;"></span>Operating point</span>
+                    </div>
+                    <div class="afr-note">Targets are biased toward safe street/performance baselines: slightly leaner at cruise, richer under acceleration and WOT.</div>
+                </div>
+            </section>
         </div>
 
         <div class="disclaimer">
-            <strong>Disclaimer:</strong> Starting recommendations based on Weber carburetor baseline references. 
+            <strong>Disclaimer:</strong> <span data-regional-template="Starting recommendations based on Weber {{carbSingular}} baseline references.">Starting recommendations based on Weber carburetor baseline references.</span>
             Final tuning requires dyno or wideband O2. Engine database covers popular JDM/Euro motors 1960-2010.
         </div>
     </div>
@@ -1555,7 +1840,25 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-23 22:23 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 00:19 UTC</span></p>
+                    </div>
+                </div>
+
+                <div class="reference-card">
+                    <h3>Regional Terminology</h3>
+                    <div class="reference-footnote about-copy">
+                        <p class="about-note">Choose the spelling style you want the app to use. USA uses “carburetor”; Rest of the World uses “carburettor”.</p>
+                        <div class="region-switch" role="radiogroup" aria-label="Regional spelling preference">
+                            <label class="region-option">
+                                <input type="radio" name="regionalSpelling" value="usa">
+                                <span>USA</span>
+                            </label>
+                            <label class="region-option">
+                                <input type="radio" name="regionalSpelling" value="row">
+                                <span>Rest of the World</span>
+                            </label>
+                        </div>
+                        <p class="region-help">Your preference is saved for this browser using a cookie when available, with a local fallback for direct file use.</p>
                     </div>
                 </div>
 
@@ -1582,7 +1885,7 @@
 
             <div class="reference-grid">
                 <section class="reference-card">
-                    <h3>Carburetor Family Overview</h3>
+                    <h3 data-regional-template="{{carbSingularCap}} Family Overview">Carburetor Family Overview</h3>
                     <div class="reference-table-wrap">
                         <table class="reference-table">
                             <thead>
@@ -1600,7 +1903,7 @@
                                 </tr>
                                 <tr>
                                     <td>IDF / downdraft</td>
-                                    <td>Downdraft dual-throat performance carburetors on manifolds for upright or downdraft applications.</td>
+                                    <td data-regional-template="Downdraft dual-throat performance {{carbPlural}} on manifolds for upright or downdraft applications.">Downdraft dual-throat performance carburetors on manifolds for upright or downdraft applications.</td>
                                     <td>Supports single and twin carb layouts, removable vents, main jets, air correctors, idle jets, emulsion tubes, pump jets, boosters, and needle valves.</td>
                                 </tr>
                                 <tr>
@@ -1905,7 +2208,24 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-23 22:23 UTC';
+        const APP_VERSION = '2026-03-24 00:19 UTC';
+        const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
+        const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+        const regionalTerms = {
+            usa: {
+                carbSingular: 'carburetor',
+                carbPlural: 'carburetors',
+                carbSingularCap: 'Carburetor',
+                carbPluralCap: 'Carburetors'
+            },
+            row: {
+                carbSingular: 'carburettor',
+                carbPlural: 'carburettors',
+                carbSingularCap: 'Carburettor',
+                carbPluralCap: 'Carburettors'
+            }
+        };
+        let regionalPreference = 'usa';
 
         // Engine database with specs
         const engineCatalog = {
@@ -2166,27 +2486,202 @@
         };
 
         let lastRenderedSignature = null;
-        let userHasStartedWorkflow = false;
+        const carbControlSelectionState = {
+            familyKey: null,
+            bodyManualOverride: false
+        };
 
-        function updateWorkflowState() {
-            document.body.classList.toggle('workflow-started', userHasStartedWorkflow);
-            document.body.classList.toggle('workflow-awaiting-start', !userHasStartedWorkflow);
+        const wizardState = {
+            activeStep: 1,
+            completedSteps: new Set(),
+            completionMessageTemplate: 'Start by choosing the {{carbSingular}} family and count you want to tune.'
+        };
+
+        const wizardStepMeta = {
+            1: {
+                statusTemplate: 'Step 1 of 3 • Choose {{carbPlural}}',
+                defaultMessageTemplate: 'Start by choosing the {{carbSingular}} family and count you want to tune.',
+                completedMessageTemplate: 'Step 1 complete — {{carbSingular}} layout chosen.'
+            },
+            2: {
+                statusTemplate: 'Step 2 of 3 • Define engine',
+                defaultMessageTemplate: 'Choose an engine from the database or enter your build manually.',
+                completedMessageTemplate: 'Step 2 complete — engine details are ready for the report.'
+            },
+            3: {
+                statusTemplate: 'Step 3 of 3 • Review report',
+                defaultMessageTemplate: 'Review the report, then tweak the available parts without leaving this screen.',
+                completedMessageTemplate: 'Report screen is live — tweak available parts and watch the baseline update.'
+            }
+        };
+
+        function getRegionalTerms() {
+            return regionalTerms[regionalPreference] || regionalTerms.usa;
         }
 
-        function markWorkflowStarted() {
-            if (!userHasStartedWorkflow) {
-                userHasStartedWorkflow = true;
-                updateWorkflowState();
+        function renderRegionalTemplate(template = '') {
+            const terms = getRegionalTerms();
+            return template.replace(/\{\{(\w+)\}\}/g, (match, key) => terms[key] || match);
+        }
+
+        function setRegionalPreferenceCookie(value) {
+            document.cookie = `${REGIONAL_PREFERENCE_KEY}=${value}; max-age=${REGIONAL_COOKIE_MAX_AGE}; path=/; SameSite=Lax`;
+        }
+
+        function getRegionalPreferenceCookie() {
+            const cookie = document.cookie
+                .split(';')
+                .map(entry => entry.trim())
+                .find(entry => entry.startsWith(`${REGIONAL_PREFERENCE_KEY}=`));
+
+            if (!cookie) {
+                return null;
+            }
+
+            return cookie.split('=')[1] || null;
+        }
+
+        function getStoredRegionalPreference() {
+            const cookieValue = getRegionalPreferenceCookie();
+            if (cookieValue === 'usa' || cookieValue === 'row') {
+                return cookieValue;
+            }
+
+            try {
+                const localValue = window.localStorage.getItem(REGIONAL_PREFERENCE_KEY);
+                if (localValue === 'usa' || localValue === 'row') {
+                    return localValue;
+                }
+            } catch (error) {
+                // Ignore storage access problems.
+            }
+
+            return 'usa';
+        }
+
+        function syncRegionalPreferenceControls() {
+            document.querySelectorAll('input[name="regionalSpelling"]').forEach(input => {
+                input.checked = input.value === regionalPreference;
+            });
+        }
+
+        function applyRegionalSpelling(options = {}) {
+            document.title = renderRegionalTemplate('Weber {{carbSingularCap}} Jetting Calculator - Engine Database Edition');
+
+            document.querySelectorAll('[data-regional-template]').forEach(element => {
+                element.textContent = renderRegionalTemplate(element.dataset.regionalTemplate);
+            });
+
+            document.querySelectorAll('[data-regional-aria-template]').forEach(element => {
+                element.setAttribute('aria-label', renderRegionalTemplate(element.dataset.regionalAriaTemplate));
+            });
+
+            if (options.refreshDynamicContent) {
+                updateWizardUI();
+                calculateJets();
             }
         }
 
-        function scrollToSection(targetId) {
-            const target = document.getElementById(targetId);
-            if (!target) {
+        function setRegionalPreference(nextPreference, options = {}) {
+            if (!regionalTerms[nextPreference]) {
                 return;
             }
 
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            regionalPreference = nextPreference;
+            setRegionalPreferenceCookie(nextPreference);
+
+            try {
+                window.localStorage.setItem(REGIONAL_PREFERENCE_KEY, nextPreference);
+            } catch (error) {
+                // Ignore storage access problems.
+            }
+
+            syncRegionalPreferenceControls();
+            applyRegionalSpelling({ refreshDynamicContent: options.refreshDynamicContent !== false });
+        }
+
+        function initializeRegionalPreference() {
+            regionalPreference = getStoredRegionalPreference();
+            syncRegionalPreferenceControls();
+
+            document.querySelectorAll('input[name="regionalSpelling"]').forEach(input => {
+                input.addEventListener('change', () => {
+                    if (input.checked) {
+                        setRegionalPreference(input.value);
+                    }
+                });
+            });
+        }
+
+        function getMaxUnlockedWizardStep() {
+            if (wizardState.completedSteps.has(2)) return 3;
+            if (wizardState.completedSteps.has(1)) return 2;
+            return 1;
+        }
+
+        function updateWizardUI() {
+            const maxUnlocked = getMaxUnlockedWizardStep();
+
+            document.querySelectorAll('.wizard-screen').forEach(screen => {
+                screen.classList.toggle('active', Number(screen.dataset.step) === wizardState.activeStep);
+            });
+
+            for (let step = 1; step <= 3; step += 1) {
+                const button = document.getElementById(`wizardStep${step}`);
+                if (!button) {
+                    continue;
+                }
+
+                button.classList.toggle('active', step === wizardState.activeStep);
+                button.classList.toggle('completed', wizardState.completedSteps.has(step));
+                button.disabled = step > maxUnlocked;
+            }
+
+            document.getElementById('wizardProgressFill').style.width = `${(wizardState.activeStep / 3) * 100}%`;
+            document.getElementById('wizardProgressStatus').textContent = renderRegionalTemplate(wizardStepMeta[wizardState.activeStep].statusTemplate);
+            document.getElementById('wizardCompletionNote').textContent = renderRegionalTemplate(wizardState.completionMessageTemplate || wizardStepMeta[wizardState.activeStep].defaultMessageTemplate);
+        }
+
+        function setActiveWizardStep(step, options = {}) {
+            const maxUnlocked = getMaxUnlockedWizardStep();
+            if (step < 1 || step > 3 || step > maxUnlocked) {
+                return;
+            }
+
+            wizardState.activeStep = step;
+            if (!options.preserveMessage) {
+                wizardState.completionMessageTemplate = wizardStepMeta[step].defaultMessageTemplate;
+            }
+            updateWizardUI();
+            document.querySelector('.main-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function completeWizardStep(step) {
+            wizardState.completedSteps.add(step);
+            wizardState.completionMessageTemplate = wizardStepMeta[step].completedMessageTemplate;
+            updateWizardUI();
+        }
+
+        function syncSetupSelectionCards() {
+            const selectedSetup = document.getElementById('carbSetup').value;
+            document.querySelectorAll('.setup-option-card').forEach(card => {
+                card.classList.toggle('active', card.dataset.setupValue === selectedSetup);
+            });
+        }
+
+        function navigateWizardTo(step) {
+            if (step === 2) {
+                completeWizardStep(1);
+            }
+
+            if (step === 3) {
+                completeWizardStep(1);
+                completeWizardStep(2);
+                updateCarburetorUI({ shouldRecalculate: false });
+                calculateJets();
+            }
+
+            setActiveWizardStep(step, { preserveMessage: true });
         }
 
         function roundToStep(value, step) {
@@ -2241,6 +2736,17 @@
         function refreshCarbSetupOptions(cylinders, preferredSetupKey = null) {
             const select = document.getElementById('carbSetup');
             const currentValue = preferredSetupKey || select.value;
+            const shouldRestrictByEngine = wizardState.completedSteps.has(2);
+
+            if (!shouldRestrictByEngine) {
+                Array.from(select.options).forEach(option => {
+                    option.disabled = false;
+                    option.hidden = false;
+                });
+                select.value = currentValue || select.value;
+                return select.value;
+            }
+
             const validSetupKeys = new Set(getValidCarbSetupKeys(cylinders));
 
             Array.from(select.options).forEach(option => {
@@ -2742,6 +3248,43 @@
             }, available[0]);
         }
 
+        function getRecommendedCarbBody(familyKey, desiredVenturi, fallbackBody = null) {
+            const family = carbFamilies[familyKey];
+            if (!family?.bodyOptions?.length) {
+                return fallbackBody || '';
+            }
+
+            if (!family.availableVenturisByBody) {
+                return fallbackBody || getDefaultOptionValue(family.bodyOptions);
+            }
+
+            const bodyValues = family.bodyOptions
+                .map(option => option.value)
+                .filter(value => Array.isArray(family.availableVenturisByBody[value]));
+
+            const exactMatch = bodyValues.find(value => family.availableVenturisByBody[value].includes(desiredVenturi));
+            if (exactMatch) {
+                return exactMatch;
+            }
+
+            if (fallbackBody && bodyValues.includes(fallbackBody)) {
+                return fallbackBody;
+            }
+
+            return bodyValues.reduce((bestBody, currentBody) => {
+                const bestVenturi = getNearestAvailableVenturi(familyKey, bestBody, desiredVenturi);
+                const currentVenturi = getNearestAvailableVenturi(familyKey, currentBody, desiredVenturi);
+                const bestDelta = Math.abs(bestVenturi - desiredVenturi);
+                const currentDelta = Math.abs(currentVenturi - desiredVenturi);
+
+                if (currentDelta !== bestDelta) {
+                    return currentDelta < bestDelta ? currentBody : bestBody;
+                }
+
+                return Number(currentBody) < Number(bestBody) ? currentBody : bestBody;
+            }, bodyValues[0]);
+        }
+
         function getVenturiOptionsForBody(familyKey, carbBody, selectedValue) {
             const family = carbFamilies[familyKey];
             const catalog = family.venturiCatalog || family.venturiOptions || [];
@@ -2796,38 +3339,44 @@
             const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
             const maxRpm = parseInt(document.getElementById('maxRpm').value, 10) || 6000;
             const cam = document.getElementById('cam').value;
+            const engineRestrictionActive = wizardState.completedSteps.has(2);
             const validSetupKeys = getValidCarbSetupKeys(cylinders);
-            const suggestedSetupKey = suggestCarbSetup(displacement, cylinders, cam);
             const selectedSetupKey = refreshCarbSetupOptions(cylinders, document.getElementById('carbSetup').value);
-            const setupKey = validSetupKeys.includes(selectedSetupKey) ? selectedSetupKey : suggestedSetupKey;
+            const setupKey = validSetupKeys.includes(selectedSetupKey) ? selectedSetupKey : getFallbackCarbSetup(cylinders);
             document.getElementById('carbSetup').value = setupKey;
             const setup = carbSetups[setupKey];
             const familyKey = setup.familyKey;
             const family = carbFamilies[familyKey];
-            const suggestedSetupLabel = carbSetups[suggestedSetupKey].label;
-            const restrictionNote = validSetupKeys.length < Object.keys(carbSetups).length
+            const familyChanged = carbControlSelectionState.familyKey !== familyKey;
+
+            if (familyChanged) {
+                carbControlSelectionState.bodyManualOverride = false;
+            }
+
+            const restrictionNote = engineRestrictionActive && validSetupKeys.length < Object.keys(carbSetups).length
                 ? ` Layouts with more than ${cylinders} venturi${cylinders === 1 ? '' : 's'} are hidden for this engine.`
                 : '';
 
-            document.getElementById('setupHelp').textContent = carbSetupSuggestionState.manualOverride && suggestedSetupKey !== setupKey
-                ? `${setup.help} Suggested from current engine + cam: ${suggestedSetupLabel}. Manual override is active.${restrictionNote}`
-                : `${setup.help} Suggested from current engine + cam: ${suggestedSetupLabel}. You can override it.${restrictionNote}`;
+            document.getElementById('setupHelp').textContent = engineRestrictionActive
+                ? `${setup.help}${restrictionNote}`
+                : `${setup.help} Engine compatibility will be checked after the next step.`;
             document.getElementById('venturiLabel').textContent = family.venturiLabel;
             document.getElementById('carbBodyLabel').textContent = family.bodyLabel;
             document.getElementById('airBleedLabel').textContent = family.airBleedLabel;
+            syncSetupSelectionCards();
 
             populateSelect('carbBody', family.bodyOptions);
             populateSelect('airBleed', family.airBleedOptions);
 
-            if (resetSelections) {
-                document.getElementById('carbBody').value = getDefaultOptionValue(family.bodyOptions);
+            if (resetSelections || familyChanged) {
+                carbControlSelectionState.bodyManualOverride = false;
                 document.getElementById('airBleed').value = getDefaultOptionValue(family.airBleedOptions);
                 clearOverrideFields();
             }
 
             configureOverrideFields(familyKey);
 
-            const selectedBody = document.getElementById('carbBody').value;
+            const carbBodySelect = document.getElementById('carbBody');
             let targetVenturiValue;
             const displacementPerVenturi = getPerVenturiCapacity(displacement, setup.carbCount, familyKey);
 
@@ -2836,11 +3385,21 @@
                 populateSelect('venturi', family.venturiCatalog);
             } else {
                 const suggestedVenturi = suggestVenturiFromLoad(displacementPerVenturi, maxRpm, familyKey, cam);
+                const shouldAutoSelectBody = resetSelections
+                    || familyChanged
+                    || !carbControlSelectionState.bodyManualOverride;
+
+                if (shouldAutoSelectBody) {
+                    carbBodySelect.value = getRecommendedCarbBody(familyKey, suggestedVenturi, carbBodySelect.value);
+                }
+
+                const selectedBody = carbBodySelect.value;
                 targetVenturiValue = String(getNearestAvailableVenturi(familyKey, selectedBody, suggestedVenturi));
                 populateSelect('venturi', getVenturiOptionsForBody(familyKey, selectedBody, targetVenturiValue));
             }
 
             document.getElementById('venturi').value = String(targetVenturiValue);
+            carbControlSelectionState.familyKey = familyKey;
 
             if (shouldRecalculate) {
                 calculateJets();
@@ -2848,8 +3407,6 @@
         }
 
         function resetCarbSpecsToDefaults() {
-            carbSetupSuggestionState.manualOverride = false;
-            applySuggestedCarbSetup(true);
             updateCarburetorUI({ resetSelections: true, shouldRecalculate: true });
         }
 
@@ -2905,12 +3462,9 @@
 
             const engine = engineDatabase[engineKey];
             if (engine) {
-                markWorkflowStarted();
                 document.getElementById('displacement').value = engine.disp;
                 document.getElementById('cylinders').value = engine.cyl;
                 document.getElementById('maxRpm').value = engine.rpm;
-                carbSetupSuggestionState.manualOverride = false;
-                applySuggestedCarbSetup(true);
                 updateCarburetorUI({ resetSelections: true, shouldRecalculate: true });
             }
         }
@@ -3219,7 +3773,7 @@
                 ? 'Primary/secondary shared-plenum baseline'
                 : 'Per-venturi baseline';
             const description = isProgressive
-                ? `${context.setupLabel} uses a shared progressive primary/secondary model. The recommendations are for one 32/36 carburetor with staged barrels.`
+                ? renderRegionalTemplate(`${context.setupLabel} uses a shared progressive primary/secondary model. The recommendations are for one 32/36 {{carbSingular}} with staged barrels.`)
                 : `${context.setupLabel} uses ${metrics.assignmentText}. Main jet sizing is shown per venturi, not as a total combined jet area across the whole engine.`;
 
             return {
@@ -3685,7 +4239,7 @@
                 temp: parseInt(document.getElementById('temp').value, 10) || 70,
                 overrides,
                 venturiUserSelected: false,
-                bodyUserSelected: !family.bodyOptions.some(option => option.selected && option.value === carbBody),
+                bodyUserSelected: carbControlSelectionState.bodyManualOverride,
                 airBleedUserSelected: !family.airBleedOptions.some(option => option.selected && option.value === airBleed)
             };
 
@@ -3732,14 +4286,27 @@
 
         // Event listeners
         document.getElementById('carbSetup').addEventListener('change', () => {
-            markWorkflowStarted();
-            carbSetupSuggestionState.manualOverride = true;
             updateCarburetorUI();
         });
 
-        document.querySelectorAll('[data-scroll-target]').forEach(button => {
+        document.querySelectorAll('.setup-option-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const select = document.getElementById('carbSetup');
+                select.value = card.dataset.setupValue;
+                syncSetupSelectionCards();
+                updateCarburetorUI();
+            });
+        });
+
+        document.querySelectorAll('[data-nav-step]').forEach(button => {
             button.addEventListener('click', () => {
-                scrollToSection(button.dataset.scrollTarget);
+                navigateWizardTo(Number(button.dataset.navStep));
+            });
+        });
+
+        document.querySelectorAll('[data-step-target]').forEach(button => {
+            button.addEventListener('click', () => {
+                setActiveWizardStep(Number(button.dataset.stepTarget));
             });
         });
 
@@ -3749,10 +4316,11 @@
             }
 
             input.addEventListener('change', () => {
-                markWorkflowStarted();
+                if (input.id === 'carbBody') {
+                    carbControlSelectionState.bodyManualOverride = true;
+                }
 
                 if (['displacement', 'cylinders', 'cam', 'carbBody'].includes(input.id)) {
-                    applySuggestedCarbSetup();
                     updateCarburetorUI();
                     return;
                 }
@@ -3788,10 +4356,12 @@
         });
 
         window.onload = () => {
-            updateWorkflowState();
+            initializeRegionalPreference();
+            applyRegionalSpelling({ refreshDynamicContent: false });
             selectMake();
-            applySuggestedCarbSetup(true);
             updateCarburetorUI(false);
+            syncSetupSelectionCards();
+            updateWizardUI();
             calculateJets();
         };
     </script>
