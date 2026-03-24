@@ -1844,6 +1844,27 @@
                 justify-content: stretch;
             }
 
+            #wizardScreen2 .screen-actions {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            #wizardScreen2 .screen-actions > .ghost-btn,
+            #wizardScreen2 .screen-actions > .primary-btn,
+            #wizardScreen3 .screen-actions .action-button-group > .ghost-btn,
+            #wizardScreen3 .screen-actions .action-button-group > .primary-btn {
+                width: 100%;
+                min-width: 0;
+            }
+
+            #wizardScreen3 .screen-actions .action-button-group {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
             #wizardScreen4 .report-toolbar .action-button-group {
                 width: 100%;
                 justify-content: flex-end;
@@ -2118,6 +2139,14 @@
                 padding: 9px 12px;
             }
 
+            #wizardScreen2 .screen-actions > .ghost-btn,
+            #wizardScreen2 .screen-actions > .primary-btn,
+            #wizardScreen3 .screen-actions .action-button-group > .ghost-btn,
+            #wizardScreen3 .screen-actions .action-button-group > .primary-btn {
+                font-size: 0.68em;
+                padding: 8px 9px;
+            }
+
             #wizardScreen4 .report-toolbar .primary-btn {
                 width: auto;
                 padding: 7px 10px;
@@ -2233,7 +2262,7 @@
                 </div>
             </div>
             <h1 data-regional-template="🔧 Weber Baseline Tuner">🔧 Weber Baseline Tuner</h1>
-            <p>DCOE, IDF & 32/36 Jetting Setup - Classic JDM & European Motors (1960-2010)</p>
+            <p>DCOE, IDF & 32/36 Jetting Setup</p>
         </div>
 
         <div class="main-content">
@@ -2594,7 +2623,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 22:42 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 22:54 UTC</span></p>
                     </div>
                 </div>
 
@@ -3041,7 +3070,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 22:42 UTC';
+        const APP_VERSION = '2026-03-24 22:54 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
