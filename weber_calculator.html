@@ -1647,8 +1647,8 @@
 
                 <div class="report-edit-grid">
                     <div class="wizard-subcard">
-                        <div class="subcard-title">Tweak carb components</div>
-                        <div class="subcard-copy">Adjust the carb body, choke, and bleed/holder family to match the hardware you actually have available.</div>
+                        <div class="subcard-title">Tweak carb components and available parts</div>
+                        <div class="subcard-copy">Adjust the carb body, choke, bleed or holder family, and any parts-on-hand overrides in one place so the report reflects the hardware you actually have available.</div>
 
                         <div class="section-header">
                             <div class="section-title" data-regional-template="{{carbSingularCap}} Specs">Carburetor Specs</div>
@@ -1689,10 +1689,11 @@
                         </div>
 
                         <div class="warning-box" id="altWarning">⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.</div>
-                    </div>
 
-                    <div class="wizard-subcard">
-                        <div class="subcard-title">Tweak to the parts you have</div>
+                        <div class="section-header">
+                            <div class="section-title">Available Parts / Forced Overrides</div>
+                        </div>
+
                         <div class="subcard-copy">Use these only when you want the report to account for the jets and components already in your toolbox.</div>
 
                         <div class="override-panel">
@@ -1840,7 +1841,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 00:19 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 00:43 UTC</span></p>
                     </div>
                 </div>
 
@@ -2208,7 +2209,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 00:19 UTC';
+        const APP_VERSION = '2026-03-24 00:43 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -3498,16 +3499,18 @@
         function buildEngineSelectionSummary() {
             const makeSelect = document.getElementById('makeSelect');
             const engineSelect = document.getElementById('engineSelect');
+            const carbSetupSelect = document.getElementById('carbSetup');
             const makeKey = makeSelect.value;
             const engineKey = engineSelect.value;
             const makeLabel = makeSelect.options[makeSelect.selectedIndex]?.textContent?.trim() || 'Custom / Other';
             const rawEngineLabel = engineSelect.options[engineSelect.selectedIndex]?.textContent?.trim() || '-- Select Engine --';
             const engineName = rawEngineLabel.includes('(') ? rawEngineLabel.split('(')[0].trim() : rawEngineLabel.replace(/^-+\s*|\s*-+$/g, '').trim();
+            const setupLabel = carbSetupSelect.options[carbSetupSelect.selectedIndex]?.textContent?.trim() || 'Carb setup not selected';
             const displacement = parseFloat(document.getElementById('displacement').value) || 2000;
             const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
             const maxRpm = parseInt(document.getElementById('maxRpm').value, 10) || 6000;
             const camLabel = document.getElementById('cam').options[document.getElementById('cam').selectedIndex]?.textContent?.trim() || 'Street Perf';
-            const specs = `${Math.round(displacement)}cc • ${getCylinderSummaryLabel(cylinders)} • ${maxRpm} RPM • ${camLabel}`;
+            const specs = `${setupLabel} • ${Math.round(displacement)}cc • ${getCylinderSummaryLabel(cylinders)} • ${maxRpm} RPM • ${camLabel}`;
 
             if (engineKey !== 'custom' && engineName && !engineName.startsWith('--')) {
                 return `${makeLabel} • ${engineName} • ${specs}`;
