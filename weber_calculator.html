@@ -338,6 +338,103 @@
             justify-content: flex-end;
         }
 
+        .report-edit-grid {
+            display: none;
+        }
+
+        .tuning-inline-note {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border: 1px solid #d9e2ec;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, #f7fbff 100%);
+        }
+
+        .tuning-inline-note p {
+            margin: 0;
+            color: #50606f;
+            font-size: 0.8em;
+            line-height: 1.45;
+        }
+
+        .tuning-inline-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .edit-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border: 1px solid #c9d5e1;
+            border-radius: 999px;
+            background: #f4f8fb;
+            color: #425466;
+            font-size: 0.7em;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .edit-chip:hover {
+            background: #e8f0f8;
+            border-color: #9fb8cf;
+            transform: translateY(-1px);
+        }
+
+        .setup-hero-tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .jet-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .jet-card-body {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .edit-modal-stack {
+            display: grid;
+            gap: 14px;
+        }
+
+        .edit-modal-copy {
+            color: #50606f;
+            font-size: 0.88em;
+            line-height: 1.55;
+        }
+
+        .edit-modal-current {
+            color: #6b7785;
+            font-size: 0.8em;
+            line-height: 1.45;
+        }
+
+        .edit-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
         .screen-hint {
             color: #6b7785;
             font-size: 0.82em;
@@ -582,9 +679,12 @@
 
         .setup-hero {
             display: grid;
-            grid-template-columns: 156px minmax(0, 1fr);
-            gap: 12px;
-            align-items: center;
+            grid-template-columns: 132px minmax(0, 1fr);
+            grid-template-areas:
+                'media copy'
+                'badges badges';
+            gap: 10px 12px;
+            align-items: start;
             padding: 10px;
             margin-bottom: 10px;
             background: linear-gradient(135deg, #fff8f0 0%, #f8fbff 100%);
@@ -594,11 +694,12 @@
         }
 
         .setup-hero-media {
+            grid-area: media;
             background: linear-gradient(135deg, #ffffff 0%, #eef4fb 100%);
             border: 1px solid #dbe5ef;
             border-radius: 10px;
-            padding: 8px;
-            min-height: 104px;
+            padding: 6px;
+            min-height: 88px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -611,6 +712,7 @@
         }
 
         .setup-hero-copy {
+            grid-area: copy;
             min-width: 0;
         }
 
@@ -636,10 +738,11 @@
         }
 
         .setup-badges {
+            grid-area: badges;
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            margin-top: 8px;
+            margin-top: 2px;
         }
 
         .setup-badge {
@@ -1408,6 +1511,16 @@
                 justify-content: stretch;
             }
 
+            .tuning-inline-note {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .tuning-inline-actions,
+            .edit-modal-actions {
+                justify-content: stretch;
+            }
+
             .setup-selector-grid,
             .report-edit-grid {
                 grid-template-columns: 1fr;
@@ -1489,12 +1602,21 @@
                 padding: 18px;
             }
 
-            .setup-hero {
-                grid-template-columns: 1fr;
+            .setup-hero-media {
+                min-height: 76px;
             }
 
-            .setup-hero-media {
-                min-height: 96px;
+            .setup-hero {
+                grid-template-columns: 98px minmax(0, 1fr);
+                gap: 8px 10px;
+            }
+
+            .setup-hero-title {
+                font-size: 0.98em;
+            }
+
+            .setup-hero-text {
+                font-size: 0.74em;
             }
 
             .health-score-box.user-selected .health-score-top,
@@ -1524,6 +1646,21 @@
 
             .wizard-step-meta {
                 font-size: 0.58em;
+            }
+
+            .setup-hero {
+                grid-template-columns: 82px minmax(0, 1fr);
+                gap: 8px;
+            }
+
+            .setup-hero-media {
+                min-height: 68px;
+                padding: 5px;
+            }
+
+            .setup-badge {
+                font-size: 0.66em;
+                padding: 4px 7px;
             }
 
             .header {
@@ -1761,6 +1898,13 @@
                     <button type="button" class="ghost-btn" data-nav-step="2">Back to engine details</button>
                 </div>
 
+                <div class="tuning-inline-note final-hidden">
+                    <p>Use the Edit buttons in the report below to adjust layout, carb specs, or parts on hand without a separate tuning panel.</p>
+                    <div class="tuning-inline-actions">
+                        <button type="button" class="section-reset-btn" onclick="resetCarbSpecsToDefaults()">Reset tuning changes</button>
+                    </div>
+                </div>
+
                 <div class="report-edit-grid">
                     <div class="wizard-subcard">
                         <div class="subcard-title">Tweak carb components and available parts</div>
@@ -1860,6 +2004,7 @@
 
                 <h2 class="results-title">📋 Tuning Report</h2>
                 <div class="results-subtitle" id="engineSummaryHeader">Custom setup • 2000cc • 4 Cyl • 6000 RPM • Street Perf</div>
+                <div class="warning-box" id="reportAltWarning">⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.</div>
 
                 <div class="setup-hero" id="setupHero">
                     <div class="setup-hero-media" id="setupHeroVisual" aria-hidden="true"></div>
@@ -1867,11 +2012,17 @@
                         <div class="setup-hero-eyebrow" data-regional-template="Selected {{carbSingularCap}} Setup">Selected Carburetor Setup</div>
                         <h3 class="setup-hero-title" id="setupHeroTitle">DCOE Single</h3>
                         <p class="setup-hero-text" id="setupHeroDescription">One DCOE body with two throats. Baseline shown as a per-venturi recommendation where applicable.</p>
-                        <div class="setup-badges">
-                            <span class="setup-badge" id="setupHeroCount">1 carb / 2 throats</span>
-                            <span class="setup-badge" id="setupHeroLoad">1000cc per venturi</span>
-                            <span class="setup-badge" id="setupHeroMode">Per-venturi baseline</span>
+                        <div class="setup-hero-tools final-hidden">
+                            <button type="button" class="edit-chip" data-edit-control="setup">Edit layout</button>
+                            <button type="button" class="edit-chip" data-edit-control="carbBody">Edit body</button>
+                            <button type="button" class="edit-chip" data-edit-control="venturi">Edit choke</button>
+                            <button type="button" class="edit-chip" data-edit-control="airBleed">Edit bleed</button>
                         </div>
+                    </div>
+                    <div class="setup-badges">
+                        <span class="setup-badge" id="setupHeroCount">1 carb / 2 throats</span>
+                        <span class="setup-badge" id="setupHeroLoad">1000cc per venturi</span>
+                        <span class="setup-badge" id="setupHeroMode">Per-venturi baseline</span>
                     </div>
                 </div>
 
@@ -1977,7 +2128,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 02:36 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 03:04 UTC</span></p>
                     </div>
                 </div>
 
@@ -2343,9 +2494,33 @@
         </div>
     </div>
 
+    <div class="reference-modal" id="tuningEditModal" aria-hidden="true">
+        <div class="reference-dialog" role="dialog" aria-modal="true" aria-labelledby="tuningEditTitle">
+            <div class="reference-header">
+                <div>
+                    <h2 id="tuningEditTitle">Edit tuning item</h2>
+                    <p id="tuningEditCopy">Choose a different value for this report item.</p>
+                </div>
+                <button type="button" class="close-btn" aria-label="Close tuning editor" onclick="closeTuningEditModal()">×</button>
+            </div>
+
+            <div class="edit-modal-stack">
+                <p class="edit-modal-current" id="tuningEditCurrent">Current value shown here.</p>
+                <div class="form-group">
+                    <label for="tuningEditSelect" id="tuningEditLabel">Available options</label>
+                    <select id="tuningEditSelect"></select>
+                </div>
+                <div class="edit-modal-actions">
+                    <button type="button" class="ghost-btn" onclick="closeTuningEditModal()">Cancel</button>
+                    <button type="button" class="primary-btn" onclick="applyTuningEditSelection()">Apply change</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 02:36 UTC';
+        const APP_VERSION = '2026-03-24 03:04 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -2623,6 +2798,9 @@
         };
 
         let lastRenderedSignature = null;
+        const tuningEditState = {
+            controlKey: null
+        };
         const carbControlSelectionState = {
             familyKey: null,
             bodyManualOverride: false
@@ -2813,6 +2991,7 @@
                 return;
             }
 
+            node.querySelectorAll('.edit-chip, .final-hidden').forEach(child => child.remove());
             node.removeAttribute('id');
             node.classList.remove('updated');
             Array.from(node.children).forEach(child => stripClonedReportIds(child));
@@ -2827,7 +3006,7 @@
             }
 
             const cloneNodes = Array.from(source.children)
-                .filter(child => !child.classList.contains('report-toolbar') && !child.classList.contains('report-edit-grid') && !child.classList.contains('screen-actions') && !child.classList.contains('report-section-spacer'))
+                .filter(child => !child.classList.contains('report-toolbar') && !child.classList.contains('report-edit-grid') && !child.classList.contains('screen-actions') && !child.classList.contains('report-section-spacer') && !child.classList.contains('final-hidden'))
                 .map(child => child.cloneNode(true));
 
             target.innerHTML = '';
@@ -2842,6 +3021,142 @@
             document.querySelectorAll('.setup-option-card').forEach(card => {
                 card.classList.toggle('active', card.dataset.setupValue === selectedSetup);
             });
+        }
+
+        function getActiveFamilyKey() {
+            return carbSetups[document.getElementById('carbSetup').value]?.familyKey || 'dcoe';
+        }
+
+        function getOverrideConfigByKey(familyKey, key) {
+            return (overrideFieldConfigs[familyKey] || []).find(config => config.key === key) || null;
+        }
+
+        function getOverrideInputForKey(key) {
+            for (let index = 1; index <= 5; index += 1) {
+                const input = document.getElementById(`overrideValue${index}`);
+                if (input?.dataset.key === key) {
+                    return input;
+                }
+            }
+
+            return null;
+        }
+
+        function buildRangeOptions(config) {
+            const options = [{ value: '__auto__', label: 'Use calculated baseline' }];
+            for (let value = config.min; value <= config.max; value += config.step) {
+                options.push({ value: String(value), label: String(value) });
+            }
+            return options;
+        }
+
+        function getTuningEditConfig(controlKey) {
+            const familyKey = getActiveFamilyKey();
+
+            if (controlKey === 'setup') {
+                const select = document.getElementById('carbSetup');
+                return {
+                    title: 'Edit carb layout',
+                    copy: 'Choose the carb layout you want reflected in the report.',
+                    currentText: `Current layout: ${select.options[select.selectedIndex]?.textContent?.trim() || 'Unknown'}`,
+                    label: 'Carb layout',
+                    value: select.value,
+                    options: Array.from(select.options).map(option => ({ value: option.value, label: option.textContent.trim() })),
+                    apply: value => {
+                        select.value = value;
+                        carbSetupSuggestionState.manualOverride = true;
+                        updateCarburetorUI({ downgradeIncompatibleSetup: false });
+                    }
+                };
+            }
+
+            if (['carbBody', 'venturi', 'airBleed'].includes(controlKey)) {
+                const select = document.getElementById(controlKey);
+                const titleMap = {
+                    carbBody: 'Edit carb body',
+                    venturi: 'Edit venturi / choke',
+                    airBleed: 'Edit air bleed / holder'
+                };
+
+                return {
+                    title: titleMap[controlKey],
+                    copy: 'Choose a different report setting for this carb element.',
+                    currentText: `Current value: ${select.options[select.selectedIndex]?.textContent?.trim() || 'Unknown'}`,
+                    label: select.previousElementSibling?.textContent?.trim() || 'Available options',
+                    value: select.value,
+                    options: Array.from(select.options).map(option => ({ value: option.value, label: option.textContent.trim() })),
+                    apply: value => {
+                        select.value = value;
+                        if (controlKey === 'carbBody') {
+                            carbControlSelectionState.bodyManualOverride = true;
+                            updateCarburetorUI({ shouldRecalculate: true, downgradeIncompatibleSetup: false });
+                            return;
+                        }
+                        calculateJets();
+                    }
+                };
+            }
+
+            const config = getOverrideConfigByKey(familyKey, controlKey);
+            const input = getOverrideInputForKey(controlKey);
+            if (!config || !input) {
+                return null;
+            }
+
+            return {
+                title: `Edit ${config.label}`,
+                copy: 'Choose a specific part you have on hand, or switch back to the calculator baseline.',
+                currentText: input.value.trim() === ''
+                    ? 'Currently using the calculated baseline.'
+                    : `Current forced value: ${input.value.trim()}`,
+                label: config.label,
+                value: input.value.trim() || '__auto__',
+                options: buildRangeOptions(config),
+                apply: value => {
+                    input.value = value === '__auto__' ? '' : value;
+                    updateOverrideInputStates();
+                    calculateJets();
+                }
+            };
+        }
+
+        function openTuningEditModal(controlKey) {
+            const config = getTuningEditConfig(controlKey);
+            if (!config) {
+                return;
+            }
+
+            tuningEditState.controlKey = controlKey;
+            document.getElementById('tuningEditTitle').textContent = config.title;
+            document.getElementById('tuningEditCopy').textContent = config.copy;
+            document.getElementById('tuningEditCurrent').textContent = config.currentText;
+            document.getElementById('tuningEditLabel').textContent = config.label;
+            const select = document.getElementById('tuningEditSelect');
+            select.innerHTML = config.options.map(option => `<option value="${option.value}">${option.label}</option>`).join('');
+            select.value = config.value;
+
+            const modal = document.getElementById('tuningEditModal');
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeTuningEditModal() {
+            const modal = document.getElementById('tuningEditModal');
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+            tuningEditState.controlKey = null;
+        }
+
+        function applyTuningEditSelection() {
+            const controlKey = tuningEditState.controlKey;
+            const config = getTuningEditConfig(controlKey);
+            if (!config) {
+                closeTuningEditModal();
+                return;
+            }
+
+            config.apply(document.getElementById('tuningEditSelect').value);
+            closeTuningEditModal();
         }
 
         function navigateWizardTo(step) {
@@ -3635,6 +3950,7 @@
             closeAboutModal();
             closeReferenceModal();
             closeReferenceLinksModal();
+            closeTuningEditModal();
         }
 
         function selectEngine() {
@@ -3714,8 +4030,13 @@
             container.innerHTML = cards.map((card, index) => `
                 <div class="jet-card${shouldHighlight ? ' updated' : ''}${card.userSelected ? ' user-selected' : ''}">
                     ${card.userSelected ? '<div class="selection-badge">User Selected</div>' : ''}
-                    <div class="jet-name">${card.name}</div>
-                    <div class="jet-value" id="resultValue${index}">${card.value}</div>
+                    <div class="jet-card-header">
+                        <div class="jet-card-body">
+                            <div class="jet-name">${card.name}</div>
+                            <div class="jet-value" id="resultValue${index}">${card.value}</div>
+                        </div>
+                        ${card.editControl ? `<button type="button" class="edit-chip final-hidden" data-edit-control="${card.editControl}">Edit</button>` : ''}
+                    </div>
                     <div class="jet-note">${card.note}</div>
                 </div>
             `).join('');
@@ -4026,8 +4347,11 @@
             document.getElementById('afrSummary').textContent = result.afrSummary;
 
             const altWarning = document.getElementById('altWarning');
+            const reportAltWarning = document.getElementById('reportAltWarning');
             altWarning.textContent = result.altitudeWarning;
             altWarning.classList.toggle('show', result.showAltitudeWarning);
+            reportAltWarning.textContent = result.altitudeWarning;
+            reportAltWarning.classList.toggle('show', result.showAltitudeWarning);
 
             if (shouldHighlight) {
                 flashUpdatedResults();
@@ -4141,12 +4465,12 @@
                     airBleedUserSelected: context.airBleedUserSelected
                 },
                 cards: [
-                    { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: `Suggested from roughly ${Math.round(displacementPerVenturi)}cc per venturi and ${assignmentText}.`, userSelected: venturiUserSelected },
-                    { name: 'Main Jet', value: String(mainJet), note: formatOverrideAwareNote('Controls WOT fuel flow. Baseline is calculated per venturi from venturi × 4.', mainJet, recommendedMainJet), userSelected: mainJet !== recommendedMainJet },
-                    { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('Leans the mixture as RPM rises. Cam profile can shift this baseline up or down from the usual main + 50 rule.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector },
+                    { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: `Suggested from roughly ${Math.round(displacementPerVenturi)}cc per venturi and ${assignmentText}.`, userSelected: venturiUserSelected, editControl: 'venturi' },
+                    { name: 'Main Jet', value: String(mainJet), note: formatOverrideAwareNote('Controls WOT fuel flow. Baseline is calculated per venturi from venturi × 4.', mainJet, recommendedMainJet), userSelected: mainJet !== recommendedMainJet, editControl: 'mainJet' },
+                    { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('Leans the mixture as RPM rises. Cam profile can shift this baseline up or down from the usual main + 50 rule.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector, editControl: 'airCorrector' },
                     { name: 'Emulsion Tube', value: emulsionTube, note: `Selected from approximately ${Math.round(displacementPerVenturi)}cc of load per venturi.` },
-                    { name: 'Idle Jet', value: `${idleJetSize}${context.airBleed}`, note: formatOverrideAwareNote('Progression and cruise baseline is keyed to venturi load and cam overlap, not just carb count. Format: fuel jet + air bleed.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet || context.airBleedUserSelected },
-                    { name: 'Pump Jet', value: String(pumpJet), note: formatOverrideAwareNote('Accelerator pump discharge scaled for venturi load and cam aggressiveness.', pumpJet, recommendedPumpJet), userSelected: pumpJet !== recommendedPumpJet },
+                    { name: 'Idle Jet', value: `${idleJetSize}${context.airBleed}`, note: formatOverrideAwareNote('Progression and cruise baseline is keyed to venturi load and cam overlap, not just carb count. Format: fuel jet + air bleed.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet || context.airBleedUserSelected, editControl: 'idleJet' },
+                    { name: 'Pump Jet', value: String(pumpJet), note: formatOverrideAwareNote('Accelerator pump discharge scaled for venturi load and cam aggressiveness.', pumpJet, recommendedPumpJet), userSelected: pumpJet !== recommendedPumpJet, editControl: 'pumpJet' },
                     { name: 'Auxiliary Venturi', value: auxVenturi, note: 'Main-circuit signal booster. Smaller chokes prefer smaller aux venturis.' },
                     { name: 'Needle Valve', value: needleValve, note: 'Float chamber refill rate matched to approximate fuel demand per carb body.' }
                 ],
@@ -4269,12 +4593,12 @@
                     airBleedUserSelected: context.airBleedUserSelected
                 },
                 cards: [
-                    { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: `Suggested from roughly ${Math.round(displacementPerVenturi)}cc per venturi and ${assignmentText}.`, userSelected: venturiUserSelected },
-                    { name: 'Main Jet', value: String(mainJet), note: formatOverrideAwareNote('Downdraft IDF baseline starts slightly richer than DCOE and is calculated per venturi at venturi × 4.1.', mainJet, recommendedMainJet), userSelected: mainJet !== recommendedMainJet },
-                    { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('A slightly larger air corrector spread helps IDF top-end cleanup, and the cam profile now nudges that spread richer or leaner.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector },
+                    { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: `Suggested from roughly ${Math.round(displacementPerVenturi)}cc per venturi and ${assignmentText}.`, userSelected: venturiUserSelected, editControl: 'venturi' },
+                    { name: 'Main Jet', value: String(mainJet), note: formatOverrideAwareNote('Downdraft IDF baseline starts slightly richer than DCOE and is calculated per venturi at venturi × 4.1.', mainJet, recommendedMainJet), userSelected: mainJet !== recommendedMainJet, editControl: 'mainJet' },
+                    { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('A slightly larger air corrector spread helps IDF top-end cleanup, and the cam profile now nudges that spread richer or leaner.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector, editControl: 'airCorrector' },
                     { name: 'Emulsion Tube', value: emulsionTube, note: `Chosen from approximately ${Math.round(displacementPerVenturi)}cc of load per venturi.` },
-                    { name: 'Idle Jet', value: `${idleJetSize}${context.airBleed}`, note: formatOverrideAwareNote('IDF idle circuit baseline now follows per-venturi load and cam overlap. Format: fuel jet + holder family.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet || context.airBleedUserSelected },
-                    { name: 'Pump Jet', value: String(pumpJet), note: formatOverrideAwareNote('Pump jet baseline is biased by venturi load and cam because IDFs often need a stronger transition shot.', pumpJet, recommendedPumpJet), userSelected: pumpJet !== recommendedPumpJet },
+                    { name: 'Idle Jet', value: `${idleJetSize}${context.airBleed}`, note: formatOverrideAwareNote('IDF idle circuit baseline now follows per-venturi load and cam overlap. Format: fuel jet + holder family.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet || context.airBleedUserSelected, editControl: 'idleJet' },
+                    { name: 'Pump Jet', value: String(pumpJet), note: formatOverrideAwareNote('Pump jet baseline is biased by venturi load and cam because IDFs often need a stronger transition shot.', pumpJet, recommendedPumpJet), userSelected: pumpJet !== recommendedPumpJet, editControl: 'pumpJet' },
                     { name: 'Booster / Aux Reference', value: booster, note: 'Reference size for signal strength. Larger vents tend to want the larger booster range.' },
                     { name: 'Needle Valve', value: needleValve, note: 'Supply rate recommendation keyed to approximate fuel demand per carb body.' }
                 ],
@@ -4378,12 +4702,12 @@
                     airBleedUserSelected: context.airBleedUserSelected
                 },
                 cards: [
-                    { name: 'Venturi Pair', value: `${primaryVenturi}/${secondaryVenturi}mm`, note: 'Progressive carbs use fixed primary and secondary venturis rather than removable chokes.', userSelected: venturiUserSelected },
-                    { name: 'Primary Main Jet', value: String(primaryMain), note: formatOverrideAwareNote('Controls cruise-to-midrange fueling on the primary barrel. Cam choice now shifts this baseline more noticeably.', primaryMain, recommendedPrimaryMain), userSelected: primaryMain !== recommendedPrimaryMain },
-                    { name: 'Secondary Main Jet', value: String(secondaryMain), note: formatOverrideAwareNote('Secondary barrel spread now grows with cam aggressiveness instead of being almost fixed.', secondaryMain, recommendedSecondaryMain), userSelected: secondaryMain !== recommendedSecondaryMain },
-                    { name: 'Primary Air Corrector', value: String(primaryAir), note: formatOverrideAwareNote('Primary high-RPM trim. Cam can bias this above or below the usual primary main + 35 pattern.', primaryAir, recommendedPrimaryAir), userSelected: primaryAir !== recommendedPrimaryAir },
-                    { name: 'Secondary Air Corrector', value: String(secondaryAir), note: formatOverrideAwareNote('Secondary high-RPM trim. Race cams hold this richer than the old nearly fixed rule.', secondaryAir, recommendedSecondaryAir), userSelected: secondaryAir !== recommendedSecondaryAir },
-                    { name: 'Idle Jet', value: String(idleJet), note: formatOverrideAwareNote('Single-barrel progression baseline now reacts more strongly to cam overlap.', idleJet, recommendedIdleJet), userSelected: idleJet !== recommendedIdleJet },
+                    { name: 'Venturi Pair', value: `${primaryVenturi}/${secondaryVenturi}mm`, note: 'Progressive carbs use fixed primary and secondary venturis rather than removable chokes.', userSelected: venturiUserSelected, editControl: 'venturi' },
+                    { name: 'Primary Main Jet', value: String(primaryMain), note: formatOverrideAwareNote('Controls cruise-to-midrange fueling on the primary barrel. Cam choice now shifts this baseline more noticeably.', primaryMain, recommendedPrimaryMain), userSelected: primaryMain !== recommendedPrimaryMain, editControl: 'primaryMain' },
+                    { name: 'Secondary Main Jet', value: String(secondaryMain), note: formatOverrideAwareNote('Secondary barrel spread now grows with cam aggressiveness instead of being almost fixed.', secondaryMain, recommendedSecondaryMain), userSelected: secondaryMain !== recommendedSecondaryMain, editControl: 'secondaryMain' },
+                    { name: 'Primary Air Corrector', value: String(primaryAir), note: formatOverrideAwareNote('Primary high-RPM trim. Cam can bias this above or below the usual primary main + 35 pattern.', primaryAir, recommendedPrimaryAir), userSelected: primaryAir !== recommendedPrimaryAir, editControl: 'primaryAir' },
+                    { name: 'Secondary Air Corrector', value: String(secondaryAir), note: formatOverrideAwareNote('Secondary high-RPM trim. Race cams hold this richer than the old nearly fixed rule.', secondaryAir, recommendedSecondaryAir), userSelected: secondaryAir !== recommendedSecondaryAir, editControl: 'secondaryAir' },
+                    { name: 'Idle Jet', value: String(idleJet), note: formatOverrideAwareNote('Single-barrel progression baseline now reacts more strongly to cam overlap.', idleJet, recommendedIdleJet), userSelected: idleJet !== recommendedIdleJet, editControl: 'idleJet' },
                     { name: 'Emulsion Series', value: context.airBleed, note: 'Progressive emulsion family selection used as the baseline reference.' },
                     { name: 'Needle Valve', value: needleValve, note: 'Float valve recommendation for the common single progressive installation.' }
                 ],
@@ -4539,12 +4863,21 @@
             donationButton.setAttribute('rel', 'noopener noreferrer');
         }
 
-        ['aboutModal', 'referenceModal', 'referenceLinksModal'].forEach(modalId => {
+        ['aboutModal', 'referenceModal', 'referenceLinksModal', 'tuningEditModal'].forEach(modalId => {
             document.getElementById(modalId).addEventListener('click', event => {
                 if (event.target.id === modalId) {
                     closeAllModals();
                 }
             });
+        });
+
+        document.addEventListener('click', event => {
+            const editButton = event.target.closest('[data-edit-control]');
+            if (!editButton) {
+                return;
+            }
+
+            openTuningEditModal(editButton.dataset.editControl);
         });
 
         document.addEventListener('keydown', event => {
