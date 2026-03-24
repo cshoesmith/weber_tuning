@@ -258,7 +258,7 @@
         .wizard-step-btn.completed::after {
             content: '✓';
             position: absolute;
-            left: 12px;
+            right: 12px;
             bottom: 10px;
             width: 18px;
             height: 18px;
@@ -1836,6 +1836,16 @@
                 justify-content: stretch;
             }
 
+            #wizardScreen4 .report-toolbar .action-button-group {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            #wizardScreen4 .report-toolbar .primary-btn {
+                width: auto;
+                padding: 8px 12px;
+            }
+
             .setup-selector-grid,
             .report-edit-grid {
                 grid-template-columns: 1fr;
@@ -1857,6 +1867,16 @@
 
             .wizard-step-btn.reset-step {
                 padding: 8px 5px;
+            }
+
+            .wizard-step-btn.completed::after {
+                top: 6px;
+                right: 6px;
+                bottom: auto;
+                width: 9px;
+                height: 9px;
+                font-size: 0.42em;
+                box-shadow: 0 3px 8px rgba(47, 133, 90, 0.18);
             }
 
             .wizard-step-index {
@@ -1964,6 +1984,11 @@
 
             .wizard-step-btn {
                 padding: 7px 4px;
+            }
+
+            .wizard-step-btn.completed::after {
+                top: 5px;
+                right: 5px;
             }
 
             .wizard-step-index {
@@ -2083,6 +2108,11 @@
             .ghost-btn {
                 width: 100%;
                 padding: 9px 12px;
+            }
+
+            #wizardScreen4 .report-toolbar .primary-btn {
+                width: auto;
+                padding: 7px 10px;
             }
         }
 
@@ -2556,7 +2586,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 22:27 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 22:35 UTC</span></p>
                     </div>
                 </div>
 
@@ -3003,7 +3033,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 22:27 UTC';
+        const APP_VERSION = '2026-03-24 22:35 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
