@@ -330,6 +330,14 @@
             border-top: 1px solid #e6edf5;
         }
 
+        .action-button-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
         .screen-hint {
             color: #6b7785;
             font-size: 0.82em;
@@ -1396,6 +1404,10 @@
                 align-items: stretch;
             }
 
+            .action-button-group {
+                justify-content: stretch;
+            }
+
             .setup-selector-grid,
             .report-edit-grid {
                 grid-template-columns: 1fr;
@@ -1900,6 +1912,26 @@
                     </div>
                     <div class="afr-note">Targets are biased toward safe street/performance baselines: slightly leaner at cruise, richer under acceleration and WOT.</div>
                 </div>
+
+                <div class="screen-actions">
+                    <div class="screen-hint">When the live preview looks right, finalize it into a clean report-only page.</div>
+                    <div class="action-button-group">
+                        <button type="button" class="ghost-btn" data-nav-step="2">Back to engine details</button>
+                        <button type="button" class="primary-btn" data-nav-step="4">Finalize report</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="results-section wizard-screen" id="wizardScreen4" data-step="4">
+                <div class="report-toolbar">
+                    <div>
+                        <h2 class="screen-header">Final report</h2>
+                        <p class="screen-copy">This page is a clean read-only snapshot of the tuning report. Go back if you want to tweak parts or engine inputs.</p>
+                    </div>
+                    <button type="button" class="ghost-btn" data-nav-step="3">Back to tweak report</button>
+                </div>
+
+                <div id="finalReportSnapshot"></div>
             </section>
         </div>
 
@@ -1933,7 +1965,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 01:33 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 01:52 UTC</span></p>
                     </div>
                 </div>
 
@@ -2301,7 +2333,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 01:33 UTC';
+        const APP_VERSION = '2026-03-24 01:52 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -2605,6 +2637,11 @@
                 statusTemplate: 'Step 3 of 3 • Review report',
                 defaultMessageTemplate: 'Review the report, then tweak the available parts without leaving this screen.',
                 completedMessageTemplate: 'Report screen is live — tweak available parts and watch the baseline update.'
+            },
+            4: {
+                statusTemplate: 'Final report ready',
+                defaultMessageTemplate: 'Final report is ready. Go back to the tweak screen anytime if you want to adjust the setup.',
+                completedMessageTemplate: 'Step 3 complete — final report is ready to review.'
             }
         };
 
@@ -2707,6 +2744,7 @@
         }
 
         function getMaxUnlockedWizardStep() {
+            if (wizardState.completedSteps.has(3)) return 4;
             if (wizardState.completedSteps.has(2)) return 3;
             if (wizardState.completedSteps.has(1)) return 2;
             return 1;
@@ -2730,14 +2768,14 @@
                 button.disabled = step > maxUnlocked;
             }
 
-            document.getElementById('wizardProgressFill').style.width = `${(wizardState.activeStep / 3) * 100}%`;
+            document.getElementById('wizardProgressFill').style.width = `${(Math.min(wizardState.activeStep, 3) / 3) * 100}%`;
             document.getElementById('wizardProgressStatus').textContent = renderRegionalTemplate(wizardStepMeta[wizardState.activeStep].statusTemplate);
             document.getElementById('wizardCompletionNote').textContent = renderRegionalTemplate(wizardState.completionMessageTemplate || wizardStepMeta[wizardState.activeStep].defaultMessageTemplate);
         }
 
         function setActiveWizardStep(step, options = {}) {
             const maxUnlocked = getMaxUnlockedWizardStep();
-            if (step < 1 || step > 3 || step > maxUnlocked) {
+            if (step < 1 || step > 4 || step > maxUnlocked) {
                 return;
             }
 
@@ -2753,6 +2791,35 @@
             wizardState.completedSteps.add(step);
             wizardState.completionMessageTemplate = wizardStepMeta[step].completedMessageTemplate;
             updateWizardUI();
+        }
+
+        function stripClonedReportIds(node) {
+            if (!(node instanceof HTMLElement)) {
+                return;
+            }
+
+            node.removeAttribute('id');
+            node.classList.remove('updated');
+            Array.from(node.children).forEach(child => stripClonedReportIds(child));
+        }
+
+        function syncFinalReportView() {
+            const source = document.getElementById('wizardScreen3');
+            const target = document.getElementById('finalReportSnapshot');
+
+            if (!source || !target) {
+                return;
+            }
+
+            const cloneNodes = Array.from(source.children)
+                .filter(child => !child.classList.contains('report-toolbar') && !child.classList.contains('report-edit-grid') && !child.classList.contains('screen-actions') && !child.classList.contains('report-section-spacer'))
+                .map(child => child.cloneNode(true));
+
+            target.innerHTML = '';
+            cloneNodes.forEach(node => {
+                stripClonedReportIds(node);
+                target.appendChild(node);
+            });
         }
 
         function syncSetupSelectionCards() {
@@ -2772,6 +2839,15 @@
                 completeWizardStep(2);
                 updateCarburetorUI({ shouldRecalculate: false });
                 calculateJets();
+            }
+
+            if (step === 4) {
+                completeWizardStep(1);
+                completeWizardStep(2);
+                completeWizardStep(3);
+                updateCarburetorUI({ shouldRecalculate: false });
+                calculateJets();
+                syncFinalReportView();
             }
 
             setActiveWizardStep(step, { preserveMessage: true });
@@ -3940,6 +4016,7 @@
             }
 
             lastRenderedSignature = nextSignature;
+            syncFinalReportView();
         }
 
         function calculateDCOE(context) {
