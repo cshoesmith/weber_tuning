@@ -1933,7 +1933,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 12:24 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 01:33 UTC</span></p>
                     </div>
                 </div>
 
@@ -2301,7 +2301,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 12:24 UTC';
+        const APP_VERSION = '2026-03-24 01:33 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -2826,7 +2826,7 @@
             return validSetupKeys[0] || 'dcoe_single';
         }
 
-        function refreshCarbSetupOptions(cylinders, preferredSetupKey = null) {
+        function refreshCarbSetupOptions(cylinders, preferredSetupKey = null, options = {}) {
             const select = document.getElementById('carbSetup');
             const currentValue = preferredSetupKey || select.value;
             Array.from(select.options).forEach(option => {
@@ -2834,9 +2834,7 @@
                 option.hidden = false;
             });
 
-            const shouldRestrictByEngine = wizardState.completedSteps.has(2);
-
-            if (!shouldRestrictByEngine) {
+            if (!options.downgradeIncompatible) {
                 select.value = currentValue || select.value;
                 return select.value;
             }
@@ -3414,7 +3412,7 @@
             const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
             const cam = document.getElementById('cam').value;
             const suggestedSetup = suggestCarbSetup(displacement, cylinders, cam);
-            return refreshCarbSetupOptions(cylinders, suggestedSetup);
+            return refreshCarbSetupOptions(cylinders, suggestedSetup, { downgradeIncompatible: true });
         }
 
         function updateCarburetorUI(options = {}) {
@@ -3423,17 +3421,17 @@
                 : options;
             const shouldRecalculate = normalizedOptions.shouldRecalculate !== false;
             const resetSelections = !!normalizedOptions.resetSelections;
+            const downgradeIncompatibleSetup = !!normalizedOptions.downgradeIncompatibleSetup;
             const displacement = parseFloat(document.getElementById('displacement').value) || 2000;
             const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
             const maxRpm = parseInt(document.getElementById('maxRpm').value, 10) || 6000;
             const cam = document.getElementById('cam').value;
             const engineRestrictionActive = wizardState.completedSteps.has(2);
-            const validSetupKeys = getValidCarbSetupKeys(cylinders);
             const preferredSetupKey = carbSetupSuggestionState.manualOverride
                 ? document.getElementById('carbSetup').value
                 : suggestCarbSetup(displacement, cylinders, cam);
-            const selectedSetupKey = refreshCarbSetupOptions(cylinders, preferredSetupKey);
-            const setupKey = validSetupKeys.includes(selectedSetupKey) ? selectedSetupKey : getFallbackCarbSetup(cylinders);
+            const selectedSetupKey = refreshCarbSetupOptions(cylinders, preferredSetupKey, { downgradeIncompatible: downgradeIncompatibleSetup });
+            const setupKey = carbSetups[selectedSetupKey] ? selectedSetupKey : getFallbackCarbSetup(cylinders);
             document.getElementById('carbSetup').value = setupKey;
             const setup = carbSetups[setupKey];
             const familyKey = setup.familyKey;
@@ -3445,12 +3443,15 @@
             }
 
             const selectedVenturiCount = preferredSetupKey ? getSetupVenturiCount(preferredSetupKey) : getSetupVenturiCount(setupKey);
-            const restrictionNote = engineRestrictionActive && preferredSetupKey !== setupKey
+            const restrictionNote = engineRestrictionActive && downgradeIncompatibleSetup && preferredSetupKey !== setupKey
                 ? ` Selected layout needed ${selectedVenturiCount} venturi${selectedVenturiCount === 1 ? '' : 's'}, so it was downgraded for this engine.`
+                : '';
+            const incompatibilityWarning = engineRestrictionActive && !downgradeIncompatibleSetup && !getValidCarbSetupKeys(cylinders).includes(setupKey)
+                ? ` Current engine has fewer cylinders/rotors than this layout's venturi count, so choosing a different engine spec later may downgrade it automatically.`
                 : '';
 
             document.getElementById('setupHelp').textContent = engineRestrictionActive
-                ? `${setup.help}${restrictionNote}`
+                ? `${setup.help}${restrictionNote}${incompatibilityWarning}`
                 : `${setup.help} Engine compatibility will be checked after the next step.`;
             document.getElementById('venturiLabel').textContent = family.venturiLabel;
             document.getElementById('carbBodyLabel').textContent = family.bodyLabel;
@@ -3557,7 +3558,7 @@
                 document.getElementById('displacement').value = engine.disp;
                 document.getElementById('cylinders').value = engine.cyl;
                 document.getElementById('maxRpm').value = engine.rpm;
-                updateCarburetorUI({ resetSelections: true, shouldRecalculate: true });
+                updateCarburetorUI({ resetSelections: true, shouldRecalculate: true, downgradeIncompatibleSetup: true });
             }
         }
 
@@ -4383,7 +4384,7 @@
         // Event listeners
         document.getElementById('carbSetup').addEventListener('change', () => {
             carbSetupSuggestionState.manualOverride = true;
-            updateCarburetorUI();
+            updateCarburetorUI({ downgradeIncompatibleSetup: false });
         });
 
         document.querySelectorAll('.setup-option-card').forEach(card => {
@@ -4392,7 +4393,7 @@
                 select.value = card.dataset.setupValue;
                 carbSetupSuggestionState.manualOverride = true;
                 syncSetupSelectionCards();
-                updateCarburetorUI();
+                updateCarburetorUI({ downgradeIncompatibleSetup: false });
             });
         });
 
@@ -4423,7 +4424,7 @@
                 }
 
                 if (['displacement', 'cylinders', 'cam', 'carbBody'].includes(input.id)) {
-                    updateCarburetorUI();
+                    updateCarburetorUI({ downgradeIncompatibleSetup: ['displacement', 'cylinders', 'cam'].includes(input.id) });
                     return;
                 }
 
@@ -4461,7 +4462,7 @@
             initializeRegionalPreference();
             applyRegionalSpelling({ refreshDynamicContent: false });
             selectMake();
-            updateCarburetorUI(false);
+            updateCarburetorUI({ shouldRecalculate: false, downgradeIncompatibleSetup: false });
             syncSetupSelectionCards();
             updateWizardUI();
             calculateJets();
