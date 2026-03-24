@@ -2000,8 +2000,6 @@
                         <div class="setup-hero-tools final-hidden">
                             <button type="button" class="edit-chip" data-edit-control="setup">Edit layout</button>
                             <button type="button" class="edit-chip" data-edit-control="carbBody">Edit body</button>
-                            <button type="button" class="edit-chip" data-edit-control="venturi">Edit choke</button>
-                            <button type="button" class="edit-chip" data-edit-control="airBleed">Edit bleed</button>
                         </div>
                     </div>
                     <div class="setup-badges">
@@ -2113,7 +2111,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 03:40 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 04:21 UTC</span></p>
                     </div>
                 </div>
 
@@ -2505,7 +2503,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 03:40 UTC';
+        const APP_VERSION = '2026-03-24 04:21 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -4454,7 +4452,8 @@
                     { name: 'Main Jet', value: String(mainJet), note: formatOverrideAwareNote('Controls WOT fuel flow. Baseline is calculated per venturi from venturi × 4.', mainJet, recommendedMainJet), userSelected: mainJet !== recommendedMainJet, editControl: 'mainJet' },
                     { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('Leans the mixture as RPM rises. Cam profile can shift this baseline up or down from the usual main + 50 rule.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector, editControl: 'airCorrector' },
                     { name: 'Emulsion Tube', value: emulsionTube, note: `Selected from approximately ${Math.round(displacementPerVenturi)}cc of load per venturi.` },
-                    { name: 'Idle Jet', value: `${idleJetSize}${context.airBleed}`, note: formatOverrideAwareNote('Progression and cruise baseline is keyed to venturi load and cam overlap, not just carb count. Format: fuel jet + air bleed.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet || context.airBleedUserSelected, editControl: 'idleJet' },
+                    { name: 'Idle Jet', value: String(idleJetSize), note: formatOverrideAwareNote('Progression and cruise baseline is keyed to venturi load and cam overlap, not just carb count.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet, editControl: 'idleJet' },
+                    { name: 'Idle Air Bleed', value: context.airBleed, note: 'Idle-circuit bleed family paired with the fuel jet for progression and cruise behavior.', userSelected: context.airBleedUserSelected, editControl: 'airBleed' },
                     { name: 'Pump Jet', value: String(pumpJet), note: formatOverrideAwareNote('Accelerator pump discharge scaled for venturi load and cam aggressiveness.', pumpJet, recommendedPumpJet), userSelected: pumpJet !== recommendedPumpJet, editControl: 'pumpJet' },
                     { name: 'Auxiliary Venturi', value: auxVenturi, note: 'Main-circuit signal booster. Smaller chokes prefer smaller aux venturis.' },
                     { name: 'Needle Valve', value: needleValve, note: 'Float chamber refill rate matched to approximate fuel demand per carb body.' }
@@ -4582,7 +4581,8 @@
                     { name: 'Main Jet', value: String(mainJet), note: formatOverrideAwareNote('Downdraft IDF baseline starts slightly richer than DCOE and is calculated per venturi at venturi × 4.1.', mainJet, recommendedMainJet), userSelected: mainJet !== recommendedMainJet, editControl: 'mainJet' },
                     { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('A slightly larger air corrector spread helps IDF top-end cleanup, and the cam profile now nudges that spread richer or leaner.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector, editControl: 'airCorrector' },
                     { name: 'Emulsion Tube', value: emulsionTube, note: `Chosen from approximately ${Math.round(displacementPerVenturi)}cc of load per venturi.` },
-                    { name: 'Idle Jet', value: `${idleJetSize}${context.airBleed}`, note: formatOverrideAwareNote('IDF idle circuit baseline now follows per-venturi load and cam overlap. Format: fuel jet + holder family.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet || context.airBleedUserSelected, editControl: 'idleJet' },
+                    { name: 'Idle Jet', value: String(idleJetSize), note: formatOverrideAwareNote('IDF idle circuit baseline now follows per-venturi load and cam overlap.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet, editControl: 'idleJet' },
+                    { name: 'Idle Jet Holder', value: context.airBleed, note: 'Holder family paired with the idle jet to shape progression and cruise response.', userSelected: context.airBleedUserSelected, editControl: 'airBleed' },
                     { name: 'Pump Jet', value: String(pumpJet), note: formatOverrideAwareNote('Pump jet baseline is biased by venturi load and cam because IDFs often need a stronger transition shot.', pumpJet, recommendedPumpJet), userSelected: pumpJet !== recommendedPumpJet, editControl: 'pumpJet' },
                     { name: 'Booster / Aux Reference', value: booster, note: 'Reference size for signal strength. Larger vents tend to want the larger booster range.' },
                     { name: 'Needle Valve', value: needleValve, note: 'Supply rate recommendation keyed to approximate fuel demand per carb body.' }
@@ -4693,7 +4693,7 @@
                     { name: 'Primary Air Corrector', value: String(primaryAir), note: formatOverrideAwareNote('Primary high-RPM trim. Cam can bias this above or below the usual primary main + 35 pattern.', primaryAir, recommendedPrimaryAir), userSelected: primaryAir !== recommendedPrimaryAir, editControl: 'primaryAir' },
                     { name: 'Secondary Air Corrector', value: String(secondaryAir), note: formatOverrideAwareNote('Secondary high-RPM trim. Race cams hold this richer than the old nearly fixed rule.', secondaryAir, recommendedSecondaryAir), userSelected: secondaryAir !== recommendedSecondaryAir, editControl: 'secondaryAir' },
                     { name: 'Idle Jet', value: String(idleJet), note: formatOverrideAwareNote('Single-barrel progression baseline now reacts more strongly to cam overlap.', idleJet, recommendedIdleJet), userSelected: idleJet !== recommendedIdleJet, editControl: 'idleJet' },
-                    { name: 'Emulsion Series', value: context.airBleed, note: 'Progressive emulsion family selection used as the baseline reference.' },
+                    { name: 'Emulsion Series', value: context.airBleed, note: 'Progressive emulsion family selection used as the baseline reference.', userSelected: context.airBleedUserSelected, editControl: 'airBleed' },
                     { name: 'Needle Valve', value: needleValve, note: 'Float valve recommendation for the common single progressive installation.' }
                 ],
                 formulaTitle: '📐 32/36 Progressive Baselines',
