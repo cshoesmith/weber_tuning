@@ -1615,7 +1615,7 @@
 
             <section class="input-section wizard-screen active" id="wizardScreen1" data-step="1">
                 <h2 class="screen-header" data-regional-template="1. Choose {{carbPlural}}">1. Choose carburetors</h2>
-                <p class="screen-copy" data-regional-template="This first screen is only about the {{carbSingular}} style and count. We’ll fit the engine to that choice on the next screen instead of mixing everything together up front.">This first screen is only about the carburetor style and count. We’ll fit the engine to that choice on the next screen instead of mixing everything together up front.</p>
+                <p class="screen-copy" data-regional-template="Choose the {{carbSingular}} style and count first. Engine details come next.">Choose the carburetor style and count first. Engine details come next.</p>
 
                 <div class="setup-selector-grid" id="setupSelectorGrid">
                     <button type="button" class="setup-option-card active" data-setup-value="dcoe_single">
@@ -1669,7 +1669,7 @@
 
             <section class="input-section wizard-screen" id="wizardScreen2" data-step="2">
                 <h2 class="screen-header">2. Choose an engine or enter it manually</h2>
-                <p class="screen-copy">Use the database when it matches, or treat the form below as a clean manual build sheet. Either route feeds the same report on the next screen.</p>
+                <p class="screen-copy">Pick an engine from the database, or enter the build manually.</p>
 
                 <div class="wizard-subcard">
                     <div class="subcard-title">Use the engine database</div>
@@ -1756,7 +1756,7 @@
                 <div class="report-toolbar">
                     <div>
                         <h2 class="screen-header">3. Review the report and tweak available parts</h2>
-                        <p class="screen-copy">This report screen is where the tuning summary lives. If the hardware on hand is different from the ideal baseline, tweak it here and the report updates live.</p>
+                        <p class="screen-copy">Review the live report and tweak parts if needed.</p>
                     </div>
                     <button type="button" class="ghost-btn" data-nav-step="2">Back to engine details</button>
                 </div>
@@ -1938,7 +1938,7 @@
                 <div class="report-toolbar">
                     <div>
                         <h2 class="screen-header">Final report</h2>
-                        <p class="screen-copy">This page is a clean read-only snapshot of the tuning report. Go back if you want to tweak parts or engine inputs.</p>
+                        <p class="screen-copy">Read-only report snapshot. Go back if you need to tweak anything.</p>
                     </div>
                     <button type="button" class="ghost-btn" data-nav-step="3">Back to tweak report</button>
                 </div>
@@ -1977,7 +1977,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 01:56 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 02:36 UTC</span></p>
                     </div>
                 </div>
 
@@ -2345,7 +2345,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 01:56 UTC';
+        const APP_VERSION = '2026-03-24 02:36 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -2863,6 +2863,7 @@
                 updateCarburetorUI({ shouldRecalculate: false });
                 calculateJets();
                 syncFinalReportView();
+                wizardState.completionMessageTemplate = wizardStepMeta[4].completedMessageTemplate;
             }
 
             setActiveWizardStep(step, { preserveMessage: true });
@@ -3791,13 +3792,15 @@
             const maxAfr = 16.5;
             const width = 620;
             const height = 250;
-            const padding = { top: 18, right: 18, bottom: 58, left: 46 };
+            const padding = { top: 18, right: 18, bottom: 58, left: 60 };
             const plotWidth = width - padding.left - padding.right;
             const plotHeight = height - padding.top - padding.bottom;
             const xStep = profile.length > 1 ? plotWidth / (profile.length - 1) : plotWidth;
             const bandWidth = Math.min(82, xStep * 0.7);
             const yForAfr = afr => padding.top + ((maxAfr - afr) / (maxAfr - minAfr)) * plotHeight;
             const xForIndex = index => padding.left + index * xStep;
+            const yAxisLabelX = 20;
+            const yAxisLabelY = padding.top + (plotHeight / 2);
 
             const gridLines = [12, 13, 14, 15, 16].map(value => `
                 <line x1="${padding.left}" y1="${yForAfr(value)}" x2="${width - padding.right}" y2="${yForAfr(value)}" stroke="#d8e2eb" stroke-width="1" />
@@ -3829,7 +3832,7 @@
                     ${targetBands}
                     <polyline points="${linePoints}" fill="none" stroke="#c41e3a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
                     ${pointMarkup}
-                    <text x="18" y="${padding.top - 2}" font-size="11" fill="#607080" transform="rotate(-90 18 ${padding.top - 2})">AFR</text>
+                    <text x="${yAxisLabelX}" y="${yAxisLabelY}" text-anchor="middle" font-size="11" fill="#607080" transform="rotate(-90 ${yAxisLabelX} ${yAxisLabelY})">AFR</text>
                 </svg>
             `;
         }
