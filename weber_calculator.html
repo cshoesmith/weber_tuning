@@ -1841,7 +1841,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 00:51 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 00:58 UTC</span></p>
                     </div>
                 </div>
 
@@ -2209,7 +2209,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 00:51 UTC';
+        const APP_VERSION = '2026-03-24 00:58 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -2737,24 +2737,19 @@
         function refreshCarbSetupOptions(cylinders, preferredSetupKey = null) {
             const select = document.getElementById('carbSetup');
             const currentValue = preferredSetupKey || select.value;
+            Array.from(select.options).forEach(option => {
+                option.disabled = false;
+                option.hidden = false;
+            });
+
             const shouldRestrictByEngine = wizardState.completedSteps.has(2);
 
             if (!shouldRestrictByEngine) {
-                Array.from(select.options).forEach(option => {
-                    option.disabled = false;
-                    option.hidden = false;
-                });
                 select.value = currentValue || select.value;
                 return select.value;
             }
 
             const validSetupKeys = new Set(getValidCarbSetupKeys(cylinders));
-
-            Array.from(select.options).forEach(option => {
-                const isValid = validSetupKeys.has(option.value);
-                option.disabled = !isValid;
-                option.hidden = !isValid;
-            });
 
             if (validSetupKeys.has(currentValue)) {
                 select.value = currentValue;
@@ -3357,8 +3352,9 @@
                 carbControlSelectionState.bodyManualOverride = false;
             }
 
-            const restrictionNote = engineRestrictionActive && validSetupKeys.length < Object.keys(carbSetups).length
-                ? ` Layouts with more than ${cylinders} venturi${cylinders === 1 ? '' : 's'} are hidden for this engine.`
+            const selectedVenturiCount = preferredSetupKey ? getSetupVenturiCount(preferredSetupKey) : getSetupVenturiCount(setupKey);
+            const restrictionNote = engineRestrictionActive && preferredSetupKey !== setupKey
+                ? ` Selected layout needed ${selectedVenturiCount} venturi${selectedVenturiCount === 1 ? '' : 's'}, so it was downgraded for this engine.`
                 : '';
 
             document.getElementById('setupHelp').textContent = engineRestrictionActive
