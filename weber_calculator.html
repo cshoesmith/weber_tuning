@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weber Baseline Tuner - Engine Database Edition</title>
+    <title>Weber Setup Tuner - Engine Database Edition</title>
     <style>
         * {
             margin: 0;
@@ -2161,8 +2161,8 @@
                     <button type="button" class="header-menu-item" role="menuitem" id="referenceLinksButton" onclick="closeHeaderMenu(); openReferenceLinksModal()">🔗 Reference Links</button>
                 </div>
             </div>
-            <h1 data-regional-template="🔧 Weber Baseline Tuner">🔧 Weber Baseline Tuner</h1>
-            <p>DCOE, IDF & 32/36 Baseline Jetting - Classic JDM & European Motors (1960-2010)</p>
+            <h1 data-regional-template="🔧 Weber Setup Tuner">🔧 Weber Setup Tuner</h1>
+            <p>DCOE, IDF & 32/36 Jetting Setup - Classic JDM & European Motors (1960-2010)</p>
         </div>
 
         <div class="main-content">
@@ -2170,7 +2170,7 @@
                 <div class="wizard-progress-top">
                     <div>
                         <div class="workflow-kicker">Guided setup</div>
-                        <h2 class="wizard-title">Build your Weber baseline step by step</h2>
+                        <h2 class="wizard-title">Build your Weber setup step by step</h2>
                         <p class="wizard-copy" data-regional-template="Start with the {{carbSingular}} layout, then define the engine, then use the report screen to edit the setup and parts you actually have on the shelf.">Start with the carburetor layout, then define the engine, then use the report screen to edit the setup and parts you actually have on the shelf.</p>
                     </div>
                     <div class="wizard-progress-status" id="wizardProgressStatus">Step 1 of 3 • Choose carburetors</div>
@@ -2216,7 +2216,7 @@
                     <button type="button" class="setup-option-card active" data-setup-value="dcoe_single">
                         <div class="setup-option-title">DCOE Single</div>
                         <div class="setup-option-meta">Sidedraft • 1 carb / 2 throats</div>
-                        <div class="setup-option-copy">Compact Weber sidedraft baseline for smaller or shared-manifold setups.</div>
+                        <div class="setup-option-copy">Compact Weber sidedraft setup for smaller or shared-manifold applications.</div>
                     </button>
                     <button type="button" class="setup-option-card" data-setup-value="dcoe_double">
                         <div class="setup-option-title">DCOE Twin</div>
@@ -2231,7 +2231,7 @@
                     <button type="button" class="setup-option-card" data-setup-value="idf_single">
                         <div class="setup-option-title">IDF Single</div>
                         <div class="setup-option-meta">Downdraft • 1 carb / 2 throats</div>
-                        <div class="setup-option-copy">Single IDF baseline for shared-plenum and center-mount installations.</div>
+                        <div class="setup-option-copy">Single IDF setup for shared-plenum and center-mount installations.</div>
                     </button>
                     <button type="button" class="setup-option-card" data-setup-value="idf_double">
                         <div class="setup-option-title">IDF Twin</div>
@@ -2241,7 +2241,7 @@
                     <button type="button" class="setup-option-card" data-setup-value="progressive_single">
                         <div class="setup-option-title">32/36 Progressive</div>
                         <div class="setup-option-meta">Progressive • 1 carb / staged barrels</div>
-                        <div class="setup-option-copy">Street-friendly progressive Weber baseline with fixed primary and secondary barrels.</div>
+                        <div class="setup-option-copy">Street-friendly progressive Weber setup with fixed primary and secondary barrels.</div>
                     </button>
                 </div>
 
@@ -2346,42 +2346,42 @@
                             </div>
                         </div>
 
-                        <div class="warning-box" id="altWarning">⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.</div>
+                        <div class="warning-box" id="altWarning">⚠️ High altitude: Starting recommendation applies a 2% main jet reduction per 1000ft above sea level.</div>
 
                         <div class="override-panel">
                             <div class="grid-2" id="overrideGrid">
                                 <div class="form-group override-control" id="overrideGroup1">
                                     <label for="overrideValue1" id="overrideLabel1">Available Main Jet</label>
                                     <div class="override-input-row">
-                                        <input type="number" class="override-input" id="overrideValue1" placeholder="Auto / baseline">
+                                        <input type="number" class="override-input" id="overrideValue1" placeholder="Auto / suggested">
                                         <button type="button" class="override-reset-btn" id="overrideReset1" onclick="resetOverrideField(1)">Reset</button>
                                     </div>
                                 </div>
                                 <div class="form-group override-control" id="overrideGroup2">
                                     <label for="overrideValue2" id="overrideLabel2">Available Air Corrector</label>
                                     <div class="override-input-row">
-                                        <input type="number" class="override-input" id="overrideValue2" placeholder="Auto / baseline">
+                                        <input type="number" class="override-input" id="overrideValue2" placeholder="Auto / suggested">
                                         <button type="button" class="override-reset-btn" id="overrideReset2" onclick="resetOverrideField(2)">Reset</button>
                                     </div>
                                 </div>
                                 <div class="form-group override-control" id="overrideGroup3">
                                     <label for="overrideValue3" id="overrideLabel3">Available Idle Jet</label>
                                     <div class="override-input-row">
-                                        <input type="number" class="override-input" id="overrideValue3" placeholder="Auto / baseline">
+                                        <input type="number" class="override-input" id="overrideValue3" placeholder="Auto / suggested">
                                         <button type="button" class="override-reset-btn" id="overrideReset3" onclick="resetOverrideField(3)">Reset</button>
                                     </div>
                                 </div>
                                 <div class="form-group override-control" id="overrideGroup4">
                                     <label for="overrideValue4" id="overrideLabel4">Available Pump Jet</label>
                                     <div class="override-input-row">
-                                        <input type="number" class="override-input" id="overrideValue4" placeholder="Auto / baseline">
+                                        <input type="number" class="override-input" id="overrideValue4" placeholder="Auto / suggested">
                                         <button type="button" class="override-reset-btn" id="overrideReset4" onclick="resetOverrideField(4)">Reset</button>
                                     </div>
                                 </div>
                                 <div class="form-group override-control" id="overrideGroup5">
                                     <label for="overrideValue5" id="overrideLabel5">Available Secondary Air</label>
                                     <div class="override-input-row">
-                                        <input type="number" class="override-input" id="overrideValue5" placeholder="Auto / baseline">
+                                        <input type="number" class="override-input" id="overrideValue5" placeholder="Auto / suggested">
                                         <button type="button" class="override-reset-btn" id="overrideReset5" onclick="resetOverrideField(5)">Reset</button>
                                     </div>
                                 </div>
@@ -2395,14 +2395,14 @@
 
                 <h2 class="results-title">📋 Tuning Report</h2>
                 <div class="results-subtitle" id="engineSummaryHeader">Custom engine • 2000cc • 4 Cyl • 6000 RPM • Street Perf</div>
-                <div class="warning-box" id="reportAltWarning">⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.</div>
+                <div class="warning-box" id="reportAltWarning">⚠️ High altitude: Starting recommendation applies a 2% main jet reduction per 1000ft above sea level.</div>
 
                 <div class="setup-hero" id="setupHero">
                     <div class="setup-hero-media" id="setupHeroVisual" aria-hidden="true"></div>
                     <div class="setup-hero-copy">
                         <div class="setup-hero-eyebrow" data-regional-template="Selected {{carbSingularCap}} Setup">Selected Carburetor Setup</div>
                         <h3 class="setup-hero-title" id="setupHeroTitle">DCOE Single</h3>
-                        <p class="setup-hero-text" id="setupHeroDescription">One DCOE body with two throats. Baseline shown as a per-venturi recommendation where applicable.</p>
+                        <p class="setup-hero-text" id="setupHeroDescription">One DCOE body with two throats. Setup shown as a per-venturi recommendation where applicable.</p>
                         <div class="setup-hero-tools final-hidden">
                             <button type="button" class="edit-chip" data-edit-control="setup">Edit layout</button>
                             <button type="button" class="edit-chip" data-edit-control="carbBody">Edit body</button>
@@ -2411,7 +2411,7 @@
                     <div class="setup-badges">
                         <span class="setup-badge" id="setupHeroCount">1 carb / 2 throats</span>
                         <span class="setup-badge" id="setupHeroLoad">1000cc per venturi</span>
-                        <span class="setup-badge" id="setupHeroMode">Per-venturi baseline</span>
+                        <span class="setup-badge" id="setupHeroMode">Per-venturi setup</span>
                     </div>
                 </div>
 
@@ -2422,7 +2422,7 @@
                     </div>
                     <div class="health-score-value" id="healthScoreValue">86</div>
                     <div class="health-score-bar"><div class="health-score-fill" id="healthScoreFill"></div></div>
-                    <div class="health-score-summary" id="healthScoreSummary">Baseline configuration is well matched and should respond normally to fine-tuning.</div>
+                    <div class="health-score-summary" id="healthScoreSummary">Current setup is well matched and should respond normally to fine-tuning.</div>
                     <ul class="health-score-details" id="healthScoreDetails">
                         <li>No forced parts are active.</li>
                     </ul>
@@ -2449,12 +2449,12 @@
                     <h3>📝 Advisory Notes</h3>
                     <div class="formula-box" id="carbFamilySummary">Setup: DCOE Single • Weber DCOE / sidedraft • 45 body</div>
                     <div class="formula-box" id="venturiRecommendation">Suggested venturi: 34mm</div>
-                    <p id="advisorySummary">Baseline recommendations shown. Temperature and carb body inputs are advisory only.</p>
+                    <p id="advisorySummary">Starting recommendations shown. Temperature and carb body inputs are advisory only.</p>
                 </div>
 
                 <div class="formula-info">
                     <h3>📈 Estimated AFR Chart</h3>
-                    <p>Estimated by operating zone from the selected baseline jetting. This is a directional tuning aid, not a substitute for a wideband.</p>
+                    <p>Estimated by operating zone from the selected setup jetting. This is a directional tuning aid, not a substitute for a wideband.</p>
                     <div class="afr-chart-wrap" id="afrChart"></div>
                     <div class="afr-summary" id="afrSummary">Estimated AFR trend will appear here after calculation.</div>
                     <div class="afr-legend">
@@ -2462,7 +2462,7 @@
                         <span class="afr-pill"><span class="afr-dot" style="background:#c41e3a;"></span>Estimated AFR line</span>
                         <span class="afr-pill"><span class="afr-dot" style="background:#1f4f82;"></span>Operating point</span>
                     </div>
-                    <div class="afr-note">Targets are biased toward safe street/performance baselines: slightly leaner at cruise, richer under acceleration and WOT.</div>
+                    <div class="afr-note">Targets are biased toward safe street/performance setups: slightly leaner at cruise, richer under acceleration and WOT.</div>
                     <details class="afr-explainer">
                         <summary>How this AFR estimate is built</summary>
                         <div class="afr-explainer-body" id="afrMethodology">This explanation updates with the selected carb family and jetting choices.</div>
@@ -2494,7 +2494,7 @@
         </div>
 
         <div class="disclaimer">
-            <strong>Disclaimer:</strong> <span data-regional-template="Starting recommendations based on Weber {{carbSingular}} baseline references.">Starting recommendations based on Weber carburetor baseline references.</span>
+            <strong>Disclaimer:</strong> <span data-regional-template="Starting recommendations based on Weber {{carbSingular}} tuning references.">Starting recommendations based on Weber carburetor tuning references.</span>
             Final tuning requires dyno or wideband O2. Engine database covers popular JDM/Euro motors 1960-2010.
         </div>
     </div>
@@ -2523,7 +2523,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 21:28 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 22:17 UTC</span></p>
                     </div>
                 </div>
 
@@ -2815,7 +2815,7 @@
                                 <tr>
                                     <td>Temperature</td>
                                     <td>40°F and below</td>
-                                    <td>Colder air is denser, so real-world tuning often ends up slightly richer than the baseline.</td>
+                                    <td>Colder air is denser, so real-world tuning often ends up slightly richer than the starting recommendation.</td>
                                 </tr>
                                 <tr>
                                     <td>Temperature</td>
@@ -2825,7 +2825,7 @@
                                 <tr>
                                     <td>Temperature</td>
                                     <td>95°F and above</td>
-                                    <td>Hotter air is thinner, so real-world tuning often ends up slightly leaner than the baseline.</td>
+                                    <td>Hotter air is thinner, so real-world tuning often ends up slightly leaner than the starting recommendation.</td>
                                 </tr>
                                 <tr>
                                     <td>DCOE / IDF Body</td>
@@ -2977,7 +2977,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 21:28 UTC';
+        const APP_VERSION = '2026-03-24 22:17 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -3283,7 +3283,7 @@
             3: {
                 statusTemplate: 'Step 3 of 3 • Review report',
                 defaultMessageTemplate: 'Review the report, then use Edit on any card to adjust the live setup without leaving this screen.',
-                completedMessageTemplate: 'Report screen is live — use Edit on any card and watch the baseline update.'
+                completedMessageTemplate: 'Report screen is live — use Edit on any card and watch the setup update.'
             },
             4: {
                 statusTemplate: 'Final report ready',
@@ -3343,7 +3343,7 @@
         }
 
         function applyRegionalSpelling(options = {}) {
-            document.title = renderRegionalTemplate('Weber {{carbSingularCap}} Jetting Calculator - Engine Database Edition');
+            document.title = renderRegionalTemplate('Weber {{carbSingularCap}} Setup Tuner - Engine Database Edition');
 
             document.querySelectorAll('[data-regional-template]').forEach(element => {
                 element.textContent = renderRegionalTemplate(element.dataset.regionalTemplate);
@@ -3583,7 +3583,7 @@
         }
 
         function buildRangeOptions(config) {
-            const options = [{ value: '__auto__', label: 'Use calculated baseline' }];
+            const options = [{ value: '__auto__', label: 'Use suggested value' }];
             for (let value = config.min; value <= config.max; value += config.step) {
                 options.push({ value: String(value), label: String(value) });
             }
@@ -3645,9 +3645,9 @@
 
             return {
                 title: `Edit ${config.label}`,
-                copy: 'Choose a specific part you have on hand, or switch back to the calculator baseline.',
+                copy: 'Choose a specific part you have on hand, or switch back to the calculator recommendation.',
                 currentText: input.value.trim() === ''
-                    ? 'Currently using the calculated baseline.'
+                    ? 'Currently using the suggested value.'
                     : `Current forced value: ${input.value.trim()}`,
                 label: config.label,
                 value: input.value.trim() || '__auto__',
@@ -3975,14 +3975,14 @@
 
         function getTemperatureAdvisory(temp) {
             if (temp <= 40) {
-                return 'Cold air is denser, so real-world tuning often ends up slightly richer than the baseline.';
+                return 'Cold air is denser, so real-world tuning often ends up slightly richer than the starting recommendation.';
             }
 
             if (temp >= 95) {
-                return 'Hot air is thinner, so real-world tuning often ends up slightly leaner than the baseline.';
+                return 'Hot air is thinner, so real-world tuning often ends up slightly leaner than the starting recommendation.';
             }
 
-            return 'Ambient temperature is moderate; no extra temperature correction is applied to the baseline.';
+            return 'Ambient temperature is moderate; no extra temperature correction is applied to the starting recommendation.';
         }
 
         function configureOverrideFields(familyKey) {
@@ -4009,7 +4009,7 @@
                 input.min = String(config.min);
                 input.max = String(config.max);
                 input.step = String(config.step);
-                input.placeholder = 'Auto / baseline';
+                input.placeholder = 'Auto / suggested';
                 resetButton.disabled = input.value.trim() === '';
             }
 
@@ -4088,7 +4088,7 @@
                 return baseNote;
             }
 
-            return `${baseNote} Forced to ${actualValue}${suffix}; baseline would be ${recommendedValue}${suffix}.`;
+            return `${baseNote} Forced to ${actualValue}${suffix}; suggested value would be ${recommendedValue}${suffix}.`;
         }
 
         function getAfrDeviationStats(profile) {
@@ -4244,14 +4244,14 @@
 
             let status = 'Excellent';
             let className = 'excellent';
-            let summary = 'Baseline configuration is very healthy and should respond normally to fine-tuning.';
+            let summary = 'Current setup is very healthy and should respond normally to fine-tuning.';
 
             if (score < 90) {
                 status = 'Good';
                 className = 'good';
                 summary = overrideEntries.length > 0
                     ? 'This enforced parts combination should still tune reasonably well with only minor compromise.'
-                    : 'Configuration remains close to the recommended baseline.';
+                    : 'Configuration remains close to the recommended setup.';
             }
 
             if (score < 75) {
@@ -4263,7 +4263,7 @@
             if (score < 55) {
                 status = 'Poor';
                 className = 'poor';
-                summary = 'The enforced parts are pushing the combo away from the baseline. Some operating zones will likely remain compromised.';
+                summary = 'The enforced parts are pushing the combo away from the recommended setup. Some operating zones will likely remain compromised.';
             }
 
             if (score < 35 || worstOutside > 0.95 || (config.venturiDelta >= 6 && worstOutside > 0.35)) {
@@ -4840,7 +4840,7 @@
             const cruisePoint = profile[Math.min(1, profile.length - 1)];
             const wotPoint = profile[profile.length - 1];
             const averageDeviation = profile.reduce((sum, point) => sum + (point.value - ((point.targetLow + point.targetHigh) / 2)), 0) / profile.length;
-            const overallTrend = averageDeviation > 0.2 ? 'Overall estimate trends slightly lean.' : averageDeviation < -0.2 ? 'Overall estimate trends slightly rich.' : 'Overall estimate is broadly near baseline targets.';
+            const overallTrend = averageDeviation > 0.2 ? 'Overall estimate trends slightly lean.' : averageDeviation < -0.2 ? 'Overall estimate trends slightly rich.' : 'Overall estimate is broadly near the target bands.';
             return `${overallTrend} ${describePoint(cruisePoint)} at about ${cruisePoint.value.toFixed(1)}:1, and ${describePoint(wotPoint)} at about ${wotPoint.value.toFixed(1)}:1.`;
         }
 
@@ -4860,7 +4860,7 @@
                 idf: [
                     'Idle and cruise respond mostly to the idle jet, idle holder family, and ambient temperature.',
                     'Tip-in responds mostly to progression and pump shot changes.',
-                    'Midrange and WOT respond mostly to the main jet, air corrector, and venturi mismatch relative to the recommended baseline.'
+                    'Midrange and WOT respond mostly to the main jet, air corrector, and venturi mismatch relative to the recommended setup.'
                 ],
                 progressive: [
                     'Idle, primary, and transition are driven mostly by the idle jet, primary main, and emulsion family choice.',
@@ -4869,19 +4869,19 @@
                 ]
             };
 
-            const familyLabel = familyLabels[context.familyKey] || 'Weber baseline';
+            const familyLabel = familyLabels[context.familyKey] || 'Weber setup';
             const zoneLabels = zones.map(zone => `${zone.label} ${zone.targetLow.toFixed(1)}-${zone.targetHigh.toFixed(1)}:1`).join(' • ');
             const venturiLabel = context.familyKey === 'progressive'
                 ? `Selected venturi pair: ${String(context.venturiValue).replace('|', '/')}`
                 : `Selected venturi: ${context.venturiValue}mm (suggested ${context.suggestedVenturi}mm)`;
 
             return `
-                <p><strong>Model type:</strong> Directional heuristic for <strong>${familyLabel}</strong>, not a combustion simulation or dyno substitute. It estimates whether the selected baseline parts would tend to move each operating zone richer or leaner than the built-in target bands.</p>
+                <p><strong>Model type:</strong> Directional heuristic for <strong>${familyLabel}</strong>, not a combustion simulation or dyno substitute. It estimates whether the selected parts would tend to move each operating zone richer or leaner than the built-in target bands.</p>
                 <p><strong>Target bands shown on the chart:</strong> ${zoneLabels}.</p>
                 <ul>
                     ${perZoneNotes[context.familyKey].map(note => `<li>${note}</li>`).join('')}
                 </ul>
-                <p><strong>Inputs used right now:</strong> ${venturiLabel} • Main fuel system versus recommended baseline • ${context.familyKey === 'progressive' ? 'Primary and secondary main split' : 'Air corrector versus recommended baseline'} • ${context.familyKey === 'progressive' ? 'Emulsion family choice' : 'Idle air bleed / holder family'} • Temperature ${context.temp}°F.</p>
+                <p><strong>Inputs used right now:</strong> ${venturiLabel} • Main fuel system versus recommended setup • ${context.familyKey === 'progressive' ? 'Primary and secondary main split' : 'Air corrector versus recommended setup'} • ${context.familyKey === 'progressive' ? 'Emulsion family choice' : 'Idle air bleed / holder family'} • Temperature ${context.temp}°F.</p>
                 <p><strong>Limits:</strong> This chart does <em>not</em> know fuel pressure, float height, manifold design, ignition timing, pump cam profile, emulsion well geometry, or real engine VE. It is technically useful as a consistency check and educational guide, but final mixture must still be confirmed with a wideband, plugs, or dyno data.</p>
             `;
         }
@@ -4994,8 +4994,8 @@
                 ? `${Math.round(metrics.displacementPerVenturi)}cc per barrel`
                 : `${Math.round(metrics.displacementPerVenturi)}cc per venturi`;
             const modeText = isProgressive
-                ? 'Primary/secondary shared-plenum baseline'
-                : 'Per-venturi baseline';
+                ? 'Primary/secondary shared-plenum setup'
+                : 'Per-venturi setup';
             const setupSuffix = context.setupLabel.split(' ').slice(1).join(' ') || context.setupLabel;
             const description = isProgressive
                 ? renderRegionalTemplate(`${context.setupLabel} uses a shared progressive primary/secondary model. The recommendations are for one 32/36 {{carbSingular}} with staged barrels.`)
