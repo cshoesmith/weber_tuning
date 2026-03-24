@@ -338,7 +338,7 @@
             justify-content: flex-end;
         }
 
-        .report-edit-grid {
+        .hidden-control-plumbing {
             display: none;
         }
 
@@ -1719,7 +1719,7 @@
                     <div>
                         <div class="workflow-kicker">Guided setup</div>
                         <h2 class="wizard-title">Build your Weber baseline step by step</h2>
-                        <p class="wizard-copy" data-regional-template="Start with the {{carbSingular}} layout, then define the engine, then use the report screen to tweak the parts you actually have on the shelf.">Start with the carburetor layout, then define the engine, then use the report screen to tweak the parts you actually have on the shelf.</p>
+                        <p class="wizard-copy" data-regional-template="Start with the {{carbSingular}} layout, then define the engine, then use the report screen to edit the setup and parts you actually have on the shelf.">Start with the carburetor layout, then define the engine, then use the report screen to edit the setup and parts you actually have on the shelf.</p>
                     </div>
                     <div class="wizard-progress-status" id="wizardProgressStatus">Step 1 of 3 • Choose carburetors</div>
                 </div>
@@ -1743,7 +1743,7 @@
                         <span class="wizard-step-index">3</span>
                         <span>
                             <span class="wizard-step-label">Report</span>
-                            <span class="wizard-step-meta">Review and tweak</span>
+                            <span class="wizard-step-meta">Review + edit</span>
                         </span>
                     </button>
                 </div>
@@ -1892,29 +1892,21 @@
             <section class="results-section wizard-screen" id="wizardScreen3" data-step="3">
                 <div class="report-toolbar">
                     <div>
-                        <h2 class="screen-header">3. Review the report and tweak available parts</h2>
-                        <p class="screen-copy">Review the live report and tweak parts if needed.</p>
+                        <h2 class="screen-header">3. Review the report and make inline edits</h2>
+                        <p class="screen-copy">Review the live report and use Edit on any item you want to adjust.</p>
                     </div>
                     <button type="button" class="ghost-btn" data-nav-step="2">Back to engine details</button>
                 </div>
 
                 <div class="tuning-inline-note final-hidden">
-                    <p>Use the Edit buttons in the report below to adjust layout, carb specs, or parts on hand without a separate tuning panel.</p>
+                    <p>Use the Edit buttons in the report below to adjust layout, carb specs, or parts on hand right where they appear in the report.</p>
                     <div class="tuning-inline-actions">
                         <button type="button" class="section-reset-btn" onclick="resetCarbSpecsToDefaults()">Reset tuning changes</button>
                     </div>
                 </div>
 
-                <div class="report-edit-grid">
+                <div class="hidden-control-plumbing" hidden aria-hidden="true">
                     <div class="wizard-subcard">
-                        <div class="subcard-title">Tweak carb components and available parts</div>
-                        <div class="subcard-copy">Adjust the carb body, choke, bleed or holder family, and any parts-on-hand overrides in one place so the report reflects the hardware you actually have available.</div>
-
-                        <div class="section-header">
-                            <div class="section-title" data-regional-template="{{carbSingularCap}} Specs">Carburetor Specs</div>
-                            <button type="button" class="section-reset-btn" onclick="resetCarbSpecsToDefaults()">Reset Carb Defaults</button>
-                        </div>
-
                         <div class="form-group">
                             <label for="venturi" id="venturiLabel">Main Venturi/Choke (mm)</label>
                             <select id="venturi">
@@ -1950,14 +1942,7 @@
 
                         <div class="warning-box" id="altWarning">⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.</div>
 
-                        <div class="section-header">
-                            <div class="section-title">Available Parts / Forced Overrides</div>
-                        </div>
-
-                        <div class="subcard-copy">Use these only when you want the report to account for the jets and components already in your toolbox.</div>
-
                         <div class="override-panel">
-                            <p>Leave these blank for the normal recommendation. Fill them in when you only have certain jets on hand and the calculator will estimate whether the rest of the combo can compensate.</p>
                             <div class="grid-2" id="overrideGrid">
                                 <div class="form-group override-control" id="overrideGroup1">
                                     <label for="overrideValue1" id="overrideLabel1">Available Main Jet</label>
@@ -2089,9 +2074,9 @@
                 <div class="report-toolbar">
                     <div>
                         <h2 class="screen-header">Final report</h2>
-                        <p class="screen-copy">Read-only report snapshot. Go back if you need to tweak anything.</p>
+                        <p class="screen-copy">Read-only report snapshot. Go back to the live report if you want to edit anything.</p>
                     </div>
-                    <button type="button" class="ghost-btn" data-nav-step="3">Back to tweak report</button>
+                    <button type="button" class="ghost-btn" data-nav-step="3">Back to live report</button>
                 </div>
 
                 <div id="finalReportSnapshot"></div>
@@ -2128,7 +2113,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 03:04 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 03:40 UTC</span></p>
                     </div>
                 </div>
 
@@ -2520,7 +2505,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 03:04 UTC';
+        const APP_VERSION = '2026-03-24 03:40 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -2825,12 +2810,12 @@
             },
             3: {
                 statusTemplate: 'Step 3 of 3 • Review report',
-                defaultMessageTemplate: 'Review the report, then tweak the available parts without leaving this screen.',
-                completedMessageTemplate: 'Report screen is live — tweak available parts and watch the baseline update.'
+                defaultMessageTemplate: 'Review the report, then use Edit on any card to adjust the live setup without leaving this screen.',
+                completedMessageTemplate: 'Report screen is live — use Edit on any card and watch the baseline update.'
             },
             4: {
                 statusTemplate: 'Final report ready',
-                defaultMessageTemplate: 'Final report is ready. Go back to the tweak screen anytime if you want to adjust the setup.',
+                defaultMessageTemplate: 'Final report is ready. Go back to the live report anytime if you want to adjust the setup.',
                 completedMessageTemplate: 'Step 3 complete — final report is ready to review.'
             }
         };
@@ -2991,7 +2976,7 @@
                 return;
             }
 
-            node.querySelectorAll('.edit-chip, .final-hidden').forEach(child => child.remove());
+            node.querySelectorAll('.edit-chip, .final-hidden, .hidden-control-plumbing').forEach(child => child.remove());
             node.removeAttribute('id');
             node.classList.remove('updated');
             Array.from(node.children).forEach(child => stripClonedReportIds(child));
@@ -3006,7 +2991,7 @@
             }
 
             const cloneNodes = Array.from(source.children)
-                .filter(child => !child.classList.contains('report-toolbar') && !child.classList.contains('report-edit-grid') && !child.classList.contains('screen-actions') && !child.classList.contains('report-section-spacer') && !child.classList.contains('final-hidden'))
+                .filter(child => !child.classList.contains('report-toolbar') && !child.classList.contains('hidden-control-plumbing') && !child.classList.contains('screen-actions') && !child.classList.contains('report-section-spacer') && !child.classList.contains('final-hidden'))
                 .map(child => child.cloneNode(true));
 
             target.innerHTML = '';
