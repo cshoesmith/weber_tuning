@@ -1421,6 +1421,35 @@
             margin-bottom: 16px;
         }
 
+        .reference-header.reference-header-compact {
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        #referenceLinksModal .reference-dialog {
+            width: min(860px, 100%);
+            padding: 18px;
+        }
+
+        #referenceLinksModal .reference-header.reference-header-compact {
+            margin-bottom: 6px;
+        }
+
+        #referenceLinksModal .reference-grid {
+            gap: 10px;
+        }
+
+        #referenceLinksModal .reference-card h3 {
+            padding: 10px 12px;
+            font-size: 0.9em;
+        }
+
+        #referenceLinksModal .citation-list li {
+            padding: 12px;
+            font-size: 0.84em;
+            line-height: 1.5;
+        }
+
         .reference-header h2 {
             color: #2c3e50;
             font-size: 1.5em;
@@ -1892,6 +1921,10 @@
                 padding: 18px;
             }
 
+            #referenceLinksModal .reference-dialog {
+                padding: 14px;
+            }
+
             .setup-hero-media {
                 min-height: 76px;
             }
@@ -2161,7 +2194,7 @@
                     <button type="button" class="header-menu-item" role="menuitem" id="referenceLinksButton" onclick="closeHeaderMenu(); openReferenceLinksModal()">🔗 Reference Links</button>
                 </div>
             </div>
-            <h1 data-regional-template="🔧 Weber Setup Tuner">🔧 Weber Setup Tuner</h1>
+            <h1 data-regional-template="🔧 Weber Baseline Tuner">🔧 Weber Baseline Tuner</h1>
             <p>DCOE, IDF & 32/36 Jetting Setup - Classic JDM & European Motors (1960-2010)</p>
         </div>
 
@@ -2523,7 +2556,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 22:17 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 22:27 UTC</span></p>
                     </div>
                 </div>
 
@@ -2859,18 +2892,14 @@
     </div>
 
     <div class="reference-modal" id="referenceLinksModal" aria-hidden="true">
-        <div class="reference-dialog" role="dialog" aria-modal="true" aria-labelledby="referenceLinksTitle">
-            <div class="reference-header">
-                <div>
-                    <h2 id="referenceLinksTitle">Reference Links</h2>
-                    <p>Source links presented in Chicago-style bibliography format for the web references used by this calculator.</p>
-                </div>
+        <div class="reference-dialog" role="dialog" aria-modal="true" aria-label="Reference Links">
+            <div class="reference-header reference-header-compact">
                 <button type="button" class="close-btn" aria-label="Close reference links" onclick="closeReferenceLinksModal()">×</button>
             </div>
 
             <div class="reference-grid">
                 <section class="reference-card">
-                    <h3>Chicago-Style Web References</h3>
+                    <h3>Reference Links</h3>
                     <ul class="citation-list">
                         <li>
                             240-260-280. n.d. “DCOE Theory &amp; Tuning.” Accessed March 23, 2026.
@@ -2881,9 +2910,6 @@
                             <a href="https://www.sidedraught.com/" target="_blank" rel="noopener noreferrer">https://www.sidedraught.com/</a>.
                         </li>
                     </ul>
-                    <div class="citation-style-note">
-                        Citations are formatted in a Chicago-style bibliography pattern for online sources: organization or author, no-date marker when publication year is unavailable, title in quotation marks, access date, then the URL.
-                    </div>
                 </section>
             </div>
         </div>
@@ -2977,7 +3003,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 22:17 UTC';
+        const APP_VERSION = '2026-03-24 22:27 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
