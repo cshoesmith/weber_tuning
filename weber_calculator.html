@@ -541,6 +541,14 @@
             box-shadow: 0 12px 24px rgba(196, 30, 58, 0.18);
         }
 
+        .primary-btn:disabled,
+        .ghost-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.55;
+            transform: none;
+            box-shadow: none;
+        }
+
         .primary-btn:hover,
         .ghost-btn:hover {
             transform: translateY(-1px);
@@ -2362,7 +2370,7 @@
 
                 <div class="screen-actions">
                     <button type="button" class="ghost-btn" data-nav-step="1" data-regional-template="Back to {{carbPlural}}">Back to carburetors</button>
-                    <button type="button" class="primary-btn" data-nav-step="3">Continue to report</button>
+                    <button type="button" class="primary-btn" id="engineContinueButton" data-nav-step="3" disabled>Continue to report</button>
                 </div>
             </section>
 
@@ -2586,7 +2594,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 22:35 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 22:42 UTC</span></p>
                     </div>
                 </div>
 
@@ -3025,7 +3033,7 @@
                 </div>
 
                 <div class="edit-modal-actions">
-                    <button type="button" class="ghost-btn" onclick="closeManualEngineModal()">Done</button>
+                    <button type="button" class="ghost-btn" onclick="confirmManualEngineDetails()">Done</button>
                 </div>
             </div>
         </div>
@@ -3033,7 +3041,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 22:35 UTC';
+        const APP_VERSION = '2026-03-24 22:42 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -3319,6 +3327,10 @@
             bodyManualOverride: false
         };
 
+        const engineSelectionState = {
+            mode: 'none'
+        };
+
         const wizardState = {
             activeStep: 1,
             completedSteps: new Set(),
@@ -3451,6 +3463,48 @@
             if (wizardState.completedSteps.has(2)) return 3;
             if (wizardState.completedSteps.has(1)) return 2;
             return 1;
+        }
+
+        function hasConfirmedEngineSelection() {
+            return engineSelectionState.mode === 'database' || engineSelectionState.mode === 'manual';
+        }
+
+        function updateEngineContinueState() {
+            const continueButton = document.getElementById('engineContinueButton');
+            if (!continueButton) {
+                return;
+            }
+
+            continueButton.disabled = !hasConfirmedEngineSelection();
+        }
+
+        function resetManualEngineInputs() {
+            document.getElementById('displacement').value = '';
+            document.getElementById('cylinders').value = '4';
+            document.getElementById('maxRpm').value = '';
+            document.getElementById('cam').value = 'street';
+            document.getElementById('altitude').value = '0';
+            document.getElementById('temp').value = '70';
+        }
+
+        function hasCompleteManualEngineDetails() {
+            const displacement = parseFloat(document.getElementById('displacement').value);
+            const maxRpm = parseInt(document.getElementById('maxRpm').value, 10);
+            const altitude = parseInt(document.getElementById('altitude').value, 10);
+            const temp = parseInt(document.getElementById('temp').value, 10);
+
+            return Number.isFinite(displacement)
+                && displacement >= 1000
+                && displacement <= 4000
+                && Number.isFinite(maxRpm)
+                && maxRpm >= 4000
+                && maxRpm <= 10000
+                && Number.isFinite(altitude)
+                && altitude >= 0
+                && altitude <= 10000
+                && Number.isFinite(temp)
+                && temp >= 0
+                && temp <= 120;
         }
 
         function updateWizardUI() {
@@ -3787,16 +3841,12 @@
             document.getElementById('makeSelect').value = 'custom';
             selectMake();
             document.getElementById('engineSelect').value = 'custom';
-            document.getElementById('displacement').value = '2000';
-            document.getElementById('cylinders').value = '4';
-            document.getElementById('maxRpm').value = '6000';
-            document.getElementById('cam').value = 'street';
-            document.getElementById('altitude').value = '0';
-            document.getElementById('temp').value = '70';
+            resetManualEngineInputs();
 
             carbSetupSuggestionState.manualOverride = false;
             carbControlSelectionState.familyKey = null;
             carbControlSelectionState.bodyManualOverride = false;
+            engineSelectionState.mode = 'none';
             wizardState.activeStep = 1;
             wizardState.completedSteps = new Set();
             wizardState.completionMessageTemplate = wizardStepMeta[1].defaultMessageTemplate;
@@ -3807,6 +3857,7 @@
             updateCarburetorUI({ resetSelections: true, shouldRecalculate: false, downgradeIncompatibleSetup: false });
             syncSetupSelectionCards();
             updateWizardUI();
+            updateEngineContinueState();
             calculateJets();
             document.querySelector('.main-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -4651,6 +4702,7 @@
         function openManualEngineModal() {
             const makeSelect = document.getElementById('makeSelect');
             const engineSelect = document.getElementById('engineSelect');
+            const shouldResetInputs = engineSelectionState.mode !== 'manual';
 
             if (makeSelect) {
                 makeSelect.value = 'custom';
@@ -4660,6 +4712,13 @@
                 engineSelect.innerHTML = '<option value="custom">-- Select Engine --</option>';
                 engineSelect.value = 'custom';
             }
+
+            if (shouldResetInputs) {
+                resetManualEngineInputs();
+            }
+
+            engineSelectionState.mode = 'manual-pending';
+            updateEngineContinueState();
 
             calculateJets();
 
@@ -4683,11 +4742,25 @@
             closeHeaderMenu();
         }
 
+        function confirmManualEngineDetails() {
+            if (!hasCompleteManualEngineDetails()) {
+                return;
+            }
+
+            engineSelectionState.mode = 'manual';
+            updateEngineContinueState();
+            calculateJets();
+            closeManualEngineModal();
+        }
+
         function selectEngine() {
             const select = document.getElementById('engineSelect');
             const engineKey = select.value;
 
             if (engineKey === 'custom') {
+                engineSelectionState.mode = 'none';
+                updateEngineContinueState();
+                calculateJets();
                 return;
             }
 
@@ -4696,6 +4769,8 @@
                 document.getElementById('displacement').value = engine.disp;
                 document.getElementById('cylinders').value = engine.cyl;
                 document.getElementById('maxRpm').value = engine.rpm;
+                engineSelectionState.mode = 'database';
+                updateEngineContinueState();
                 updateCarburetorUI({ resetSelections: true, shouldRecalculate: true, downgradeIncompatibleSetup: true });
             }
         }
@@ -4708,6 +4783,8 @@
             if (!engines.length) {
                 engineSelect.innerHTML = '<option value="custom">-- Select Engine --</option>';
                 engineSelect.value = 'custom';
+                engineSelectionState.mode = 'none';
+                updateEngineContinueState();
                 calculateJets();
                 return;
             }
@@ -4716,6 +4793,8 @@
                 .concat(engines.map(engine => `<option value="${engine.key}">${engine.label}</option>`))
                 .join('');
             engineSelect.value = 'custom';
+            engineSelectionState.mode = 'none';
+            updateEngineContinueState();
             calculateJets();
         }
 
@@ -4739,6 +4818,10 @@
             const maxRpm = parseInt(document.getElementById('maxRpm').value, 10) || 6000;
             const camLabel = document.getElementById('cam').options[document.getElementById('cam').selectedIndex]?.textContent?.trim() || 'Street Perf';
             const specs = `${Math.round(displacement)}cc • ${getCylinderSummaryLabel(cylinders)} • ${maxRpm} RPM • ${camLabel}`;
+
+            if (!hasConfirmedEngineSelection()) {
+                return 'Engine details pending • choose a make and engine or complete the manual engine form';
+            }
 
             if (engineKey !== 'custom' && engineName && !engineName.startsWith('--')) {
                 return `${makeLabel} • ${engineName} • ${specs}`;
@@ -5680,10 +5763,12 @@
         window.onload = () => {
             initializeRegionalPreference();
             applyRegionalSpelling({ refreshDynamicContent: false });
+            resetManualEngineInputs();
             selectMake();
             updateCarburetorUI({ shouldRecalculate: false, downgradeIncompatibleSetup: false });
             syncSetupSelectionCards();
             updateWizardUI();
+            updateEngineContinueState();
             calculateJets();
         };
     </script>
