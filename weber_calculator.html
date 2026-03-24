@@ -1841,7 +1841,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 00:43 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 00:51 UTC</span></p>
                     </div>
                 </div>
 
@@ -2209,7 +2209,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 00:43 UTC';
+        const APP_VERSION = '2026-03-24 00:51 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -3342,7 +3342,10 @@
             const cam = document.getElementById('cam').value;
             const engineRestrictionActive = wizardState.completedSteps.has(2);
             const validSetupKeys = getValidCarbSetupKeys(cylinders);
-            const selectedSetupKey = refreshCarbSetupOptions(cylinders, document.getElementById('carbSetup').value);
+            const preferredSetupKey = carbSetupSuggestionState.manualOverride
+                ? document.getElementById('carbSetup').value
+                : suggestCarbSetup(displacement, cylinders, cam);
+            const selectedSetupKey = refreshCarbSetupOptions(cylinders, preferredSetupKey);
             const setupKey = validSetupKeys.includes(selectedSetupKey) ? selectedSetupKey : getFallbackCarbSetup(cylinders);
             document.getElementById('carbSetup').value = setupKey;
             const setup = carbSetups[setupKey];
@@ -3500,17 +3503,19 @@
             const makeSelect = document.getElementById('makeSelect');
             const engineSelect = document.getElementById('engineSelect');
             const carbSetupSelect = document.getElementById('carbSetup');
+            const carbBodySelect = document.getElementById('carbBody');
             const makeKey = makeSelect.value;
             const engineKey = engineSelect.value;
             const makeLabel = makeSelect.options[makeSelect.selectedIndex]?.textContent?.trim() || 'Custom / Other';
             const rawEngineLabel = engineSelect.options[engineSelect.selectedIndex]?.textContent?.trim() || '-- Select Engine --';
             const engineName = rawEngineLabel.includes('(') ? rawEngineLabel.split('(')[0].trim() : rawEngineLabel.replace(/^-+\s*|\s*-+$/g, '').trim();
             const setupLabel = carbSetupSelect.options[carbSetupSelect.selectedIndex]?.textContent?.trim() || 'Carb setup not selected';
+            const carbBodyLabel = carbBodySelect.options[carbBodySelect.selectedIndex]?.textContent?.trim() || 'Body not selected';
             const displacement = parseFloat(document.getElementById('displacement').value) || 2000;
             const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
             const maxRpm = parseInt(document.getElementById('maxRpm').value, 10) || 6000;
             const camLabel = document.getElementById('cam').options[document.getElementById('cam').selectedIndex]?.textContent?.trim() || 'Street Perf';
-            const specs = `${setupLabel} • ${Math.round(displacement)}cc • ${getCylinderSummaryLabel(cylinders)} • ${maxRpm} RPM • ${camLabel}`;
+            const specs = `${setupLabel} • ${carbBodyLabel} • ${Math.round(displacement)}cc • ${getCylinderSummaryLabel(cylinders)} • ${maxRpm} RPM • ${camLabel}`;
 
             if (engineKey !== 'custom' && engineName && !engineName.startsWith('--')) {
                 return `${makeLabel} • ${engineName} • ${specs}`;
@@ -4289,6 +4294,7 @@
 
         // Event listeners
         document.getElementById('carbSetup').addEventListener('change', () => {
+            carbSetupSuggestionState.manualOverride = true;
             updateCarburetorUI();
         });
 
@@ -4296,6 +4302,7 @@
             card.addEventListener('click', () => {
                 const select = document.getElementById('carbSetup');
                 select.value = card.dataset.setupValue;
+                carbSetupSuggestionState.manualOverride = true;
                 syncSetupSelectionCards();
                 updateCarburetorUI();
             });
@@ -4321,6 +4328,10 @@
             input.addEventListener('change', () => {
                 if (input.id === 'carbBody') {
                     carbControlSelectionState.bodyManualOverride = true;
+                }
+
+                if (['displacement', 'cylinders', 'cam'].includes(input.id)) {
+                    carbSetupSuggestionState.manualOverride = false;
                 }
 
                 if (['displacement', 'cylinders', 'cam', 'carbBody'].includes(input.id)) {
