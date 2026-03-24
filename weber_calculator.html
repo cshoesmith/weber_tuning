@@ -2366,34 +2366,30 @@
                 <h2 class="screen-header">2. Choose an engine or enter it manually</h2>
                 <p class="screen-copy">Pick an engine from the database, or enter the build manually.</p>
 
-                <div class="wizard-subcard">
-                    <div class="subcard-title">Use the engine database</div>
-                    <div class="subcard-copy">Pick a make and engine to auto-fill the core specs. You can still edit any of the values below afterwards.</div>
-                    <div class="engine-selector">
-                        <label>🚗 Select Make & Engine (Auto-fills specs)</label>
-                        <div class="grid-2">
-                            <div class="form-group">
-                                <label for="makeSelect">Make</label>
-                                <select id="makeSelect" onchange="selectMake()">
-                                    <option value="custom" selected>-- Custom / Other --</option>
-                                    <option value="toyota">Toyota</option>
-                                    <option value="honda">Honda</option>
-                                    <option value="mazda">Mazda</option>
-                                    <option value="nissan">Nissan / Datsun</option>
-                                    <option value="alfa">Alfa Romeo</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="engineSelect">Engine</label>
-                                <select id="engineSelect" onchange="selectEngine()">
-                                    <option value="custom">-- Select Engine --</option>
-                                </select>
-                            </div>
+                <div class="engine-selector">
+                    <label>🚗 Select Make & Engine</label>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="makeSelect">Make</label>
+                            <select id="makeSelect" onchange="selectMake()">
+                                <option value="custom" selected>-- Custom / Other --</option>
+                                <option value="toyota">Toyota</option>
+                                <option value="honda">Honda</option>
+                                <option value="mazda">Mazda</option>
+                                <option value="nissan">Nissan / Datsun</option>
+                                <option value="alfa">Alfa Romeo</option>
+                            </select>
                         </div>
-                        <div class="override-notice">Pick a make first, then choose an engine to auto-fill displacement, cylinder/rotor count, and peak-power RPM.</div>
-                        <div class="subcard-footer">
-                            <button type="button" class="mini-ghost-btn" onclick="openManualEngineModal()">Engine not listed?</button>
+                        <div class="form-group">
+                            <label for="engineSelect">Engine</label>
+                            <select id="engineSelect" onchange="selectEngine()">
+                                <option value="custom">-- Select Engine --</option>
+                            </select>
                         </div>
+                    </div>
+                    <div class="override-notice">Pick a make first, then choose an engine to auto-fill displacement, cylinder/rotor count, and peak-power RPM.</div>
+                    <div class="subcard-footer">
+                        <button type="button" class="mini-ghost-btn" onclick="openManualEngineModal()">Engine not listed?</button>
                     </div>
                 </div>
 
@@ -2623,7 +2619,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 22:54 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 22:58 UTC</span></p>
                     </div>
                 </div>
 
@@ -3070,7 +3066,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 22:54 UTC';
+        const APP_VERSION = '2026-03-24 22:58 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
