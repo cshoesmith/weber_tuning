@@ -737,6 +737,14 @@
             color: #4f5f6f;
         }
 
+        .setup-hero-detail {
+            margin-top: 6px;
+            font-size: 0.74em;
+            line-height: 1.45;
+            color: #607080;
+            font-weight: 700;
+        }
+
         .setup-badges {
             grid-area: badges;
             display: flex;
@@ -1988,7 +1996,7 @@
                 <div class="report-section-spacer"></div>
 
                 <h2 class="results-title">📋 Tuning Report</h2>
-                <div class="results-subtitle" id="engineSummaryHeader">Custom setup • 2000cc • 4 Cyl • 6000 RPM • Street Perf</div>
+                <div class="results-subtitle" id="engineSummaryHeader">Custom engine • 2000cc • 4 Cyl • 6000 RPM • Street Perf</div>
                 <div class="warning-box" id="reportAltWarning">⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.</div>
 
                 <div class="setup-hero" id="setupHero">
@@ -1997,6 +2005,7 @@
                         <div class="setup-hero-eyebrow" data-regional-template="Selected {{carbSingularCap}} Setup">Selected Carburetor Setup</div>
                         <h3 class="setup-hero-title" id="setupHeroTitle">DCOE Single</h3>
                         <p class="setup-hero-text" id="setupHeroDescription">One DCOE body with two throats. Baseline shown as a per-venturi recommendation where applicable.</p>
+                        <div class="setup-hero-detail" id="setupHeroDetail">Weber DCOE / sidedraft • 45 DCOE</div>
                         <div class="setup-hero-tools final-hidden">
                             <button type="button" class="edit-chip" data-edit-control="setup">Edit layout</button>
                             <button type="button" class="edit-chip" data-edit-control="carbBody">Edit body</button>
@@ -2111,7 +2120,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 04:21 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 04:27 UTC</span></p>
                     </div>
                 </div>
 
@@ -2503,7 +2512,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 04:21 UTC';
+        const APP_VERSION = '2026-03-24 04:27 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -3982,20 +3991,16 @@
         function buildEngineSelectionSummary() {
             const makeSelect = document.getElementById('makeSelect');
             const engineSelect = document.getElementById('engineSelect');
-            const carbSetupSelect = document.getElementById('carbSetup');
-            const carbBodySelect = document.getElementById('carbBody');
             const makeKey = makeSelect.value;
             const engineKey = engineSelect.value;
             const makeLabel = makeSelect.options[makeSelect.selectedIndex]?.textContent?.trim() || 'Custom / Other';
             const rawEngineLabel = engineSelect.options[engineSelect.selectedIndex]?.textContent?.trim() || '-- Select Engine --';
             const engineName = rawEngineLabel.includes('(') ? rawEngineLabel.split('(')[0].trim() : rawEngineLabel.replace(/^-+\s*|\s*-+$/g, '').trim();
-            const setupLabel = carbSetupSelect.options[carbSetupSelect.selectedIndex]?.textContent?.trim() || 'Carb setup not selected';
-            const carbBodyLabel = carbBodySelect.options[carbBodySelect.selectedIndex]?.textContent?.trim() || 'Body not selected';
             const displacement = parseFloat(document.getElementById('displacement').value) || 2000;
             const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
             const maxRpm = parseInt(document.getElementById('maxRpm').value, 10) || 6000;
             const camLabel = document.getElementById('cam').options[document.getElementById('cam').selectedIndex]?.textContent?.trim() || 'Street Perf';
-            const specs = `${setupLabel} • ${carbBodyLabel} • ${Math.round(displacement)}cc • ${getCylinderSummaryLabel(cylinders)} • ${maxRpm} RPM • ${camLabel}`;
+            const specs = `${Math.round(displacement)}cc • ${getCylinderSummaryLabel(cylinders)} • ${maxRpm} RPM • ${camLabel}`;
 
             if (engineKey !== 'custom' && engineName && !engineName.startsWith('--')) {
                 return `${makeLabel} • ${engineName} • ${specs}`;
@@ -4005,7 +4010,7 @@
                 return `${makeLabel} custom engine • ${specs}`;
             }
 
-            return `Custom setup • ${specs}`;
+            return `Custom engine • ${specs}`;
         }
 
         function renderResults(cards, shouldHighlight = false) {
@@ -4032,6 +4037,7 @@
             document.getElementById('setupHeroVisual').innerHTML = hero.visual;
             document.getElementById('setupHeroTitle').textContent = hero.title;
             document.getElementById('setupHeroDescription').textContent = hero.description;
+            document.getElementById('setupHeroDetail').textContent = hero.detailText;
             document.getElementById('setupHeroCount').textContent = hero.countText;
             document.getElementById('setupHeroLoad').textContent = hero.loadText;
             document.getElementById('setupHeroMode').textContent = hero.modeText;
@@ -4274,6 +4280,7 @@
             return {
                 title: context.setupLabel,
                 description,
+                detailText: `${carbFamilies[context.familyKey].name} • ${context.carbBodyLabel}`,
                 countText,
                 loadText,
                 modeText,
@@ -4722,6 +4729,7 @@
             const overrides = getPartsOverrides();
             const venturiValue = document.getElementById('venturi').value;
             const carbBody = document.getElementById('carbBody').value;
+            const carbBodyLabel = document.getElementById('carbBody').options[document.getElementById('carbBody').selectedIndex]?.textContent?.trim() || carbBody;
             const airBleed = document.getElementById('airBleed').value;
             const family = carbFamilies[familyKey];
             const context = {
@@ -4736,6 +4744,7 @@
                 cam: document.getElementById('cam').value,
                 altitude: parseInt(document.getElementById('altitude').value, 10) || 0,
                 carbBody,
+                carbBodyLabel,
                 airBleed,
                 temp: parseInt(document.getElementById('temp').value, 10) || 70,
                 overrides,
