@@ -31,9 +31,10 @@
         .header {
             background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
             color: white;
-            padding: 30px;
+            padding: 22px 20px 18px;
             text-align: center;
             border-bottom: 5px solid #ffd700;
+            position: relative;
         }
 
         .header h1 {
@@ -49,15 +50,15 @@
             opacity: 0.9;
         }
 
-        .header-actions {
-            margin-top: 18px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
+        .header-menu-shell {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            z-index: 5;
         }
 
-        .secondary-btn {
+        .secondary-btn,
+        .hamburger-btn {
             padding: 10px 16px;
             border: 2px solid rgba(255, 255, 255, 0.8);
             border-radius: 999px;
@@ -71,8 +72,59 @@
             backdrop-filter: blur(3px);
         }
 
-        .secondary-btn:hover {
+        .secondary-btn:hover,
+        .hamburger-btn:hover,
+        .hamburger-btn[aria-expanded="true"] {
             background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .hamburger-btn {
+            width: 46px;
+            height: 46px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15em;
+            line-height: 1;
+        }
+
+        .header-menu-panel {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            min-width: 220px;
+            padding: 8px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            background: rgba(22, 35, 54, 0.96);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+            display: none;
+            gap: 6px;
+        }
+
+        .header-menu-panel.show {
+            display: grid;
+        }
+
+        .header-menu-item {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            font-size: 0.82em;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .header-menu-item:hover {
+            background: rgba(255, 255, 255, 0.16);
+            border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-1px);
         }
 
@@ -159,7 +211,7 @@
 
         .wizard-step-list {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(138px, 0.78fr);
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 10px;
             margin-bottom: 14px;
         }
@@ -178,6 +230,7 @@
             text-align: left;
             cursor: pointer;
             transition: all 0.2s ease;
+            position: relative;
         }
 
         .wizard-step-btn:hover:not(:disabled) {
@@ -202,11 +255,28 @@
             color: #2f855a;
         }
 
+        .wizard-step-btn.completed::after {
+            content: '✓';
+            position: absolute;
+            left: 12px;
+            bottom: 10px;
+            width: 18px;
+            height: 18px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #2f855a;
+            color: #ffffff;
+            font-size: 0.72em;
+            font-weight: 900;
+            box-shadow: 0 6px 14px rgba(47, 133, 90, 0.22);
+        }
+
         .wizard-step-btn.reset-step {
-            grid-template-columns: 1fr;
-            justify-items: center;
-            text-align: center;
-            padding: 10px 12px;
+            grid-template-columns: auto minmax(0, 1fr);
+            justify-items: stretch;
+            text-align: left;
+            padding: 12px 14px;
             border-style: dashed;
             background: linear-gradient(135deg, #f7fbff 0%, #ffffff 100%);
             color: #1f4f82;
@@ -220,7 +290,7 @@
         .wizard-step-btn.reset-step .wizard-step-index {
             width: 26px;
             height: 26px;
-            font-size: 0.78em;
+            font-size: 0.92em;
             background: #eef4fb;
             color: #1f4f82;
         }
@@ -258,16 +328,6 @@
             font-size: 0.72em;
             color: #6b7785;
             line-height: 1.35;
-        }
-
-        .completion-note {
-            padding: 11px 14px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #eef7ff 0%, #f6fbff 100%);
-            border: 1px solid #d4e0ec;
-            color: #425466;
-            font-size: 0.84em;
-            line-height: 1.45;
         }
 
         .wizard-screen {
@@ -501,6 +561,43 @@
 
         .wizard-subcard + .wizard-subcard {
             margin-top: 14px;
+        }
+
+        .subcard-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .mini-ghost-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 12px;
+            border-radius: 999px;
+            border: 1px solid #c9d5e1;
+            background: #f4f8fb;
+            color: #425466;
+            font-size: 0.76em;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .mini-ghost-btn:hover {
+            background: #e7f0f8;
+            border-color: #9fb8cf;
+            transform: translateY(-1px);
+        }
+
+        .modal-note {
+            color: #5b6978;
+            font-size: 0.82em;
+            line-height: 1.5;
+            margin-bottom: 12px;
         }
 
         .subcard-title {
@@ -1053,9 +1150,29 @@
 
         .jet-value {
             font-size: 1.22em;
-            color: #c41e3a;
+            color: #2f855a;
             font-weight: 700;
             line-height: 1.1;
+        }
+
+        .jet-value.severity-excellent {
+            color: #2f855a;
+        }
+
+        .jet-value.severity-good {
+            color: #68a357;
+        }
+
+        .jet-value.severity-fair {
+            color: #c79521;
+        }
+
+        .jet-value.severity-poor {
+            color: #d97a1d;
+        }
+
+        .jet-value.severity-critical {
+            color: #c53030;
         }
 
         .jet-note {
@@ -1150,6 +1267,60 @@
             font-size: 0.72em;
             margin-top: 6px;
             line-height: 1.35;
+        }
+
+        .afr-explainer {
+            margin-top: 10px;
+            border: 1px solid #d8e2eb;
+            border-radius: 10px;
+            background: #f8fbff;
+            overflow: hidden;
+        }
+
+        .afr-explainer summary {
+            cursor: pointer;
+            list-style: none;
+            padding: 10px 12px;
+            font-size: 0.78em;
+            font-weight: 800;
+            color: #1f4f82;
+            background: linear-gradient(135deg, #f7fbff 0%, #eef6ff 100%);
+        }
+
+        .afr-explainer summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .afr-explainer summary::after {
+            content: '▾';
+            float: right;
+            color: #607080;
+        }
+
+        .afr-explainer[open] summary::after {
+            content: '▴';
+        }
+
+        .afr-explainer-body {
+            padding: 10px 12px 12px;
+            font-size: 0.76em;
+            line-height: 1.5;
+            color: #425466;
+        }
+
+        .afr-explainer-body p + p,
+        .afr-explainer-body ul + p,
+        .afr-explainer-body p + ul {
+            margin-top: 8px;
+        }
+
+        .afr-explainer-body ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .afr-explainer-body li + li {
+            margin-top: 4px;
         }
 
         .warning-box {
@@ -1477,7 +1648,7 @@
             }
 
             .header {
-                padding: 16px 12px 12px;
+                padding: 14px 12px 10px;
                 border-bottom-width: 4px;
             }
 
@@ -1493,18 +1664,29 @@
                 line-height: 1.3;
             }
 
-            .header-actions {
-                margin-top: 10px;
-                gap: 5px;
+            .header-menu-shell {
+                top: 10px;
+                left: 10px;
             }
 
-            .secondary-btn {
-                flex: 1 1 0;
+            .secondary-btn,
+            .hamburger-btn {
                 padding: 7px 8px;
                 font-size: 0.68em;
                 line-height: 1.15;
                 letter-spacing: 0;
                 border-width: 1px;
+            }
+
+            .hamburger-btn {
+                width: 40px;
+                height: 40px;
+                padding: 0;
+                font-size: 1.05em;
+            }
+
+            .header-menu-panel {
+                min-width: 196px;
             }
 
             .main-content {
@@ -1517,7 +1699,6 @@
             }
 
             .wizard-copy,
-            .completion-note,
             .screen-hint {
                 font-size: 0.8em;
             }
@@ -1744,7 +1925,6 @@
             }
 
             .wizard-copy,
-            .completion-note,
             .screen-hint {
                 font-size: 0.75em;
             }
@@ -1845,22 +2025,25 @@
             }
 
             .header {
-                padding: 12px 10px 10px;
+                padding: 10px 10px 8px;
             }
 
-            .header-actions {
-                display: grid;
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-                gap: 4px;
-            }
-
-            .secondary-btn {
-                flex: none;
-                width: 100%;
-                min-width: 0;
+            .secondary-btn,
+            .hamburger-btn {
                 padding: 7px 4px;
                 font-size: 0.6em;
                 line-height: 1.15;
+            }
+
+            .hamburger-btn {
+                width: 38px;
+                height: 38px;
+                padding: 0;
+                font-size: 1em;
+            }
+
+            .header-menu-panel {
+                min-width: 180px;
             }
 
             .primary-btn,
@@ -1882,18 +2065,88 @@
             border-radius: 3px;
             font-size: 0.9em;
         }
+
+        @media print {
+            @page {
+                margin: 12mm;
+            }
+
+            body.print-final-report {
+                background: #ffffff !important;
+                padding: 0 !important;
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            body.print-final-report .header,
+            body.print-final-report .wizard-progress-panel,
+            body.print-final-report #wizardScreen1,
+            body.print-final-report #wizardScreen2,
+            body.print-final-report #wizardScreen3,
+            body.print-final-report .disclaimer,
+            body.print-final-report .reference-modal,
+            body.print-final-report #wizardScreen4 .ghost-btn,
+            body.print-final-report #wizardScreen4 .primary-btn {
+                display: none !important;
+            }
+
+            body.print-final-report .container,
+            body.print-final-report .main-content,
+            body.print-final-report #wizardScreen4,
+            body.print-final-report #finalReportSnapshot {
+                display: block !important;
+                max-width: none !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+                border: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                overflow: visible !important;
+            }
+
+            body.print-final-report .main-content {
+                gap: 0 !important;
+            }
+
+            body.print-final-report #wizardScreen4 {
+                display: block !important;
+            }
+
+            body.print-final-report #wizardScreen4 .report-toolbar {
+                display: block !important;
+                margin: 0 0 14px 0 !important;
+            }
+
+            body.print-final-report #wizardScreen4 .screen-header {
+                margin-bottom: 4px !important;
+            }
+
+            body.print-final-report #wizardScreen4 .screen-copy {
+                margin-bottom: 0 !important;
+            }
+
+            body.print-final-report #finalReportSnapshot .results-title:first-child {
+                margin-top: 0 !important;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
+            <div class="header-menu-shell">
+                <button type="button" class="hamburger-btn" id="headerMenuButton" aria-label="Open header menu" aria-expanded="false" aria-controls="headerMenuPanel" onclick="toggleHeaderMenu()">☰</button>
+                <div class="header-menu-panel" id="headerMenuPanel" role="menu" aria-label="Header menu">
+                    <button type="button" class="header-menu-item" role="menuitem" id="aboutButton" onclick="closeHeaderMenu(); openAboutModal()">ℹ️ About</button>
+                    <button type="button" class="header-menu-item" role="menuitem" id="referenceButton" onclick="closeHeaderMenu(); openReferenceModal()">📚 Reference Tables</button>
+                    <button type="button" class="header-menu-item" role="menuitem" id="referenceLinksButton" onclick="closeHeaderMenu(); openReferenceLinksModal()">🔗 Reference Links</button>
+                </div>
+            </div>
             <h1 data-regional-template="🔧 Weber Baseline Tuner">🔧 Weber Baseline Tuner</h1>
             <p>DCOE, IDF & 32/36 Baseline Jetting - Classic JDM & European Motors (1960-2010)</p>
-            <div class="header-actions">
-                <button type="button" class="secondary-btn" id="aboutButton" onclick="openAboutModal()">ℹ️ About</button>
-                <button type="button" class="secondary-btn" id="referenceButton" onclick="openReferenceModal()">📚 Reference Tables</button>
-                <button type="button" class="secondary-btn" id="referenceLinksButton" onclick="openReferenceLinksModal()">🔗 Reference Links</button>
-            </div>
         </div>
 
         <div class="main-content">
@@ -1930,14 +2183,13 @@
                         </span>
                     </button>
                     <button type="button" class="wizard-step-btn reset-step" id="wizardResetStep" data-wizard-reset="true">
-                        <span class="wizard-step-index">4</span>
+                        <span class="wizard-step-index" aria-hidden="true">↺</span>
                         <span>
                             <span class="wizard-step-label">Start over</span>
                             <span class="wizard-step-meta">Fresh wizard</span>
                         </span>
                     </button>
                 </div>
-                <div class="completion-note" id="wizardCompletionNote">Start by choosing the carburetor family and count you want to tune.</div>
             </div>
 
             <section class="input-section wizard-screen active" id="wizardScreen1" data-step="1">
@@ -2023,52 +2275,8 @@
                             </div>
                         </div>
                         <div class="override-notice">Pick a make first, then choose an engine to auto-fill displacement, cylinder/rotor count, and peak-power RPM.</div>
-                    </div>
-                </div>
-
-                <div class="wizard-subcard">
-                    <div class="subcard-title">Manual engine details</div>
-                    <div class="subcard-copy">These values are the foundation for the report. If you already know the build, enter it directly here.</div>
-
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label for="displacement">Displacement (cc)</label>
-                            <input type="number" id="displacement" value="2000" min="1000" max="4000">
-                        </div>
-                        <div class="form-group">
-                            <label for="cylinders">Cylinders</label>
-                            <select id="cylinders">
-                                <option value="4" selected>4 Cyl</option>
-                                <option value="6">6 Cyl</option>
-                                <option value="3">3 Rotor</option>
-                                <option value="2">2 Rotor</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label for="maxRpm">Peak Power RPM</label>
-                            <input type="number" id="maxRpm" value="6000" min="4000" max="10000">
-                        </div>
-                        <div class="form-group">
-                            <label for="cam">Cam Profile</label>
-                            <select id="cam">
-                                <option value="stock">Stock</option>
-                                <option value="street" selected>Street Perf</option>
-                                <option value="race">Race</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label for="altitude">Altitude (ft)</label>
-                            <input type="number" id="altitude" value="0" min="0" max="10000">
-                        </div>
-                        <div class="form-group">
-                            <label for="temp">Temp (°F)</label>
-                            <input type="number" id="temp" value="70" min="0" max="120">
+                        <div class="subcard-footer">
+                            <button type="button" class="mini-ghost-btn" onclick="openManualEngineModal()">Engine not listed?</button>
                         </div>
                     </div>
                 </div>
@@ -2084,14 +2292,6 @@
                     <div>
                         <h2 class="screen-header">3. Review the report and make inline edits</h2>
                         <p class="screen-copy">Review the live report and use Edit on any item you want to adjust.</p>
-                    </div>
-                    <button type="button" class="ghost-btn" data-nav-step="2">Back to engine details</button>
-                </div>
-
-                <div class="tuning-inline-note final-hidden">
-                    <p>Use the Edit buttons in the report below to adjust layout, carb specs, or parts on hand right where they appear in the report.</p>
-                    <div class="tuning-inline-actions">
-                        <button type="button" class="section-reset-btn" onclick="resetCarbSpecsToDefaults()">Reset tuning changes</button>
                     </div>
                 </div>
 
@@ -2247,6 +2447,10 @@
                         <span class="afr-pill"><span class="afr-dot" style="background:#1f4f82;"></span>Operating point</span>
                     </div>
                     <div class="afr-note">Targets are biased toward safe street/performance baselines: slightly leaner at cruise, richer under acceleration and WOT.</div>
+                    <details class="afr-explainer">
+                        <summary>How this AFR estimate is built</summary>
+                        <div class="afr-explainer-body" id="afrMethodology">This explanation updates with the selected carb family and jetting choices.</div>
+                    </details>
                 </div>
 
                 <div class="screen-actions">
@@ -2262,9 +2466,12 @@
                 <div class="report-toolbar">
                     <div>
                         <h2 class="screen-header">Final report</h2>
-                        <p class="screen-copy">Read-only report snapshot. Go back to the live report if you want to edit anything.</p>
+                        <p class="screen-copy">Read-only report snapshot. Print it or save this page as a PDF when you're happy with the result.</p>
                     </div>
-                    <button type="button" class="ghost-btn" data-nav-step="3">Back to live report</button>
+                    <div class="action-button-group">
+                        <button type="button" class="primary-btn" onclick="printFinalReport()">Print / Save PDF</button>
+                        <button type="button" class="ghost-btn" onclick="resetWizardFlow()">Start over</button>
+                    </div>
                 </div>
 
                 <div id="finalReportSnapshot"></div>
@@ -2301,7 +2508,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 10:18 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 11:31 UTC</span></p>
                     </div>
                 </div>
 
@@ -2691,9 +2898,71 @@
         </div>
     </div>
 
+    <div class="reference-modal" id="manualEngineModal" aria-hidden="true">
+        <div class="reference-dialog" role="dialog" aria-modal="true" aria-labelledby="manualEngineTitle">
+            <div class="reference-header">
+                <div>
+                    <h2 id="manualEngineTitle">Manual engine details</h2>
+                    <p>Set the engine values directly when you are not using a database match, or when you want to fine-tune the build inputs.</p>
+                </div>
+                <button type="button" class="close-btn" aria-label="Close manual engine details" onclick="closeManualEngineModal()">×</button>
+            </div>
+
+            <div class="edit-modal-stack">
+                <p class="modal-note">Changes here update the live report immediately. You can close this window as soon as the specs look right.</p>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="displacement">Displacement (cc)</label>
+                        <input type="number" id="displacement" value="2000" min="1000" max="4000">
+                    </div>
+                    <div class="form-group">
+                        <label for="cylinders">Cylinders</label>
+                        <select id="cylinders">
+                            <option value="4" selected>4 Cyl</option>
+                            <option value="6">6 Cyl</option>
+                            <option value="3">3 Rotor</option>
+                            <option value="2">2 Rotor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="maxRpm">Peak Power RPM</label>
+                        <input type="number" id="maxRpm" value="6000" min="4000" max="10000">
+                    </div>
+                    <div class="form-group">
+                        <label for="cam">Cam Profile</label>
+                        <select id="cam">
+                            <option value="stock">Stock</option>
+                            <option value="street" selected>Street Perf</option>
+                            <option value="race">Race</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="altitude">Altitude (ft)</label>
+                        <input type="number" id="altitude" value="0" min="0" max="10000">
+                    </div>
+                    <div class="form-group">
+                        <label for="temp">Temp (°F)</label>
+                        <input type="number" id="temp" value="70" min="0" max="120">
+                    </div>
+                </div>
+
+                <div class="edit-modal-actions">
+                    <button type="button" class="ghost-btn" onclick="closeManualEngineModal()">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 10:18 UTC';
+        const APP_VERSION = '2026-03-24 11:31 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -3136,7 +3405,6 @@
 
             document.getElementById('wizardProgressFill').style.width = `${(Math.min(wizardState.activeStep, 3) / 3) * 100}%`;
             document.getElementById('wizardProgressStatus').textContent = renderRegionalTemplate(wizardStepMeta[wizardState.activeStep].statusTemplate);
-            document.getElementById('wizardCompletionNote').textContent = renderRegionalTemplate(wizardState.completionMessageTemplate || wizardStepMeta[wizardState.activeStep].defaultMessageTemplate);
         }
 
         function setActiveWizardStep(step, options = {}) {
@@ -3187,6 +3455,14 @@
                 stripClonedReportIds(node);
                 target.appendChild(node);
             });
+        }
+
+        function printFinalReport() {
+            closeAllModals();
+            syncFinalReportView();
+            document.body.classList.add('print-final-report');
+            window.print();
+            document.body.classList.remove('print-final-report');
         }
 
         function syncSetupSelectionCards() {
@@ -3743,6 +4019,61 @@
             };
         }
 
+        function getSeverityMetaFromPenalty(penalty = 0) {
+            const safePenalty = Math.max(0, penalty);
+
+            if (safePenalty <= 0.5) {
+                return { className: 'excellent', label: 'Low health impact' };
+            }
+
+            if (safePenalty <= 4.5) {
+                return { className: 'good', label: 'Minor health impact' };
+            }
+
+            if (safePenalty <= 9.5) {
+                return { className: 'fair', label: 'Moderate health impact' };
+            }
+
+            if (safePenalty <= 16) {
+                return { className: 'poor', label: 'High health impact' };
+            }
+
+            return { className: 'critical', label: 'Very high health impact' };
+        }
+
+        function getOverridePenalty(actual, recommended, step, penaltyPerStep) {
+            if (actual === recommended) {
+                return 0;
+            }
+
+            const steps = step > 0
+                ? Math.abs(actual - recommended) / step
+                : Math.abs(actual - recommended);
+
+            return steps * penaltyPerStep;
+        }
+
+        function getOptionPenalty(familyKey, value, referenceValue) {
+            if (value === referenceValue) {
+                return 0;
+            }
+
+            return Math.abs(getAirBleedEffect(familyKey, value) - getAirBleedEffect(familyKey, referenceValue)) * 20;
+        }
+
+        function getVenturiPenalty(familyKey, carbBody, actualVenturiValue, recommendedVenturiValue) {
+            const venturiDelta = familyKey === 'progressive'
+                ? (String(actualVenturiValue) === String(recommendedVenturiValue) ? 0 : 1)
+                : Math.abs(Number(actualVenturiValue) - Number(recommendedVenturiValue));
+            const basePenalty = venturiDelta * (familyKey === 'progressive' ? 5 : 4);
+            const bodyPenalty = getBodyMismatchPenalty(familyKey, carbBody, actualVenturiValue).penalty;
+            return basePenalty + bodyPenalty;
+        }
+
+        function getCardSeverity(penalty = 0) {
+            return getSeverityMetaFromPenalty(penalty).className;
+        }
+
         function getBodyMismatchPenalty(familyKey, carbBody, venturiValue) {
             const numericVenturi = typeof venturiValue === 'number'
                 ? venturiValue
@@ -4110,17 +4441,15 @@
             }
         }
 
-        function resetCarbSpecsToDefaults() {
-            updateCarburetorUI({ resetSelections: true, shouldRecalculate: true });
-        }
-
         function openReferenceModal() {
+            closeHeaderMenu();
             const modal = document.getElementById('referenceModal');
             modal.classList.add('show');
             modal.setAttribute('aria-hidden', 'false');
         }
 
         function openAboutModal() {
+            closeHeaderMenu();
             const modal = document.getElementById('aboutModal');
             modal.classList.add('show');
             modal.setAttribute('aria-hidden', 'false');
@@ -4139,13 +4468,61 @@
         }
 
         function openReferenceLinksModal() {
+            closeHeaderMenu();
             const modal = document.getElementById('referenceLinksModal');
             modal.classList.add('show');
             modal.setAttribute('aria-hidden', 'false');
         }
 
+        function toggleHeaderMenu() {
+            const menu = document.getElementById('headerMenuPanel');
+            const button = document.getElementById('headerMenuButton');
+            const isOpen = menu.classList.contains('show');
+
+            menu.classList.toggle('show', !isOpen);
+            button.setAttribute('aria-expanded', String(!isOpen));
+        }
+
+        function closeHeaderMenu() {
+            const menu = document.getElementById('headerMenuPanel');
+            const button = document.getElementById('headerMenuButton');
+
+            if (!menu || !button) {
+                return;
+            }
+
+            menu.classList.remove('show');
+            button.setAttribute('aria-expanded', 'false');
+        }
+
         function closeReferenceLinksModal() {
             const modal = document.getElementById('referenceLinksModal');
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        function openManualEngineModal() {
+            const makeSelect = document.getElementById('makeSelect');
+            const engineSelect = document.getElementById('engineSelect');
+
+            if (makeSelect) {
+                makeSelect.value = 'custom';
+            }
+
+            if (engineSelect) {
+                engineSelect.innerHTML = '<option value="custom">-- Select Engine --</option>';
+                engineSelect.value = 'custom';
+            }
+
+            calculateJets();
+
+            const modal = document.getElementById('manualEngineModal');
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeManualEngineModal() {
+            const modal = document.getElementById('manualEngineModal');
             modal.classList.remove('show');
             modal.setAttribute('aria-hidden', 'true');
         }
@@ -4155,6 +4532,8 @@
             closeReferenceModal();
             closeReferenceLinksModal();
             closeTuningEditModal();
+            closeManualEngineModal();
+            closeHeaderMenu();
         }
 
         function selectEngine() {
@@ -4233,7 +4612,7 @@
                     <div class="jet-card-header">
                         <div class="jet-card-body">
                             <div class="jet-name">${card.name}</div>
-                            <div class="jet-value" id="resultValue${index}">${card.value}</div>
+                            <div class="jet-value severity-${card.severityClass || 'excellent'}" id="resultValue${index}" title="${card.severityLabel || 'Low health impact'}">${card.value}</div>
                         </div>
                         ${card.editControl ? `<button type="button" class="edit-chip final-hidden" data-edit-control="${card.editControl}">Edit</button>` : ''}
                     </div>
@@ -4372,6 +4751,48 @@
             const averageDeviation = profile.reduce((sum, point) => sum + (point.value - ((point.targetLow + point.targetHigh) / 2)), 0) / profile.length;
             const overallTrend = averageDeviation > 0.2 ? 'Overall estimate trends slightly lean.' : averageDeviation < -0.2 ? 'Overall estimate trends slightly rich.' : 'Overall estimate is broadly near baseline targets.';
             return `${overallTrend} ${describePoint(cruisePoint)} at about ${cruisePoint.value.toFixed(1)}:1, and ${describePoint(wotPoint)} at about ${wotPoint.value.toFixed(1)}:1.`;
+        }
+
+        function buildAfrMethodology(context, zones) {
+            const familyLabels = {
+                dcoe: 'DCOE / sidedraft',
+                idf: 'IDF / downdraft',
+                progressive: '32/36 progressive'
+            };
+
+            const perZoneNotes = {
+                dcoe: [
+                    'Idle and cruise respond mostly to the idle jet, idle air bleed family, and ambient temperature.',
+                    'Tip-in responds mostly to the accelerator pump shot plus part of the idle/progression bias.',
+                    'Midrange and WOT respond mostly to main jet size, air corrector trim, and how far the chosen venturi is from the suggested choke.'
+                ],
+                idf: [
+                    'Idle and cruise respond mostly to the idle jet, idle holder family, and ambient temperature.',
+                    'Tip-in responds mostly to progression and pump shot changes.',
+                    'Midrange and WOT respond mostly to the main jet, air corrector, and venturi mismatch relative to the recommended baseline.'
+                ],
+                progressive: [
+                    'Idle, primary, and transition are driven mostly by the idle jet, primary main, and emulsion family choice.',
+                    'Secondary and WOT are driven mostly by the secondary main plus air density shifts from temperature.',
+                    'The venturi pair acts as a coarse sizing choice rather than a removable choke system, so the model treats pair mismatch more simply.'
+                ]
+            };
+
+            const familyLabel = familyLabels[context.familyKey] || 'Weber baseline';
+            const zoneLabels = zones.map(zone => `${zone.label} ${zone.targetLow.toFixed(1)}-${zone.targetHigh.toFixed(1)}:1`).join(' • ');
+            const venturiLabel = context.familyKey === 'progressive'
+                ? `Selected venturi pair: ${String(context.venturiValue).replace('|', '/')}`
+                : `Selected venturi: ${context.venturiValue}mm (suggested ${context.suggestedVenturi}mm)`;
+
+            return `
+                <p><strong>Model type:</strong> Directional heuristic for <strong>${familyLabel}</strong>, not a combustion simulation or dyno substitute. It estimates whether the selected baseline parts would tend to move each operating zone richer or leaner than the built-in target bands.</p>
+                <p><strong>Target bands shown on the chart:</strong> ${zoneLabels}.</p>
+                <ul>
+                    ${perZoneNotes[context.familyKey].map(note => `<li>${note}</li>`).join('')}
+                </ul>
+                <p><strong>Inputs used right now:</strong> ${venturiLabel} • Main fuel system versus recommended baseline • ${context.familyKey === 'progressive' ? 'Primary and secondary main split' : 'Air corrector versus recommended baseline'} • ${context.familyKey === 'progressive' ? 'Emulsion family choice' : 'Idle air bleed / holder family'} • Temperature ${context.temp}°F.</p>
+                <p><strong>Limits:</strong> This chart does <em>not</em> know fuel pressure, float height, manifold design, ignition timing, pump cam profile, emulsion well geometry, or real engine VE. It is technically useful as a consistency check and educational guide, but final mixture must still be confirmed with a wideband, plugs, or dyno data.</p>
+            `;
         }
 
         function buildAfrProfile(points) {
@@ -4546,6 +4967,7 @@
             document.getElementById('advisorySummary').textContent = result.advisorySummary;
             renderAfrChart(result.afrProfile);
             document.getElementById('afrSummary').textContent = result.afrSummary;
+            document.getElementById('afrMethodology').innerHTML = result.afrMethodology;
 
             const altWarning = document.getElementById('altWarning');
             const reportAltWarning = document.getElementById('reportAltWarning');
@@ -4653,6 +5075,7 @@
 
             const hasForcedOverrides = Object.keys(context.overrides).length > 0;
             const venturiUserSelected = venturi !== suggestedVenturi;
+            const dcoeAirBleedReference = getDefaultOptionValue(carbFamilies.dcoe.airBleedOptions);
 
             return {
                 setupHero: {
@@ -4666,15 +5089,15 @@
                     airBleedUserSelected: context.airBleedUserSelected
                 },
                 cards: [
-                    { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: `Suggested from roughly ${Math.round(displacementPerVenturi)}cc per venturi and ${assignmentText}.`, userSelected: venturiUserSelected, editControl: 'venturi' },
-                    { name: 'Main Jet', value: String(mainJet), note: formatOverrideAwareNote('Controls WOT fuel flow. Baseline is calculated per venturi from venturi × 4.', mainJet, recommendedMainJet), userSelected: mainJet !== recommendedMainJet, editControl: 'mainJet' },
-                    { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('Leans the mixture as RPM rises. Cam profile can shift this baseline up or down from the usual main + 50 rule.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector, editControl: 'airCorrector' },
-                    { name: 'Emulsion Tube', value: emulsionTube, note: `Selected from approximately ${Math.round(displacementPerVenturi)}cc of load per venturi.` },
-                    { name: 'Idle Jet', value: String(idleJetSize), note: formatOverrideAwareNote('Progression and cruise baseline is keyed to venturi load and cam overlap, not just carb count.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet, editControl: 'idleJet' },
-                    { name: 'Idle Air Bleed', value: context.airBleed, note: 'Idle-circuit bleed family paired with the fuel jet for progression and cruise behavior.', userSelected: context.airBleedUserSelected, editControl: 'airBleed' },
-                    { name: 'Pump Jet', value: String(pumpJet), note: formatOverrideAwareNote('Accelerator pump discharge scaled for venturi load and cam aggressiveness.', pumpJet, recommendedPumpJet), userSelected: pumpJet !== recommendedPumpJet, editControl: 'pumpJet' },
-                    { name: 'Auxiliary Venturi', value: auxVenturi, note: 'Main-circuit signal booster. Smaller chokes prefer smaller aux venturis.' },
-                    { name: 'Needle Valve', value: needleValve, note: 'Float chamber refill rate matched to approximate fuel demand per carb body.' }
+                    { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: `Suggested from roughly ${Math.round(displacementPerVenturi)}cc per venturi and ${assignmentText}.`, userSelected: venturiUserSelected, editControl: 'venturi', severityClass: getCardSeverity(getVenturiPenalty('dcoe', context.carbBody, venturi, suggestedVenturi)), severityLabel: getSeverityMetaFromPenalty(getVenturiPenalty('dcoe', context.carbBody, venturi, suggestedVenturi)).label },
+                    { name: 'Main Jet', value: String(mainJet), note: formatOverrideAwareNote('Controls WOT fuel flow. Baseline is calculated per venturi from venturi × 4.', mainJet, recommendedMainJet), userSelected: mainJet !== recommendedMainJet, editControl: 'mainJet', severityClass: getCardSeverity(getOverridePenalty(mainJet, recommendedMainJet, 5, 4)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(mainJet, recommendedMainJet, 5, 4)).label },
+                    { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('Leans the mixture as RPM rises. Cam profile can shift this baseline up or down from the usual main + 50 rule.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector, editControl: 'airCorrector', severityClass: getCardSeverity(getOverridePenalty(airCorrector, recommendedAirCorrector, 5, 2.4)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(airCorrector, recommendedAirCorrector, 5, 2.4)).label },
+                    { name: 'Emulsion Tube', value: emulsionTube, note: `Selected from approximately ${Math.round(displacementPerVenturi)}cc of load per venturi.`, severityClass: 'good', severityLabel: 'Low health impact' },
+                    { name: 'Idle Jet', value: String(idleJetSize), note: formatOverrideAwareNote('Progression and cruise baseline is keyed to venturi load and cam overlap, not just carb count.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet, editControl: 'idleJet', severityClass: getCardSeverity(getOverridePenalty(idleJetSize, recommendedIdleJet, 5, 4.2)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(idleJetSize, recommendedIdleJet, 5, 4.2)).label },
+                    { name: 'Idle Air Bleed', value: context.airBleed, note: 'Idle-circuit bleed family paired with the fuel jet for progression and cruise behavior.', userSelected: context.airBleedUserSelected, editControl: 'airBleed', severityClass: getCardSeverity(getOptionPenalty('dcoe', context.airBleed, dcoeAirBleedReference)), severityLabel: getSeverityMetaFromPenalty(getOptionPenalty('dcoe', context.airBleed, dcoeAirBleedReference)).label },
+                    { name: 'Pump Jet', value: String(pumpJet), note: formatOverrideAwareNote('Accelerator pump discharge scaled for venturi load and cam aggressiveness.', pumpJet, recommendedPumpJet), userSelected: pumpJet !== recommendedPumpJet, editControl: 'pumpJet', severityClass: getCardSeverity(getOverridePenalty(pumpJet, recommendedPumpJet, 5, 3.2)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(pumpJet, recommendedPumpJet, 5, 3.2)).label },
+                    { name: 'Auxiliary Venturi', value: auxVenturi, note: 'Main-circuit signal booster. Smaller chokes prefer smaller aux venturis.', severityClass: 'good', severityLabel: 'Low health impact' },
+                    { name: 'Needle Valve', value: needleValve, note: 'Float chamber refill rate matched to approximate fuel demand per carb body.', severityClass: 'good', severityLabel: 'Low health impact' }
                 ],
                 formulaTitle: '📐 DCOE Baseline Formulas',
                 formulaDescription1: '<strong>Main Jet:</strong> Venturi × 4 baseline per venturi, then altitude and a stronger cam-profile adjustment, then rounded to the nearest 5.',
@@ -4688,6 +5111,7 @@
                 advisorySummary: `${venturiAdvisory} ${getCamAdvisory('dcoe', context.cam)} ${getCarbBodyAdvisory('dcoe', context.carbBody, venturi)} ${getTemperatureAdvisory(context.temp)}`,
                 afrProfile,
                 afrSummary: summarizeAfrProfile(afrProfile),
+                afrMethodology: buildAfrMethodology({ ...context, suggestedVenturi }, afrProfile),
                 altitudeWarning: '⚠️ High altitude: Baseline applies a 2% main jet reduction per 1000ft above sea level.',
                 showAltitudeWarning: context.altitude > 2000
             };
@@ -4782,6 +5206,7 @@
 
             const hasForcedOverrides = Object.keys(context.overrides).length > 0;
             const venturiUserSelected = venturi !== suggestedVenturi;
+            const idfAirBleedReference = getDefaultOptionValue(carbFamilies.idf.airBleedOptions);
 
             return {
                 setupHero: {
@@ -4795,15 +5220,15 @@
                     airBleedUserSelected: context.airBleedUserSelected
                 },
                 cards: [
-                    { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: `Suggested from roughly ${Math.round(displacementPerVenturi)}cc per venturi and ${assignmentText}.`, userSelected: venturiUserSelected, editControl: 'venturi' },
-                    { name: 'Main Jet', value: String(mainJet), note: formatOverrideAwareNote('Downdraft IDF baseline starts slightly richer than DCOE and is calculated per venturi at venturi × 4.1.', mainJet, recommendedMainJet), userSelected: mainJet !== recommendedMainJet, editControl: 'mainJet' },
-                    { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('A slightly larger air corrector spread helps IDF top-end cleanup, and the cam profile now nudges that spread richer or leaner.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector, editControl: 'airCorrector' },
-                    { name: 'Emulsion Tube', value: emulsionTube, note: `Chosen from approximately ${Math.round(displacementPerVenturi)}cc of load per venturi.` },
-                    { name: 'Idle Jet', value: String(idleJetSize), note: formatOverrideAwareNote('IDF idle circuit baseline now follows per-venturi load and cam overlap.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet, editControl: 'idleJet' },
-                    { name: 'Idle Jet Holder', value: context.airBleed, note: 'Holder family paired with the idle jet to shape progression and cruise response.', userSelected: context.airBleedUserSelected, editControl: 'airBleed' },
-                    { name: 'Pump Jet', value: String(pumpJet), note: formatOverrideAwareNote('Pump jet baseline is biased by venturi load and cam because IDFs often need a stronger transition shot.', pumpJet, recommendedPumpJet), userSelected: pumpJet !== recommendedPumpJet, editControl: 'pumpJet' },
-                    { name: 'Booster / Aux Reference', value: booster, note: 'Reference size for signal strength. Larger vents tend to want the larger booster range.' },
-                    { name: 'Needle Valve', value: needleValve, note: 'Supply rate recommendation keyed to approximate fuel demand per carb body.' }
+                    { name: 'Main Venturi (Choke)', value: `${venturi}mm`, note: `Suggested from roughly ${Math.round(displacementPerVenturi)}cc per venturi and ${assignmentText}.`, userSelected: venturiUserSelected, editControl: 'venturi', severityClass: getCardSeverity(getVenturiPenalty('idf', context.carbBody, venturi, suggestedVenturi)), severityLabel: getSeverityMetaFromPenalty(getVenturiPenalty('idf', context.carbBody, venturi, suggestedVenturi)).label },
+                    { name: 'Main Jet', value: String(mainJet), note: formatOverrideAwareNote('Downdraft IDF baseline starts slightly richer than DCOE and is calculated per venturi at venturi × 4.1.', mainJet, recommendedMainJet), userSelected: mainJet !== recommendedMainJet, editControl: 'mainJet', severityClass: getCardSeverity(getOverridePenalty(mainJet, recommendedMainJet, 5, 4)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(mainJet, recommendedMainJet, 5, 4)).label },
+                    { name: 'Air Corrector Jet', value: String(airCorrector), note: formatOverrideAwareNote('A slightly larger air corrector spread helps IDF top-end cleanup, and the cam profile now nudges that spread richer or leaner.', airCorrector, recommendedAirCorrector), userSelected: airCorrector !== recommendedAirCorrector, editControl: 'airCorrector', severityClass: getCardSeverity(getOverridePenalty(airCorrector, recommendedAirCorrector, 5, 2.4)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(airCorrector, recommendedAirCorrector, 5, 2.4)).label },
+                    { name: 'Emulsion Tube', value: emulsionTube, note: `Chosen from approximately ${Math.round(displacementPerVenturi)}cc of load per venturi.`, severityClass: 'good', severityLabel: 'Low health impact' },
+                    { name: 'Idle Jet', value: String(idleJetSize), note: formatOverrideAwareNote('IDF idle circuit baseline now follows per-venturi load and cam overlap.', idleJetSize, recommendedIdleJet), userSelected: idleJetSize !== recommendedIdleJet, editControl: 'idleJet', severityClass: getCardSeverity(getOverridePenalty(idleJetSize, recommendedIdleJet, 1, 3.2)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(idleJetSize, recommendedIdleJet, 1, 3.2)).label },
+                    { name: 'Idle Jet Holder', value: context.airBleed, note: 'Holder family paired with the idle jet to shape progression and cruise response.', userSelected: context.airBleedUserSelected, editControl: 'airBleed', severityClass: getCardSeverity(getOptionPenalty('idf', context.airBleed, idfAirBleedReference)), severityLabel: getSeverityMetaFromPenalty(getOptionPenalty('idf', context.airBleed, idfAirBleedReference)).label },
+                    { name: 'Pump Jet', value: String(pumpJet), note: formatOverrideAwareNote('Pump jet baseline is biased by venturi load and cam because IDFs often need a stronger transition shot.', pumpJet, recommendedPumpJet), userSelected: pumpJet !== recommendedPumpJet, editControl: 'pumpJet', severityClass: getCardSeverity(getOverridePenalty(pumpJet, recommendedPumpJet, 5, 3.2)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(pumpJet, recommendedPumpJet, 5, 3.2)).label },
+                    { name: 'Booster / Aux Reference', value: booster, note: 'Reference size for signal strength. Larger vents tend to want the larger booster range.', severityClass: 'good', severityLabel: 'Low health impact' },
+                    { name: 'Needle Valve', value: needleValve, note: 'Supply rate recommendation keyed to approximate fuel demand per carb body.', severityClass: 'good', severityLabel: 'Low health impact' }
                 ],
                 formulaTitle: '📐 IDF Baseline Formulas',
                 formulaDescription1: '<strong>Main Jet:</strong> Venturi × 4.1 baseline per venturi, then altitude and a stronger cam-profile adjustment, then rounded to the nearest 5.',
@@ -4817,6 +5242,7 @@
                 advisorySummary: `${venturiAdvisory} ${getCamAdvisory('idf', context.cam)} ${getCarbBodyAdvisory('idf', context.carbBody, venturi)} ${getTemperatureAdvisory(context.temp)}`,
                 afrProfile,
                 afrSummary: summarizeAfrProfile(afrProfile),
+                afrMethodology: buildAfrMethodology({ ...context, suggestedVenturi }, afrProfile),
                 altitudeWarning: '⚠️ High altitude: IDF baseline applies a 2% main jet reduction per 1000ft above sea level.',
                 showAltitudeWarning: context.altitude > 2000
             };
@@ -4892,6 +5318,7 @@
 
             const hasForcedOverrides = Object.keys(context.overrides).length > 0;
             const venturiUserSelected = pairDelta > 0;
+            const progressiveAirBleedReference = getDefaultOptionValue(carbFamilies.progressive.airBleedOptions);
 
             return {
                 setupHero: {
@@ -4905,14 +5332,14 @@
                     airBleedUserSelected: context.airBleedUserSelected
                 },
                 cards: [
-                    { name: 'Venturi Pair', value: `${primaryVenturi}/${secondaryVenturi}mm`, note: 'Progressive carbs use fixed primary and secondary venturis rather than removable chokes.', userSelected: venturiUserSelected, editControl: 'venturi' },
-                    { name: 'Primary Main Jet', value: String(primaryMain), note: formatOverrideAwareNote('Controls cruise-to-midrange fueling on the primary barrel. Cam choice now shifts this baseline more noticeably.', primaryMain, recommendedPrimaryMain), userSelected: primaryMain !== recommendedPrimaryMain, editControl: 'primaryMain' },
-                    { name: 'Secondary Main Jet', value: String(secondaryMain), note: formatOverrideAwareNote('Secondary barrel spread now grows with cam aggressiveness instead of being almost fixed.', secondaryMain, recommendedSecondaryMain), userSelected: secondaryMain !== recommendedSecondaryMain, editControl: 'secondaryMain' },
-                    { name: 'Primary Air Corrector', value: String(primaryAir), note: formatOverrideAwareNote('Primary high-RPM trim. Cam can bias this above or below the usual primary main + 35 pattern.', primaryAir, recommendedPrimaryAir), userSelected: primaryAir !== recommendedPrimaryAir, editControl: 'primaryAir' },
-                    { name: 'Secondary Air Corrector', value: String(secondaryAir), note: formatOverrideAwareNote('Secondary high-RPM trim. Race cams hold this richer than the old nearly fixed rule.', secondaryAir, recommendedSecondaryAir), userSelected: secondaryAir !== recommendedSecondaryAir, editControl: 'secondaryAir' },
-                    { name: 'Idle Jet', value: String(idleJet), note: formatOverrideAwareNote('Single-barrel progression baseline now reacts more strongly to cam overlap.', idleJet, recommendedIdleJet), userSelected: idleJet !== recommendedIdleJet, editControl: 'idleJet' },
-                    { name: 'Emulsion Series', value: context.airBleed, note: 'Progressive emulsion family selection used as the baseline reference.', userSelected: context.airBleedUserSelected, editControl: 'airBleed' },
-                    { name: 'Needle Valve', value: needleValve, note: 'Float valve recommendation for the common single progressive installation.' }
+                    { name: 'Venturi Pair', value: `${primaryVenturi}/${secondaryVenturi}mm`, note: 'Progressive carbs use fixed primary and secondary venturis rather than removable chokes.', userSelected: venturiUserSelected, editControl: 'venturi', severityClass: getCardSeverity(getVenturiPenalty('progressive', context.carbBody, context.venturiValue, suggestedPair)), severityLabel: getSeverityMetaFromPenalty(getVenturiPenalty('progressive', context.carbBody, context.venturiValue, suggestedPair)).label },
+                    { name: 'Primary Main Jet', value: String(primaryMain), note: formatOverrideAwareNote('Controls cruise-to-midrange fueling on the primary barrel. Cam choice now shifts this baseline more noticeably.', primaryMain, recommendedPrimaryMain), userSelected: primaryMain !== recommendedPrimaryMain, editControl: 'primaryMain', severityClass: getCardSeverity(getOverridePenalty(primaryMain, recommendedPrimaryMain, 5, 4)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(primaryMain, recommendedPrimaryMain, 5, 4)).label },
+                    { name: 'Secondary Main Jet', value: String(secondaryMain), note: formatOverrideAwareNote('Secondary barrel spread now grows with cam aggressiveness instead of being almost fixed.', secondaryMain, recommendedSecondaryMain), userSelected: secondaryMain !== recommendedSecondaryMain, editControl: 'secondaryMain', severityClass: getCardSeverity(getOverridePenalty(secondaryMain, recommendedSecondaryMain, 5, 4)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(secondaryMain, recommendedSecondaryMain, 5, 4)).label },
+                    { name: 'Primary Air Corrector', value: String(primaryAir), note: formatOverrideAwareNote('Primary high-RPM trim. Cam can bias this above or below the usual primary main + 35 pattern.', primaryAir, recommendedPrimaryAir), userSelected: primaryAir !== recommendedPrimaryAir, editControl: 'primaryAir', severityClass: getCardSeverity(getOverridePenalty(primaryAir, recommendedPrimaryAir, 5, 2.4)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(primaryAir, recommendedPrimaryAir, 5, 2.4)).label },
+                    { name: 'Secondary Air Corrector', value: String(secondaryAir), note: formatOverrideAwareNote('Secondary high-RPM trim. Race cams hold this richer than the old nearly fixed rule.', secondaryAir, recommendedSecondaryAir), userSelected: secondaryAir !== recommendedSecondaryAir, editControl: 'secondaryAir', severityClass: getCardSeverity(getOverridePenalty(secondaryAir, recommendedSecondaryAir, 5, 2.4)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(secondaryAir, recommendedSecondaryAir, 5, 2.4)).label },
+                    { name: 'Idle Jet', value: String(idleJet), note: formatOverrideAwareNote('Single-barrel progression baseline now reacts more strongly to cam overlap.', idleJet, recommendedIdleJet), userSelected: idleJet !== recommendedIdleJet, editControl: 'idleJet', severityClass: getCardSeverity(getOverridePenalty(idleJet, recommendedIdleJet, 5, 4)), severityLabel: getSeverityMetaFromPenalty(getOverridePenalty(idleJet, recommendedIdleJet, 5, 4)).label },
+                    { name: 'Emulsion Series', value: context.airBleed, note: 'Progressive emulsion family selection used as the baseline reference.', userSelected: context.airBleedUserSelected, editControl: 'airBleed', severityClass: getCardSeverity(getOptionPenalty('progressive', context.airBleed, progressiveAirBleedReference)), severityLabel: getSeverityMetaFromPenalty(getOptionPenalty('progressive', context.airBleed, progressiveAirBleedReference)).label },
+                    { name: 'Needle Valve', value: needleValve, note: 'Float valve recommendation for the common single progressive installation.', severityClass: 'good', severityLabel: 'Low health impact' }
                 ],
                 formulaTitle: '📐 32/36 Progressive Baselines',
                 formulaDescription1: '<strong>Primary Main:</strong> Engine-size baseline, then altitude and a stronger cam-profile adjustment, then rounded to the nearest 5.',
@@ -4928,6 +5355,7 @@
                 advisorySummary: `${venturiAdvisory} ${getCamAdvisory('progressive', context.cam)} ${getCarbBodyAdvisory('progressive', context.carbBody, context.venturiValue)} ${getTemperatureAdvisory(context.temp)}`,
                 afrProfile,
                 afrSummary: summarizeAfrProfile(afrProfile),
+                afrMethodology: buildAfrMethodology({ ...context, suggestedVenturi: suggestedPairLabel }, afrProfile),
                 altitudeWarning: '⚠️ High altitude: Progressive baseline trims both primary and secondary mains by roughly 2% per 1000ft above sea level.',
                 showAltitudeWarning: context.altitude > 2000
             };
@@ -5074,7 +5502,7 @@
             donationButton.setAttribute('rel', 'noopener noreferrer');
         }
 
-        ['aboutModal', 'referenceModal', 'referenceLinksModal', 'tuningEditModal'].forEach(modalId => {
+        ['aboutModal', 'referenceModal', 'referenceLinksModal', 'tuningEditModal', 'manualEngineModal'].forEach(modalId => {
             document.getElementById(modalId).addEventListener('click', event => {
                 if (event.target.id === modalId) {
                     closeAllModals();
@@ -5083,6 +5511,11 @@
         });
 
         document.addEventListener('click', event => {
+            const menuShell = event.target.closest('.header-menu-shell');
+            if (!menuShell) {
+                closeHeaderMenu();
+            }
+
             const editButton = event.target.closest('[data-edit-control]');
             if (!editButton) {
                 return;
