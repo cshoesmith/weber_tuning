@@ -2066,6 +2066,15 @@
             font-size: 0.9em;
         }
 
+        .print-page-break-marker {
+            display: none;
+        }
+
+        .print-avoid-break {
+            break-inside: avoid-page;
+            page-break-inside: avoid;
+        }
+
         @media print {
             @page {
                 margin: 12mm;
@@ -2116,20 +2125,27 @@
             }
 
             body.print-final-report #wizardScreen4 .report-toolbar {
-                display: block !important;
-                margin: 0 0 14px 0 !important;
-            }
-
-            body.print-final-report #wizardScreen4 .screen-header {
-                margin-bottom: 4px !important;
-            }
-
-            body.print-final-report #wizardScreen4 .screen-copy {
-                margin-bottom: 0 !important;
+                display: none !important;
             }
 
             body.print-final-report #finalReportSnapshot .results-title:first-child {
                 margin-top: 0 !important;
+            }
+
+            body.print-final-report .print-page-break-marker {
+                display: block !important;
+                break-before: page;
+                page-break-before: always;
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: 0 !important;
+            }
+
+            body.print-final-report #finalReportSnapshot > *,
+            body.print-final-report #finalReportSnapshot [data-source-id="resultsCards"] > * {
+                break-inside: avoid-page;
+                page-break-inside: avoid;
             }
         }
     </style>
@@ -2465,12 +2481,11 @@
             <section class="results-section wizard-screen" id="wizardScreen4" data-step="4">
                 <div class="report-toolbar">
                     <div>
-                        <h2 class="screen-header">Final report</h2>
-                        <p class="screen-copy">Read-only report snapshot. Print it or save this page as a PDF when you're happy with the result.</p>
+                        <h2 class="screen-header">Print-ready view</h2>
+                        <p class="screen-copy">The report below is the export itself. Use Print / Save PDF to generate the final document.</p>
                     </div>
                     <div class="action-button-group">
                         <button type="button" class="primary-btn" onclick="printFinalReport()">Print / Save PDF</button>
-                        <button type="button" class="ghost-btn" onclick="resetWizardFlow()">Start over</button>
                     </div>
                 </div>
 
@@ -2508,7 +2523,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 11:31 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 21:28 UTC</span></p>
                     </div>
                 </div>
 
@@ -2962,7 +2977,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 11:31 UTC';
+        const APP_VERSION = '2026-03-24 21:28 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -3433,9 +3448,80 @@
             }
 
             node.querySelectorAll('.edit-chip, .final-hidden, .hidden-control-plumbing').forEach(child => child.remove());
+            if (node.id) {
+                node.dataset.sourceId = node.id;
+            }
             node.removeAttribute('id');
             node.classList.remove('updated');
             Array.from(node.children).forEach(child => stripClonedReportIds(child));
+        }
+
+        function clearPrintPagination(container) {
+            if (!(container instanceof HTMLElement)) {
+                return;
+            }
+
+            container.querySelectorAll('.print-page-break-marker').forEach(marker => marker.remove());
+            container.querySelectorAll('.print-avoid-break').forEach(node => node.classList.remove('print-avoid-break'));
+        }
+
+        function applyPrintPagination(container) {
+            if (!(container instanceof HTMLElement)) {
+                return;
+            }
+
+            clearPrintPagination(container);
+
+            container.querySelectorAll('.results-title, .results-subtitle, .warning-box, .setup-hero, .health-score-box, .formula-info, .jet-card').forEach(node => {
+                node.classList.add('print-avoid-break');
+            });
+
+            const blocks = [];
+            Array.from(container.children).forEach(child => {
+                if (!(child instanceof HTMLElement)) {
+                    return;
+                }
+
+                if (child.dataset.sourceId === 'resultsCards') {
+                    Array.from(child.children).forEach(grandchild => {
+                        if (grandchild instanceof HTMLElement) {
+                            blocks.push(grandchild);
+                        }
+                    });
+                    return;
+                }
+
+                blocks.push(child);
+            });
+
+            const pageBudget = 960;
+            let currentHeight = 0;
+
+            blocks.forEach((block, index) => {
+                const styles = window.getComputedStyle(block);
+                const blockHeight = block.getBoundingClientRect().height
+                    + (parseFloat(styles.marginTop) || 0)
+                    + (parseFloat(styles.marginBottom) || 0)
+                    + 8;
+
+                if (!blockHeight) {
+                    return;
+                }
+
+                const wouldOverflow = index > 0 && currentHeight > 0 && currentHeight + blockHeight > pageBudget;
+                if (wouldOverflow) {
+                    const marker = document.createElement('div');
+                    marker.className = 'print-page-break-marker';
+                    block.parentNode.insertBefore(marker, block);
+                    currentHeight = 0;
+                }
+
+                currentHeight += blockHeight;
+
+                if (blockHeight > pageBudget * 0.85) {
+                    currentHeight = 0;
+                }
+            });
         }
 
         function syncFinalReportView() {
@@ -3455,14 +3541,19 @@
                 stripClonedReportIds(node);
                 target.appendChild(node);
             });
+
+            applyPrintPagination(target);
         }
 
         function printFinalReport() {
+            const previousTitle = document.title;
             closeAllModals();
             syncFinalReportView();
+            document.title = 'Tuning Report';
             document.body.classList.add('print-final-report');
             window.print();
             document.body.classList.remove('print-final-report');
+            document.title = previousTitle;
         }
 
         function syncSetupSelectionCards() {
