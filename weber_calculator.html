@@ -1343,24 +1343,33 @@
             }
 
             .header {
-                padding: 24px 16px;
+                padding: 18px 14px 14px;
+                border-bottom-width: 4px;
             }
 
             .header h1 {
-                font-size: 1.45em;
-                letter-spacing: 1px;
+                font-size: 1.22em;
+                letter-spacing: 0.6px;
+                line-height: 1.2;
+                margin-bottom: 6px;
             }
 
             .header p {
-                font-size: 0.92em;
+                font-size: 0.82em;
+                line-height: 1.35;
             }
 
             .header-actions {
-                gap: 8px;
+                margin-top: 12px;
+                gap: 6px;
             }
 
             .secondary-btn {
-                flex: 1 1 140px;
+                flex: 1 1 112px;
+                padding: 8px 10px;
+                font-size: 0.74em;
+                letter-spacing: 0.2px;
+                border-width: 1px;
             }
 
             .main-content {
@@ -1387,10 +1396,46 @@
                 align-items: stretch;
             }
 
-            .wizard-step-list,
             .setup-selector-grid,
             .report-edit-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .wizard-step-list {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 6px;
+            }
+
+            .wizard-step-btn {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                text-align: center;
+                padding: 8px 6px;
+                gap: 5px;
+                border-radius: 12px;
+            }
+
+            .wizard-step-index {
+                width: 24px;
+                height: 24px;
+                font-size: 0.76em;
+            }
+
+            .wizard-step-label {
+                font-size: 0.72em;
+                line-height: 1.2;
+            }
+
+            .wizard-step-meta {
+                margin-top: 1px;
+                font-size: 0.62em;
+                line-height: 1.2;
+            }
+
+            .primary-btn,
+            .ghost-btn {
+                padding: 9px 13px;
+                font-size: 0.78em;
             }
 
             .wizard-progress-status {
@@ -1431,6 +1476,53 @@
             .health-score-box.user-selected .health-score-top,
             .setup-hero.user-selected .setup-hero-copy {
                 padding-right: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .wizard-step-list {
+                gap: 4px;
+            }
+
+            .wizard-step-btn {
+                padding: 7px 4px;
+            }
+
+            .wizard-step-index {
+                width: 22px;
+                height: 22px;
+                font-size: 0.72em;
+            }
+
+            .wizard-step-label {
+                font-size: 0.66em;
+            }
+
+            .wizard-step-meta {
+                font-size: 0.58em;
+            }
+
+            .header {
+                padding: 14px 12px 12px;
+            }
+
+            .header-actions {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .secondary-btn {
+                flex: none;
+                width: 100%;
+                min-width: 0;
+                padding: 7px 8px;
+                font-size: 0.7em;
+            }
+
+            .primary-btn,
+            .ghost-btn {
+                width: 100%;
+                padding: 9px 12px;
             }
         }
 
@@ -1841,7 +1933,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 00:58 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 12:24 UTC</span></p>
                     </div>
                 </div>
 
@@ -2209,7 +2301,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 00:58 UTC';
+        const APP_VERSION = '2026-03-24 12:24 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
