@@ -2606,7 +2606,6 @@
                     <p id="advisorySummary">Starting recommendations shown. Temperature and carb body inputs are advisory only.</p>
                 </div>
 
-                <div class="formula-info">
                 <div class="screen-actions">
                     <div class="screen-hint">When the live preview looks right, finalize it into a clean report-only page.</div>
                     <div class="action-button-group">
@@ -2661,7 +2660,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-25 10:01 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-25 10:15 UTC</span></p>
                     </div>
                 </div>
 
@@ -3108,7 +3107,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-25 10:01 UTC';
+        const APP_VERSION = '2026-03-25 10:15 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -3673,6 +3672,7 @@
 
         function collectPrintBlocks(container) {
             const blocks = [];
+            let reachedResultsCards = false;
 
             Array.from(container.children).forEach(child => {
                 if (!(child instanceof HTMLElement)) {
@@ -3680,15 +3680,19 @@
                 }
 
                 if (child.dataset.sourceId === 'resultsCards') {
+                    reachedResultsCards = true;
                     Array.from(child.children).forEach(grandchild => {
                         if (grandchild instanceof HTMLElement) {
-                            blocks.push(grandchild);
+                            blocks.push({ block: grandchild, section: 'jets' });
                         }
                     });
                     return;
                 }
 
-                blocks.push(child);
+                blocks.push({
+                    block: child,
+                    section: reachedResultsCards ? 'after-jets' : 'before-jets'
+                });
             });
 
             return blocks;
@@ -3706,10 +3710,17 @@
             setPrintSnapshotLayout(layoutWidthPx, 1);
             void container.offsetHeight;
 
-            return blocks.map(block => ({
-                block,
-                height: getBlockOuterHeight(block)
+            return blocks.map(entry => ({
+                ...entry,
+                height: getBlockOuterHeight(entry.block)
             }));
+        }
+
+        function getMeasuredBlockHeight(entries, sections) {
+            const sectionSet = new Set(sections);
+            return entries
+                .filter(entry => sectionSet.has(entry.section))
+                .reduce((sum, entry) => sum + entry.height, 0);
         }
 
         function applyPrintPagination(container) {
@@ -3728,13 +3739,23 @@
             const { contentWidthPx, contentHeightPx, maxPages } = getPrintLayoutMetrics();
             let measuredBlocks = measurePrintBlocks(container, contentWidthPx, blocks);
             let totalHeight = measuredBlocks.reduce((sum, entry) => sum + entry.height, 0);
-            let scale = Math.min(1, (contentHeightPx * maxPages) / Math.max(totalHeight, 1));
+            let priorityHeight = getMeasuredBlockHeight(measuredBlocks, ['before-jets', 'jets']);
+            let scale = Math.min(
+                1,
+                contentHeightPx / Math.max(priorityHeight, 1),
+                (contentHeightPx * maxPages) / Math.max(totalHeight, 1)
+            );
             let layoutWidthPx = contentWidthPx / Math.max(scale, 0.01);
 
             if (scale < 0.999) {
                 measuredBlocks = measurePrintBlocks(container, layoutWidthPx, blocks);
                 totalHeight = measuredBlocks.reduce((sum, entry) => sum + entry.height, 0);
-                scale = Math.min(1, (contentHeightPx * maxPages) / Math.max(totalHeight, 1));
+                priorityHeight = getMeasuredBlockHeight(measuredBlocks, ['before-jets', 'jets']);
+                scale = Math.min(
+                    1,
+                    contentHeightPx / Math.max(priorityHeight, 1),
+                    (contentHeightPx * maxPages) / Math.max(totalHeight, 1)
+                );
                 layoutWidthPx = contentWidthPx / Math.max(scale, 0.01);
                 measuredBlocks = measurePrintBlocks(container, layoutWidthPx, blocks);
             }
@@ -3743,11 +3764,20 @@
 
             const pageBudget = contentHeightPx / Math.max(scale, 0.01);
             let currentHeight = 0;
+            let forcedAfterJetsPageBreak = false;
 
-            measuredBlocks.forEach(({ block, height: blockHeight }, index) => {
+            measuredBlocks.forEach(({ block, height: blockHeight, section }, index) => {
 
                 if (!blockHeight) {
                     return;
+                }
+
+                if (section === 'after-jets' && !forcedAfterJetsPageBreak) {
+                    const marker = document.createElement('div');
+                    marker.className = 'print-page-break-marker';
+                    block.parentNode.insertBefore(marker, block);
+                    currentHeight = 0;
+                    forcedAfterJetsPageBreak = true;
                 }
 
                 const wouldOverflow = index > 0 && currentHeight > 0 && currentHeight + blockHeight > pageBudget;
