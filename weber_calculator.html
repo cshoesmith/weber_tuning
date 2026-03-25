@@ -408,6 +408,10 @@
             margin-top: 18px;
         }
 
+        .report-toolbar-page {
+            align-items: flex-start;
+        }
+
         .screen-actions {
             padding-top: 14px;
             border-top: 1px solid #e6edf5;
@@ -419,6 +423,34 @@
             gap: 10px;
             flex-wrap: wrap;
             justify-content: flex-end;
+        }
+
+        #finalReportSnapshot {
+            margin-top: 16px;
+        }
+
+        .final-report-brand {
+            margin-bottom: 14px;
+            padding: 16px 18px;
+            border-radius: 16px;
+            border: 1px solid #d9e2ec;
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: #ffffff;
+            box-shadow: 0 14px 30px rgba(139, 0, 0, 0.18);
+        }
+
+        .final-report-brand h2 {
+            margin: 0;
+            font-size: 1.34em;
+            text-transform: uppercase;
+            letter-spacing: 0.9px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.22);
+        }
+
+        .final-report-brand p {
+            margin: 6px 0 0;
+            font-size: 0.82em;
+            opacity: 0.92;
         }
 
         .hidden-control-plumbing {
@@ -837,6 +869,14 @@
             width: 100%;
             height: auto;
             display: block;
+        }
+
+        .setup-hero-media img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            border-radius: 8px;
         }
 
         .setup-hero-copy {
@@ -2228,6 +2268,13 @@
                 display: none !important;
             }
 
+            body.print-final-report .final-report-brand {
+                margin-bottom: 12px !important;
+                box-shadow: none !important;
+                break-inside: avoid-page;
+                page-break-inside: avoid;
+            }
+
             body.print-final-report #finalReportSnapshot .results-title:first-child {
                 margin-top: 0 !important;
             }
@@ -2496,7 +2543,7 @@
                 <div class="setup-hero" id="setupHero">
                     <div class="setup-hero-media" id="setupHeroVisual" aria-hidden="true"></div>
                     <div class="setup-hero-copy">
-                        <div class="setup-hero-eyebrow" data-regional-template="Selected {{carbSingularCap}} Setup">Selected Carburetor Setup</div>
+                        <div class="setup-hero-eyebrow" data-regional-template="Selected {{carbSingularCap}}">Selected Carburetor</div>
                         <h3 class="setup-hero-title" id="setupHeroTitle">DCOE Single</h3>
                         <p class="setup-hero-text" id="setupHeroDescription">One DCOE body with two throats. Setup shown as a per-venturi recommendation where applicable.</p>
                         <div class="setup-hero-tools final-hidden">
@@ -2575,7 +2622,7 @@
             </section>
 
             <section class="results-section wizard-screen" id="wizardScreen4" data-step="4">
-                <div class="report-toolbar">
+                <div class="report-toolbar report-toolbar-page">
                     <div>
                         <h2 class="screen-header">Print-ready view</h2>
                         <p class="screen-copy">The report below is the export itself. Use Print / Save PDF to generate the final document.</p>
@@ -2619,7 +2666,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-24 22:58 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-25 01:48 UTC</span></p>
                     </div>
                 </div>
 
@@ -3066,7 +3113,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-24 22:58 UTC';
+        const APP_VERSION = '2026-03-25 01:48 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -3667,11 +3714,18 @@
                 return;
             }
 
+            const reportBrandMarkup = `
+                <div class="final-report-brand">
+                    <h2>${renderRegionalTemplate('🔧 Weber Baseline Tuner')}</h2>
+                    <p>${renderRegionalTemplate('Starting recommendations for Weber {{carbPlural}} tuning')}</p>
+                </div>
+            `;
+
             const cloneNodes = Array.from(source.children)
                 .filter(child => !child.classList.contains('report-toolbar') && !child.classList.contains('hidden-control-plumbing') && !child.classList.contains('screen-actions') && !child.classList.contains('report-section-spacer') && !child.classList.contains('final-hidden'))
                 .map(child => child.cloneNode(true));
 
-            target.innerHTML = '';
+            target.innerHTML = reportBrandMarkup;
             cloneNodes.forEach(node => {
                 stripClonedReportIds(node);
                 target.appendChild(node);
@@ -5109,6 +5163,14 @@
         }
 
         function buildSetupHero(context, metrics) {
+            const setupImageMap = {
+                dcoe_single: './images/DCOE_single.jpg',
+                dcoe_double: './images/DCOE_twin.jpg',
+                dcoe_triple: './images/DCOE_triple.jpg',
+                idf_single: './images/IDF_single.jpg',
+                idf_double: './images/IDF_double.jpg',
+                progressive_single: './images/DGV_single.jpg'
+            };
             const colorMap = {
                 dcoe: { body: '#c41e3a', top: '#8b0000', accent: '#ffd166', shadow: '#4a5568' },
                 idf: { body: '#1f4f82', top: '#163a60', accent: '#7bdff2', shadow: '#43566b' },
@@ -5164,14 +5226,10 @@
             const description = isProgressive
                 ? renderRegionalTemplate(`${context.setupLabel} uses a shared progressive primary/secondary model. The recommendations are for one 32/36 {{carbSingular}} with staged barrels.`)
                 : `${context.setupLabel} uses ${metrics.assignmentText}. Main jet sizing is shown per venturi, not as a total combined jet area across the whole engine.`;
-
-            return {
-                title: isProgressive ? context.setupLabel : `${context.carbBodyLabel} ${setupSuffix}`,
-                description,
-                countText,
-                loadText,
-                modeText,
-                visual: `
+            const setupImagePath = setupImageMap[context.setupKey] || null;
+            const visualMarkup = setupImagePath
+                ? `<img src="${setupImagePath}" alt="${context.setupLabel} carburetor" loading="eager">`
+                : `
                     <svg viewBox="0 0 320 150" role="img" aria-label="${context.setupLabel} illustration">
                         <defs>
                             <linearGradient id="heroBg${context.setupKey}" x1="0" x2="1" y1="0" y2="1">
@@ -5183,7 +5241,15 @@
                         <rect x="24" y="118" width="272" height="10" rx="5" fill="#d8e2eb" />
                         ${carbMarkup}
                     </svg>
-                `
+                `;
+
+            return {
+                title: isProgressive ? context.setupLabel : `${context.carbBodyLabel} ${setupSuffix}`,
+                description,
+                countText,
+                loadText,
+                modeText,
+                visual: visualMarkup
             };
         }
 
