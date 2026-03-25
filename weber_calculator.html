@@ -1125,15 +1125,22 @@
 
         #resultsCards {
             display: grid;
-            gap: 7px;
+            gap: 6px;
+            margin-top: 10px;
+            padding: 10px;
+            background: linear-gradient(135deg, #ffffff 0%, #f5f8fc 100%);
+            border: 1px solid #d8e2eb;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
         }
 
         .jet-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #eef3f8 100%);
             border-left: 4px solid #c41e3a;
             padding: 9px 10px;
-            border-radius: 0 8px 8px 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            border: 1px solid #e1e8f0;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
             transition: transform 0.2s;
             position: relative;
         }
@@ -1153,6 +1160,7 @@
 
         .jet-card.user-selected {
             border-left-color: #d69e2e;
+            border-color: #e5c975;
         }
 
         .health-score-box.user-selected .health-score-top {
@@ -2313,6 +2321,18 @@
                 margin-bottom: 4px !important;
             }
 
+            body.print-final-report #resultsCards {
+                margin-top: 8px !important;
+                padding: 8px !important;
+                border-radius: 10px !important;
+                box-shadow: none !important;
+            }
+
+            body.print-final-report .jet-card {
+                border-radius: 8px !important;
+                box-shadow: none !important;
+            }
+
             body.print-final-report .health-score-details {
                 padding-left: 16px !important;
                 font-size: 0.67em !important;
@@ -2703,7 +2723,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-25 10:36 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-25 10:40 UTC</span></p>
                     </div>
                 </div>
 
@@ -3150,7 +3170,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-25 10:36 UTC';
+        const APP_VERSION = '2026-03-25 10:40 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
