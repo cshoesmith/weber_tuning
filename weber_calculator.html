@@ -1241,11 +1241,19 @@
             border-left: 4px solid #17a2b8;
         }
 
+            .formula-panel {
+                padding: 11px 12px;
+            }
+
         .formula-info h3 {
             color: #17a2b8;
             margin-bottom: 5px;
             font-size: 0.86em;
         }
+
+            .formula-panel h3 {
+                margin-bottom: 4px;
+            }
 
         .formula-info p {
             font-size: 0.77em;
@@ -1253,6 +1261,26 @@
             color: #555;
             margin-bottom: 4px;
         }
+
+            .formula-step {
+                display: grid;
+                gap: 4px;
+                align-items: start;
+            }
+
+            .formula-step + .formula-step {
+                margin-top: 3px;
+                padding-top: 7px;
+                border-top: 1px solid rgba(23, 162, 184, 0.16);
+            }
+
+            .formula-panel .formula-info-copy {
+                margin: 0;
+            }
+
+            .formula-panel .formula-info-copy strong {
+                color: #264653;
+            }
 
         .formula-box {
             background: white;
@@ -1263,6 +1291,15 @@
             color: #c41e3a;
             margin: 5px 0;
             border: 1px solid #ddd;
+        }
+
+        .formula-panel .formula-box {
+            margin: 0;
+        }
+
+        .formula-box.compact-formula {
+            font-size: 0.72em;
+            line-height: 1.5;
         }
 
         .warning-box {
@@ -2584,18 +2621,24 @@
 
                 <div id="resultsCards"></div>
 
-                <div class="formula-info">
+                <div class="formula-info formula-panel">
                     <h3 id="formulaTitle">📐 Technical Formulas</h3>
-                    <p id="formulaDescription1"><strong>Main Jet:</strong> Venturi × 4 baseline, then altitude/cam adjustments, then rounded to the nearest 5.</p>
-                    <div class="formula-box" id="mainJetFormula">34 × 4 = 136 → street cam +0 → round = 135</div>
+                    <div class="formula-step">
+                        <p class="formula-info-copy" id="formulaDescription1"><strong>Main Jet:</strong> Venturi × 4 baseline, then altitude/cam adjustments, then rounded to the nearest 5.</p>
+                        <div class="formula-box" id="mainJetFormula">34 × 4 = 136 → street cam +0 → round = 135</div>
+                    </div>
 
-                    <p id="formulaDescription2"><strong>Air Corrector:</strong> Main Jet + 50, rounded to the nearest 5.</p>
-                    <div class="formula-box" id="airCorrFormula">135 + 50 = 185</div>
+                    <div class="formula-step">
+                        <p class="formula-info-copy" id="formulaDescription2"><strong>Air Corrector:</strong> Main Jet + 50, rounded to the nearest 5.</p>
+                        <div class="formula-box" id="airCorrFormula">135 + 50 = 185</div>
+                    </div>
 
-                    <p id="formulaDescription3"><strong>Emulsion Tube by Cylinder Size:</strong></p>
-                    <div class="formula-box" id="supportFormula" style="font-size: 0.7em;">
-                        &lt;325cc: F11 | 325-400cc: F15<br>
-                        400-475cc: F16 | &gt;475cc: F2
+                    <div class="formula-step">
+                        <p class="formula-info-copy" id="formulaDescription3"><strong>Emulsion Tube by Cylinder Size:</strong></p>
+                        <div class="formula-box compact-formula" id="supportFormula">
+                            &lt;325cc: F11 | 325-400cc: F15<br>
+                            400-475cc: F16 | &gt;475cc: F2
+                        </div>
                     </div>
                 </div>
 
@@ -2660,7 +2703,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-25 10:15 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-25 10:36 UTC</span></p>
                     </div>
                 </div>
 
@@ -3107,7 +3150,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-25 10:15 UTC';
+        const APP_VERSION = '2026-03-25 10:36 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
