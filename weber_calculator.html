@@ -2104,7 +2104,8 @@
 
         @media print {
             @page {
-                margin: 12mm;
+                size: A4 portrait;
+                margin: 10mm;
             }
 
             body.print-final-report {
@@ -2129,8 +2130,7 @@
 
             body.print-final-report .container,
             body.print-final-report .main-content,
-            body.print-final-report #wizardScreen4,
-            body.print-final-report #finalReportSnapshot {
+            body.print-final-report #wizardScreen4 {
                 display: block !important;
                 max-width: none !important;
                 width: 100% !important;
@@ -2143,12 +2143,35 @@
                 overflow: visible !important;
             }
 
+            body.print-final-report #finalReportSnapshot {
+                display: block !important;
+                width: var(--print-snapshot-layout-width, 100%) !important;
+                max-width: var(--print-snapshot-layout-width, 100%) !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+                border: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                overflow: visible !important;
+                zoom: var(--print-snapshot-zoom, 1);
+                transform-origin: top left !important;
+            }
+
             body.print-final-report .main-content {
                 gap: 0 !important;
             }
 
+            body.print-final-report .main-content > :not(#wizardScreen4) {
+                display: none !important;
+            }
+
             body.print-final-report #wizardScreen4 {
                 display: block !important;
+            }
+
+            body.print-final-report #wizardScreen4 > :not(#finalReportSnapshot) {
+                display: none !important;
             }
 
             body.print-final-report #wizardScreen4 .report-toolbar {
@@ -2537,7 +2560,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-25 03:25 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-25 03:35 UTC</span></p>
                     </div>
                 </div>
 
@@ -2984,7 +3007,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-25 03:25 UTC';
+        const APP_VERSION = '2026-03-25 03:35 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -3002,6 +3025,13 @@
             }
         };
         let regionalPreference = 'usa';
+        const PRINT_LAYOUT = {
+            pageWidthMm: 210,
+            pageHeightMm: 297,
+            marginMm: 10,
+            maxPages: 2,
+            millimetersToPx: 96 / 25.4
+        };
 
         // Engine database with specs
         const engineCatalog = {
@@ -3262,6 +3292,7 @@
         };
 
         let lastRenderedSignature = null;
+        let previousPrintTitle = null;
         const tuningEditState = {
             controlKey: null
         };
@@ -3518,18 +3549,30 @@
             container.querySelectorAll('.print-avoid-break').forEach(node => node.classList.remove('print-avoid-break'));
         }
 
-        function applyPrintPagination(container) {
-            if (!(container instanceof HTMLElement)) {
-                return;
-            }
+        function getPrintLayoutMetrics() {
+            const contentWidthMm = PRINT_LAYOUT.pageWidthMm - (PRINT_LAYOUT.marginMm * 2);
+            const contentHeightMm = PRINT_LAYOUT.pageHeightMm - (PRINT_LAYOUT.marginMm * 2);
 
-            clearPrintPagination(container);
+            return {
+                contentWidthPx: contentWidthMm * PRINT_LAYOUT.millimetersToPx,
+                contentHeightPx: contentHeightMm * PRINT_LAYOUT.millimetersToPx,
+                maxPages: PRINT_LAYOUT.maxPages
+            };
+        }
 
-            container.querySelectorAll('.results-title, .results-subtitle, .warning-box, .setup-hero, .health-score-box, .formula-info, .jet-card').forEach(node => {
-                node.classList.add('print-avoid-break');
-            });
+        function setPrintSnapshotLayout(layoutWidthPx, zoom = 1) {
+            document.body.style.setProperty('--print-snapshot-layout-width', `${layoutWidthPx}px`);
+            document.body.style.setProperty('--print-snapshot-zoom', String(Number(zoom.toFixed(4))));
+        }
 
+        function resetPrintSnapshotLayout() {
+            document.body.style.removeProperty('--print-snapshot-layout-width');
+            document.body.style.removeProperty('--print-snapshot-zoom');
+        }
+
+        function collectPrintBlocks(container) {
             const blocks = [];
+
             Array.from(container.children).forEach(child => {
                 if (!(child instanceof HTMLElement)) {
                     return;
@@ -3547,15 +3590,60 @@
                 blocks.push(child);
             });
 
-            const pageBudget = 960;
+            return blocks;
+        }
+
+        function getBlockOuterHeight(block) {
+            const styles = window.getComputedStyle(block);
+            return block.getBoundingClientRect().height
+                + (parseFloat(styles.marginTop) || 0)
+                + (parseFloat(styles.marginBottom) || 0)
+                + 8;
+        }
+
+        function measurePrintBlocks(container, layoutWidthPx, blocks) {
+            setPrintSnapshotLayout(layoutWidthPx, 1);
+            void container.offsetHeight;
+
+            return blocks.map(block => ({
+                block,
+                height: getBlockOuterHeight(block)
+            }));
+        }
+
+        function applyPrintPagination(container) {
+            if (!(container instanceof HTMLElement)) {
+                return;
+            }
+
+            clearPrintPagination(container);
+            resetPrintSnapshotLayout();
+
+            container.querySelectorAll('.results-title, .results-subtitle, .warning-box, .setup-hero, .health-score-box, .formula-info, .jet-card').forEach(node => {
+                node.classList.add('print-avoid-break');
+            });
+
+            const blocks = collectPrintBlocks(container);
+            const { contentWidthPx, contentHeightPx, maxPages } = getPrintLayoutMetrics();
+            let measuredBlocks = measurePrintBlocks(container, contentWidthPx, blocks);
+            let totalHeight = measuredBlocks.reduce((sum, entry) => sum + entry.height, 0);
+            let scale = Math.min(1, (contentHeightPx * maxPages) / Math.max(totalHeight, 1));
+            let layoutWidthPx = contentWidthPx / Math.max(scale, 0.01);
+
+            if (scale < 0.999) {
+                measuredBlocks = measurePrintBlocks(container, layoutWidthPx, blocks);
+                totalHeight = measuredBlocks.reduce((sum, entry) => sum + entry.height, 0);
+                scale = Math.min(1, (contentHeightPx * maxPages) / Math.max(totalHeight, 1));
+                layoutWidthPx = contentWidthPx / Math.max(scale, 0.01);
+                measuredBlocks = measurePrintBlocks(container, layoutWidthPx, blocks);
+            }
+
+            setPrintSnapshotLayout(layoutWidthPx, scale);
+
+            const pageBudget = contentHeightPx / Math.max(scale, 0.01);
             let currentHeight = 0;
 
-            blocks.forEach((block, index) => {
-                const styles = window.getComputedStyle(block);
-                const blockHeight = block.getBoundingClientRect().height
-                    + (parseFloat(styles.marginTop) || 0)
-                    + (parseFloat(styles.marginBottom) || 0)
-                    + 8;
+            measuredBlocks.forEach(({ block, height: blockHeight }, index) => {
 
                 if (!blockHeight) {
                     return;
@@ -3605,15 +3693,32 @@
             applyPrintPagination(target);
         }
 
+        function exitPrintFinalReportMode() {
+            document.body.classList.remove('print-final-report');
+            resetPrintSnapshotLayout();
+
+            if (previousPrintTitle !== null) {
+                document.title = previousPrintTitle;
+                previousPrintTitle = null;
+            }
+        }
+
         function printFinalReport() {
-            const previousTitle = document.title;
             closeAllModals();
             syncFinalReportView();
+
+            if (previousPrintTitle === null) {
+                previousPrintTitle = document.title;
+            }
+
             document.title = 'Tuning Report';
             document.body.classList.add('print-final-report');
-            window.print();
-            document.body.classList.remove('print-final-report');
-            document.title = previousTitle;
+
+            window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(() => {
+                    window.print();
+                });
+            });
         }
 
         function syncSetupSelectionCards() {
@@ -5463,6 +5568,16 @@
             if (event.key === 'Escape') {
                 closeAllModals();
             }
+        });
+
+        window.addEventListener('beforeprint', () => {
+            if (document.body.classList.contains('print-final-report')) {
+                syncFinalReportView();
+            }
+        });
+
+        window.addEventListener('afterprint', () => {
+            exitPrintFinalReportMode();
         });
 
         window.onload = () => {
