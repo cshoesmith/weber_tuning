@@ -2542,7 +2542,17 @@
                             </select>
                         </div>
                     </div>
-                    <div class="override-notice">Pick a make first, then choose an engine to auto-fill displacement, cylinder/rotor count, and peak-power RPM.</div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="cam">Cam Type</label>
+                            <select id="cam">
+                                <option value="stock">Standard</option>
+                                <option value="street" selected>Street Tune</option>
+                                <option value="race">Race</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="override-notice">Pick a make first, then choose an engine to auto-fill displacement, cylinder/rotor count, and peak-power RPM. Cam type stays adjustable here for standard, street-tuned, or race builds.</div>
                     <div class="subcard-footer">
                         <button type="button" class="mini-ghost-btn" onclick="openManualEngineModal()">Engine not listed?</button>
                     </div>
@@ -2645,7 +2655,7 @@
                 <div class="report-section-spacer"></div>
 
                 <h2 class="results-title">📋 Tuning Report</h2>
-                <div class="results-subtitle" id="engineSummaryHeader">Custom engine • 2000cc • 4 Cyl • 6000 RPM • Street Perf</div>
+                <div class="results-subtitle" id="engineSummaryHeader">Custom engine • 2000cc • 4 Cyl • 6000 RPM • Street Tune</div>
                 <div class="warning-box" id="reportAltWarning">⚠️ High altitude: Starting recommendation applies a 2% main jet reduction per 1000ft above sea level.</div>
 
                 <div class="setup-hero" id="setupHero">
@@ -2763,7 +2773,7 @@
                     <div class="reference-footnote about-copy">
                         <span class="license-pill">MIT License</span>
                         <p style="margin-top: 10px;">This software is released under the <a class="about-link" href="./LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
-                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-25 10:49 UTC</span></p>
+                        <p style="margin-top: 10px;"><strong>Version:</strong> <span id="versionValue">2026-03-29 05:34 UTC</span></p>
                     </div>
                 </div>
 
@@ -3180,14 +3190,6 @@
                         <label for="maxRpm">Peak Power RPM</label>
                         <input type="number" id="maxRpm" value="6000" min="4000" max="10000">
                     </div>
-                    <div class="form-group">
-                        <label for="cam">Cam Profile</label>
-                        <select id="cam">
-                            <option value="stock">Stock</option>
-                            <option value="street" selected>Street Perf</option>
-                            <option value="race">Race</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div class="grid-2">
@@ -3210,7 +3212,7 @@
 
     <script>
         const DONATION_URL = '#';
-        const APP_VERSION = '2026-03-25 10:49 UTC';
+        const APP_VERSION = '2026-03-29 05:34 UTC';
         const REGIONAL_PREFERENCE_KEY = 'weber_region_preference';
         const REGIONAL_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
         const regionalTerms = {
@@ -5074,7 +5076,7 @@
             const displacement = parseFloat(document.getElementById('displacement').value) || 2000;
             const cylinders = parseInt(document.getElementById('cylinders').value, 10) || 4;
             const maxRpm = parseInt(document.getElementById('maxRpm').value, 10) || 6000;
-            const camLabel = document.getElementById('cam').options[document.getElementById('cam').selectedIndex]?.textContent?.trim() || 'Street Perf';
+            const camLabel = document.getElementById('cam').options[document.getElementById('cam').selectedIndex]?.textContent?.trim() || 'Street Tune';
             const specs = `${Math.round(displacement)}cc • ${getCylinderSummaryLabel(cylinders)} • ${maxRpm} RPM • ${camLabel}`;
 
             if (!hasConfirmedEngineSelection()) {
